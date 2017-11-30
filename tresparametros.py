@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+#testeasds
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib.pyplot as plt
