@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#testeasds
+
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib.pyplot as plt
@@ -513,6 +513,7 @@ while True:
         gls = (txt_s['      RED    '].min() + txt_s['     BLUE    '].min() + txt_s['  MAGENTA    '].min() + txt_s['    GREEN    '].min()
         + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min())/6
         print("\n\nGlobal Longitudinal Strain: ", gls)
+        #print(tcolunas-2) #Número de segmentos
 
     elif prmt == "2":
         txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
