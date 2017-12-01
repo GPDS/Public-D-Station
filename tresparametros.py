@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+#testeasds
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib.pyplot as plt
@@ -246,7 +246,7 @@ def Parameters_Plot():
     #Definição do subplot das curvas (gráfico do meio)
     ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
     plt.xlim(0, END_Time1)
-    ColorPlot(txt2)
+    ColorPlot(txt_mid)
     plt.grid()
     tick_locs = np.arange(0.0,END_Time1,0.2)
     tick_lbls = np.arange(0, int(END_Time1*1000), 200)
@@ -375,17 +375,17 @@ else:
 arq_la = open('exam_la', 'r')
 exame = arq.readline()
 exame = exame[:len(exame)-1]    #Retira o \n
-exame2 = arq.readline()
-exame2 = exame2[:len(exame2)-1]    #Retira o \n
+exame_mid = arq.readline()
+exame_mid = exame_mid[:len(exame_mid)-1]    #Retira o \n
 exame_la = arq_la.readline()
 exame_la = exame_la[:len(exame_la)-1]    #Retira o \n
 print("\n\nUsing files: ")
 print("\t",exame)
-print("\t",exame2)
-if exame2 != exame_la:
+print("\t",exame_mid)
+if exame_mid != exame_la:
     print("\t",exame_la)
 txt=pd.read_csv(exame, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
-txt2=pd.read_csv(exame2, sep='\t', engine='python', skiprows=3, index_col=0)
+txt_mid=pd.read_csv(exame_mid, sep='\t', engine='python', skiprows=3, index_col=0)
 strain_la=pd.read_csv(exame_la, sep='\t', engine='python', skiprows=3, index_col=0)
 #Fim da abertura dos .txt
 
@@ -414,7 +414,7 @@ numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos
 txt_original.close()
 
 txt.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
-txt2.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
+txt_mid.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
 strain_la.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
 #nsamples(exame, txt, N) #Função para colocar o mesmo numero de amostras
 
@@ -430,10 +430,10 @@ if txt.index[len(txt.index)-1] < strain_la.index[len(strain_la.index)-1]:#Determ
 else:
     END_Time0 = strain_la.index[len(strain_la.index)-1]
 
-if txt.index[len(txt.index)-1] < txt2.index[len(txt2.index)-1]:#Determinar o arquivo de texto com menor tempo
+if txt.index[len(txt.index)-1] < txt_mid.index[len(txt_mid.index)-1]:#Determinar o arquivo de texto com menor tempo
     END_Time1 = txt.index[len(txt.index)-1]                     #para que um gráfico não fique sobrando
 else:
-    END_Time1 = txt2.index[len(txt2.index)-1]
+    END_Time1 = txt_mid.index[len(txt_mid.index)-1]
 
 ###################################################################################   A parte alterada nessa etapa foi a parte abaixo
 
@@ -513,7 +513,7 @@ while True:
         gls = (txt_s['      RED    '].min() + txt_s['     BLUE    '].min() + txt_s['  MAGENTA    '].min() + txt_s['    GREEN    '].min()
         + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min())/6
         print("\n\nGlobal Longitudinal Strain: ", gls)
-        #print(tcolunas-2) #Número de segmentos
+        #print(tcolunas-2) #Imprime o número de curvas
 
     elif prmt == "2":
         txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
