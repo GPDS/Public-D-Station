@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+#Switchs para parâmetros depois das 18 curvas
+
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib.pyplot as plt
