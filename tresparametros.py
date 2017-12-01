@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+#teste
 #Switchs para parâmetros depois das 18 curvas
 
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
