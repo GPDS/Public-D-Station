@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #Cálculo dos parâmetros com a quantidade de segmentos e marcação dos pontos em todas as curvas
-#Saber quais segmentos existem
+#Saber quais segmentos existem - talvez usando txt.iloc
 #Switchs para parâmetros depois das 18 curvas
 
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
@@ -549,7 +549,6 @@ while True:
         + txt2_s['     CYAN    '].min() + txt2_s['   YELLOW    '].min()+txt3_s['      RED    '].min() + txt3_s['     BLUE    '].min() + txt3_s['  MAGENTA    '].min() + txt3_s['    GREEN    '].min()
         + txt3_s['     CYAN    '].min() + txt3_s['   YELLOW    '].min())/((tcolunas-2)+(tcolunas2-2)+(tcolunas3-2))
         print("\n\nGlobal Longitudinal Strain: ", gls)
-        #print(tcolunas-2) #Imprime o número de curvas
 
     elif prmt == "2":
         txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
@@ -667,6 +666,8 @@ while True:
 
     elif prmt == "5":
         print("\nPlot w/o any parameters")
+        print(tcolunas-2) #Quantidade de segmentos
+        print(list(txt)[tcolunas-3]) #Lista dos segmentos
 
     elif prmt == "0":
         break
