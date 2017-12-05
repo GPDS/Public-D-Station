@@ -3,6 +3,8 @@
 #Saber quais segmentos existem - talvez usando txt.iloc
 #Switchs para parâmetros depois das 18 curvas
 
+#http://onlinelibrary.wiley.com/doi/10.1111/echo.13547/full
+
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib.pyplot as plt
@@ -564,6 +566,7 @@ while True:
         txt3_sliced_onsets['     BLUE    '].idxmin(), txt3_sliced_onsets['  MAGENTA    '].idxmin(),
         txt3_sliced_onsets['    GREEN    '].idxmin(), txt3_sliced_onsets['     CYAN    '].idxmin(),
         txt3_sliced_onsets['   YELLOW    '].idxmin()])
+        #print(global_minima_times)
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "3":
