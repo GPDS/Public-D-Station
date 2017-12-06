@@ -3,6 +3,9 @@
 #Saber quais segmentos existem
 #Switchs para parâmetros depois das 18 curvas
 
+#http://onlinelibrary.wiley.com/doi/10.1111/echo.13547/full
+#Ver se os pontos estão corretos
+
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib.pyplot as plt
@@ -160,6 +163,7 @@ def Parameters_Plot():
         plt.plot(txt3_s['   YELLOW    '].idxmin(),txt3_s['   YELLOW    '].min(), 'kx')
 
     if prmt == "2":
+
         plt.plot(txt_sliced_onsets['      RED    '].idxmin(),txt_sliced_onsets['      RED    '].min(), 'kx')
         plt.plot(txt_sliced_onsets['     BLUE    '].idxmin(),txt_sliced_onsets['     BLUE    '].min(), 'kx')
         plt.plot(txt_sliced_onsets['  MAGENTA    '].idxmin(),txt_sliced_onsets['  MAGENTA    '].min(), 'kx')
@@ -555,16 +559,17 @@ while True:
         txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
         txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < EMCvalues2[it-4])]
         txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < EMCvalues2[it-4])]
-        global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin(),
-        txt_sliced_onsets['     BLUE    '].idxmin(), txt_sliced_onsets['  MAGENTA    '].idxmin(),
-        txt_sliced_onsets['    GREEN    '].idxmin(), txt_sliced_onsets['     CYAN    '].idxmin(),
-        txt_sliced_onsets['   YELLOW    '].idxmin(), txt2_sliced_onsets['      RED    '].idxmin(),
-        txt2_sliced_onsets['     BLUE    '].idxmin(), txt2_sliced_onsets['  MAGENTA    '].idxmin(),
-        txt2_sliced_onsets['    GREEN    '].idxmin(), txt2_sliced_onsets['     CYAN    '].idxmin(),
-        txt2_sliced_onsets['   YELLOW    '].idxmin(), txt3_sliced_onsets['      RED    '].idxmin(),
-        txt3_sliced_onsets['     BLUE    '].idxmin(), txt3_sliced_onsets['  MAGENTA    '].idxmin(),
-        txt3_sliced_onsets['    GREEN    '].idxmin(), txt3_sliced_onsets['     CYAN    '].idxmin(),
-        txt3_sliced_onsets['   YELLOW    '].idxmin()])
+        global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
+        txt_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
+        txt_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
+        txt_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
+        txt2_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
+        txt2_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
+        txt2_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
+        txt3_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
+        txt3_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
+        txt3_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4]])
+        print(global_minima_times)
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "3":
@@ -663,6 +668,7 @@ while True:
         txt3_sliced_onsets['     BLUE    '].idxmin(), txt3_sliced_onsets['  MAGENTA    '].idxmin(),
         txt3_sliced_onsets['    GREEN    '].idxmin(), txt3_sliced_onsets['     CYAN    '].idxmin(),
         txt3_sliced_onsets['   YELLOW    '].idxmin()])
+        print(global_minima_times)
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "5":
