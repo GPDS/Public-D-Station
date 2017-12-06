@@ -1,0 +1,15 @@
+Instruções:
+
+Para os testes a serem realizados basta alterar os arquivos Event_Timing, exam_la (opcional, alterar para que a marcação do ponto de diástase seja possível, apesar de que a marcação dele não interfere no cálculo dos parâmetros) e test_option. Nos arquivos de texto, o nome dos exames deve sempre ser seguido de .txt
+
+
+Coloque os três arquivos que contêm as curvas de strain e o que contém a as curvas de strain rate do VE (4CH) na mesma pasta que o programa, que a planilha Event_Timing e que os arquivos main_option, alt_option1, alt_option2, alt_option3, exam_la e test_option. O arquivo de strain do AE de um paciente qualquer pode ser mantido na pasta para a marcação do ponto de diástase. A função dos arquivos a serem utizados estão descritas abaixo:
+
+
+Event_Timing: Planilha onde são inseridos o nome do paciente e os tempos de abertura e fechamento das valvas. Eles devem ser inseridos na linha 4. Ela deve ser alterada para cada paciente. Apenas os nome e os tempos das valvas precisam ser alterados, os tempos das fases estão sendo obtidos e calculados pelo programa.
+
+exam_la: Arquivo de texto onde deve ficar o nome do arquivo correspondente ao exame de strain do átrio esquerdo do paciente, utilizado na marcação dos pontos no ECG. Pode ser de um paciente qualquer, considerando o que está escrito em parênteses nas primeiras linhas.
+
+test_option: Arquivo de texto onde devem ficar os nomes dos arquivos correspondentes aos exames de strain do ventrículo esquerdo 4CH, strain rate do ventrículo esquerdo (4CH) e strain do ventrículo esquerdo (2CH e APLAX), nessa ordem (importante).
+
+Assim, para alterar os pacientes, basta alterar os nomes dos exames nesses arquivos de texto e alterar o nome e os tempos de abertura na planilha e mover os exames do paciente para a mesma pasta que o programa. Os exames que não estão sendo utilizados podem ficar em outra pasta.
