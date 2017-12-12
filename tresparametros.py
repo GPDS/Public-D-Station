@@ -103,7 +103,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
     colorPlot(strain_rate_lv,tcolunas_strain_rate_lv)
-    plt.ylabel('Strain Rate - LV\n(%)')
+    plt.ylabel('Strain Rate - LV\n(1/s)')
     plt.grid()
     plt.setp(ax1.get_xticklabels(), visible=False)
 
