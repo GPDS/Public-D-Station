@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 #Cálculo dos parâmetros com a quantidade de segmentos e marcação dos pontos em todas as curvas
-#Saber quais segmentos existem
+#Saber quais segmentos existem - talvez usando txt.iloc
 #Switchs para parâmetros depois das 18 curvas
 
 #http://onlinelibrary.wiley.com/doi/10.1111/echo.13547/full
+<<<<<<< HEAD
 #Ver se os pontos estão corretos
+=======
+>>>>>>> n_Segmente
 
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
@@ -554,6 +557,7 @@ while True:
         + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min()+txt2_s['      RED    '].min() + txt2_s['     BLUE    '].min() + txt2_s['  MAGENTA    '].min() + txt2_s['    GREEN    '].min()
         + txt2_s['     CYAN    '].min() + txt2_s['   YELLOW    '].min()+txt3_s['      RED    '].min() + txt3_s['     BLUE    '].min() + txt3_s['  MAGENTA    '].min() + txt3_s['    GREEN    '].min()
         + txt3_s['     CYAN    '].min() + txt3_s['   YELLOW    '].min())/((tcolunas-2)+(tcolunas2-2)+(tcolunas3-2))
+<<<<<<< HEAD
         print("Peak negative systolic strain:\n")
         colours=list(txt2_s)
         for colour_it in range(0,tcolunas2-2):
@@ -569,11 +573,15 @@ while True:
 
         print("\n\nGlobal Longitudinal Strain: ", gls,"%")
         #print(tcolunas-2) #Imprime o número de curvas
+=======
+        print("\n\nGlobal Longitudinal Strain: ", gls)
+>>>>>>> n_Segmente
 
     elif prmt == "2":
         txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
         txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < EMCvalues2[it-4])]
         txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < EMCvalues2[it-4])]
+<<<<<<< HEAD
         global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
         txt_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
         txt_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
@@ -598,6 +606,19 @@ while True:
         for colour_it in range(0,tcolunas3-2):
             print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
 
+=======
+        global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin(),
+        txt_sliced_onsets['     BLUE    '].idxmin(), txt_sliced_onsets['  MAGENTA    '].idxmin(),
+        txt_sliced_onsets['    GREEN    '].idxmin(), txt_sliced_onsets['     CYAN    '].idxmin(),
+        txt_sliced_onsets['   YELLOW    '].idxmin(), txt2_sliced_onsets['      RED    '].idxmin(),
+        txt2_sliced_onsets['     BLUE    '].idxmin(), txt2_sliced_onsets['  MAGENTA    '].idxmin(),
+        txt2_sliced_onsets['    GREEN    '].idxmin(), txt2_sliced_onsets['     CYAN    '].idxmin(),
+        txt2_sliced_onsets['   YELLOW    '].idxmin(), txt3_sliced_onsets['      RED    '].idxmin(),
+        txt3_sliced_onsets['     BLUE    '].idxmin(), txt3_sliced_onsets['  MAGENTA    '].idxmin(),
+        txt3_sliced_onsets['    GREEN    '].idxmin(), txt3_sliced_onsets['     CYAN    '].idxmin(),
+        txt3_sliced_onsets['   YELLOW    '].idxmin()])
+        #print(global_minima_times)
+>>>>>>> n_Segmente
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "3":
@@ -728,6 +749,8 @@ while True:
 
     elif prmt == "5":
         print("\nPlot w/o any parameters")
+        print(tcolunas-2) #Quantidade de segmentos
+        print(list(txt)[tcolunas-3]) #Lista dos segmentos
 
     elif prmt == "0":
         break
