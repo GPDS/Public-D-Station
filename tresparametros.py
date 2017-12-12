@@ -4,10 +4,8 @@
 #Switchs para parâmetros depois das 18 curvas
 
 #http://onlinelibrary.wiley.com/doi/10.1111/echo.13547/full
-<<<<<<< HEAD
 #Ver se os pontos estão corretos
-=======
->>>>>>> n_Segmente
+
 
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
@@ -105,7 +103,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
     colorPlot(strain_rate_lv,tcolunas_strain_rate_lv)
-    plt.ylabel('Strain - LA\n(%)')
+    plt.ylabel('Strain Rate - LV\n(%)')
     plt.grid()
     plt.setp(ax1.get_xticklabels(), visible=False)
 
@@ -557,8 +555,8 @@ while True:
         + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min()+txt2_s['      RED    '].min() + txt2_s['     BLUE    '].min() + txt2_s['  MAGENTA    '].min() + txt2_s['    GREEN    '].min()
         + txt2_s['     CYAN    '].min() + txt2_s['   YELLOW    '].min()+txt3_s['      RED    '].min() + txt3_s['     BLUE    '].min() + txt3_s['  MAGENTA    '].min() + txt3_s['    GREEN    '].min()
         + txt3_s['     CYAN    '].min() + txt3_s['   YELLOW    '].min())/((tcolunas-2)+(tcolunas2-2)+(tcolunas3-2))
-<<<<<<< HEAD
-        print("Peak negative systolic strain:\n")
+
+        print("\n\nPeak negative systolic strain:\n")
         colours=list(txt2_s)
         for colour_it in range(0,tcolunas2-2):
             print("2CH:", colours[colour_it],":",txt2_s[colours[colour_it]].min(),"%")
@@ -573,15 +571,11 @@ while True:
 
         print("\n\nGlobal Longitudinal Strain: ", gls,"%")
         #print(tcolunas-2) #Imprime o número de curvas
-=======
-        print("\n\nGlobal Longitudinal Strain: ", gls)
->>>>>>> n_Segmente
 
     elif prmt == "2":
         txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
         txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < EMCvalues2[it-4])]
         txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < EMCvalues2[it-4])]
-<<<<<<< HEAD
         global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
         txt_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
         txt_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
@@ -593,7 +587,7 @@ while True:
         txt3_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
         txt3_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4]])
         #print(global_minima_times)
-        print("Times of peak negative strain:\n")
+        print("\n\nTimes of peak negative strain:\n")
         colours=list(txt2_sliced_onsets)
         for colour_it in range(0,tcolunas2-2):
             print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
@@ -606,7 +600,7 @@ while True:
         for colour_it in range(0,tcolunas3-2):
             print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
 
-=======
+
         global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin(),
         txt_sliced_onsets['     BLUE    '].idxmin(), txt_sliced_onsets['  MAGENTA    '].idxmin(),
         txt_sliced_onsets['    GREEN    '].idxmin(), txt_sliced_onsets['     CYAN    '].idxmin(),
@@ -618,7 +612,7 @@ while True:
         txt3_sliced_onsets['    GREEN    '].idxmin(), txt3_sliced_onsets['     CYAN    '].idxmin(),
         txt3_sliced_onsets['   YELLOW    '].idxmin()])
         #print(global_minima_times)
->>>>>>> n_Segmente
+
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "3":
@@ -651,7 +645,7 @@ while True:
         #Criação das células com os valores de AVC e de 1/3 da diástole - Fim
 
         #print(txt_dr.at[AVCvalues1[it-4],'      RED    '])
-        print("\nFirst third of diastole time: ",ThirdDiastoleTime*1000,"ms")
+        print("\n\nFirst third of diastole time: ",ThirdDiastoleTime*1000,"ms")
 
         DI_R1 = (txt_dr.at[AVCvalues1[it-4],'      RED    '] - txt_dr.at[ThirdDiastoleTime,'      RED    '])/txt_dr.at[AVCvalues1[it-4],'      RED    ']
         DI_B1 = (txt_dr.at[AVCvalues1[it-4],'     BLUE    '] - txt_dr.at[ThirdDiastoleTime,'     BLUE    '])/txt_dr.at[AVCvalues1[it-4],'     BLUE    ']
@@ -703,7 +697,7 @@ while True:
         + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min()+txt2_s['      RED    '].min() + txt2_s['     BLUE    '].min() + txt2_s['  MAGENTA    '].min() + txt2_s['    GREEN    '].min()
         + txt2_s['     CYAN    '].min() + txt2_s['   YELLOW    '].min()+txt3_s['      RED    '].min() + txt3_s['     BLUE    '].min() + txt3_s['  MAGENTA    '].min() + txt3_s['    GREEN    '].min()
         + txt3_s['     CYAN    '].min() + txt3_s['   YELLOW    '].min())/((tcolunas-2)+(tcolunas2-2)+(tcolunas3-2))
-        print("Peak negative systolic strain:\n")
+        print("\n\nPeak negative systolic strain:\n")
         colours=list(txt2_s)
         for colour_it in range(0,tcolunas2-2):
             print("2CH:", colours[colour_it],":",txt2_s[colours[colour_it]].min(),"%")
@@ -749,8 +743,7 @@ while True:
 
     elif prmt == "5":
         print("\nPlot w/o any parameters")
-        print(tcolunas-2) #Quantidade de segmentos
-        print(list(txt)[tcolunas-3]) #Lista dos segmentos
+
 
     elif prmt == "0":
         break
