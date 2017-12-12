@@ -55,19 +55,19 @@ def onclick(event):
 
 #Plotagem com as cores correspondentes ao arquivo - INÍCIO
 def colorPlot(txt,tcolunas):
-    colors=list(txt)
+    colours=list(txt)
     for it in range(0,tcolunas-2):
-        if(colors[it] == '      RED    '):
+        if(colours[it] == '      RED    '):
             plt.plot(txt.iloc[:,it], 'r')
-        elif(colors[it] == '     BLUE    '):
+        elif(colours[it] == '     BLUE    '):
             plt.plot(txt.iloc[:,it], 'b')
-        elif(colors[it] == '  MAGENTA    '):
+        elif(colours[it] == '  MAGENTA    '):
             plt.plot(txt.iloc[:,it], 'm')
-        elif(colors[it] == '    GREEN    '):
+        elif(colours[it] == '    GREEN    '):
             plt.plot(txt.iloc[:,it], 'g')
-        elif(colors[it] == '     CYAN    '):
+        elif(colours[it] == '     CYAN    '):
             plt.plot(txt.iloc[:,it], 'c')
-        elif(colors[it] == '   YELLOW    '):
+        elif(colours[it] == '   YELLOW    '):
             plt.plot(txt.iloc[:,it], 'y')
         else:
             plt.plot(txt.iloc[:,it], 'k')
@@ -101,7 +101,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_locs = np.arange(0.0,END_Time0,0.2)
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
-    colorPlot(strain_la,tcolunas_strain_la)
+    colorPlot(strain_rate_lv,tcolunas_strain_rate_lv)
     plt.ylabel('Strain - LA\n(%)')
     plt.grid()
     plt.setp(ax1.get_xticklabels(), visible=False)
@@ -406,7 +406,7 @@ elif op == "5":
 else:
     arq = open('main_option', 'r')
 
-arq_la = open('exam_la', 'r')
+arq_sr_lv = open('exam_sr_LV', 'r')
 exame1 = arq.readline()
 exame1 = exame1[:len(exame1)-1]    #Retira o \n
 exame_mid = arq.readline()
@@ -415,20 +415,22 @@ exame2 = arq.readline()
 exame2 = exame2[:len(exame2)-1]    #Retira o \n
 exame3 = arq.readline()
 exame3 = exame3[:len(exame3)-1]    #Retira o \n
-exame_la = arq_la.readline()
-exame_la = exame_la[:len(exame_la)-1]    #Retira o \n
+exame_sr_LV = arq_sr_lv.readline()
+exame_sr_LV = exame_sr_LV[:len(exame_sr_LV)-1]    #Retira o \n
 print("\n\nUsing files: ")
 print("\t",exame1)
 print("\t",exame2)
 print("\t",exame3)
 print("\t",exame_mid)
-if exame_mid != exame_la:
-    print("\t",exame_la)
+if (exame1 == exame2 or exame1 == exame3 or exame2 == exame3):
+    input("\n\n\n\n\n\n\n\n\n\n\n\nWARNING: Some files are the same. To find out which ones are equal check their names above.\n\nPress enter to continue.")
+if exame_mid != exame_sr_LV:
+    print("\t",exame_sr_LV)
 txt=pd.read_csv(exame1, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
 txt2=pd.read_csv(exame2, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
 txt3=pd.read_csv(exame3, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
 txt_mid=pd.read_csv(exame_mid, sep='\t', engine='python', skiprows=3, index_col=0)
-strain_la=pd.read_csv(exame_la, sep='\t', engine='python', skiprows=3, index_col=0)
+strain_rate_lv=pd.read_csv(exame_sr_LV, sep='\t', engine='python', skiprows=3, index_col=0)
 #Fim da abertura dos .txt
 
 txt_original = open(exame1, 'r')
@@ -439,23 +441,23 @@ txt.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lid
 txt2.drop('Unnamed: 1', axis=1, inplace=True)
 txt3.drop('Unnamed: 1', axis=1, inplace=True)
 txt_mid.drop('Unnamed: 1', axis=1, inplace=True)
-strain_la.drop('Unnamed: 1', axis=1, inplace=True)
+strain_rate_lv.drop('Unnamed: 1', axis=1, inplace=True)
 
 tcolunas=int(((txt.size/len(txt.index))))
 tcolunas2=int(((txt2.size/len(txt2.index))))
 tcolunas3=int(((txt2.size/len(txt2.index))))
 tcolunas_mid=int(((txt_mid.size/len(txt_mid.index))))
-tcolunas_strain_la = int(((strain_la.size/len(strain_la.index))))
+tcolunas_strain_rate_lv = int(((strain_rate_lv.size/len(strain_rate_lv.index))))
 
 LM_Time = float(numbers[0])
 RM_Time = float(numbers[1])
 ES_Time = float(numbers[2])                    #AVC - Aortic Valve Closure
 
 #Determinação do tempo máximo para o gráfico de marcação - Início
-if txt.index[len(txt.index)-1] < strain_la.index[len(strain_la.index)-1]:#Determinar o arquivo de texto com menor tempo
+if txt.index[len(txt.index)-1] < strain_rate_lv.index[len(strain_rate_lv.index)-1]:#Determinar o arquivo de texto com menor tempo
     END_Time0 = txt.index[len(txt.index)-1]                              #para que um gráfico não fique sobrando
 else:
-    END_Time0 = strain_la.index[len(strain_la.index)-1]
+    END_Time0 = strain_rate_lv.index[len(strain_rate_lv.index)-1]
 #Para o gráfico de marcação - FIM
 
 #Para o gráfico dos parâmetros - Início
@@ -552,6 +554,19 @@ while True:
         + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min()+txt2_s['      RED    '].min() + txt2_s['     BLUE    '].min() + txt2_s['  MAGENTA    '].min() + txt2_s['    GREEN    '].min()
         + txt2_s['     CYAN    '].min() + txt2_s['   YELLOW    '].min()+txt3_s['      RED    '].min() + txt3_s['     BLUE    '].min() + txt3_s['  MAGENTA    '].min() + txt3_s['    GREEN    '].min()
         + txt3_s['     CYAN    '].min() + txt3_s['   YELLOW    '].min())/((tcolunas-2)+(tcolunas2-2)+(tcolunas3-2))
+        print("Peak negative systolic strain:\n")
+        colours=list(txt2_s)
+        for colour_it in range(0,tcolunas2-2):
+            print("2CH:", colours[colour_it],":",txt2_s[colours[colour_it]].min(),"%")
+        print("\n")
+        colours=list(txt_s)
+        for colour_it in range(0,tcolunas-2):
+            print("4CH:", colours[colour_it],":",txt_s[colours[colour_it]].min(),"%")
+        print("\n")
+        colours=list(txt3_s)
+        for colour_it in range(0,tcolunas3-2):
+            print("APLAX:", colours[colour_it],":",txt3_s[colours[colour_it]].min(),"%")
+
         print("\n\nGlobal Longitudinal Strain: ", gls,"%")
         #print(tcolunas-2) #Imprime o número de curvas
 
@@ -570,6 +585,19 @@ while True:
         txt3_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
         txt3_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4]])
         #print(global_minima_times)
+        print("Times of peak negative strain:\n")
+        colours=list(txt2_sliced_onsets)
+        for colour_it in range(0,tcolunas2-2):
+            print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+        print("\n")
+        colours=list(txt_sliced_onsets)
+        for colour_it in range(0,tcolunas-2):
+            print("4CH:", colours[colour_it],":",txt_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+        print("\n")
+        colours=list(txt3_sliced_onsets)
+        for colour_it in range(0,tcolunas3-2):
+            print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "3":
@@ -654,7 +682,21 @@ while True:
         + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min()+txt2_s['      RED    '].min() + txt2_s['     BLUE    '].min() + txt2_s['  MAGENTA    '].min() + txt2_s['    GREEN    '].min()
         + txt2_s['     CYAN    '].min() + txt2_s['   YELLOW    '].min()+txt3_s['      RED    '].min() + txt3_s['     BLUE    '].min() + txt3_s['  MAGENTA    '].min() + txt3_s['    GREEN    '].min()
         + txt3_s['     CYAN    '].min() + txt3_s['   YELLOW    '].min())/((tcolunas-2)+(tcolunas2-2)+(tcolunas3-2))
+        print("Peak negative systolic strain:\n")
+        colours=list(txt2_s)
+        for colour_it in range(0,tcolunas2-2):
+            print("2CH:", colours[colour_it],":",txt2_s[colours[colour_it]].min(),"%")
+        print("\n")
+        colours=list(txt_s)
+        for colour_it in range(0,tcolunas-2):
+            print("4CH:", colours[colour_it],":",txt_s[colours[colour_it]].min(),"%")
+        print("\n")
+        colours=list(txt3_s)
+        for colour_it in range(0,tcolunas3-2):
+            print("APLAX:", colours[colour_it],":",txt3_s[colours[colour_it]].min(),"%")
+
         print("\n\nGlobal Longitudinal Strain: ", gls,"%")
+
         txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
         txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < EMCvalues2[it-4])]
         txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < EMCvalues2[it-4])]
@@ -669,8 +711,20 @@ while True:
         txt3_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
         txt3_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4]])
         #print(global_minima_times)
-        print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
+        print("\n\nTimes of peak negative strain:\n")
+        colours=list(txt2_sliced_onsets)
+        for colour_it in range(0,tcolunas2-2):
+            print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+        print("\n")
+        colours=list(txt_sliced_onsets)
+        for colour_it in range(0,tcolunas-2):
+            print("4CH:", colours[colour_it],":",txt_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+        print("\n")
+        colours=list(txt3_sliced_onsets)
+        for colour_it in range(0,tcolunas3-2):
+            print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
 
+        print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "5":
         print("\nPlot w/o any parameters")
@@ -685,4 +739,4 @@ while True:
     print("\n")
 
 arq.close()
-arq_la.close()
+arq_sr_lv.close()
