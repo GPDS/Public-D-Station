@@ -6,7 +6,6 @@
 #http://onlinelibrary.wiley.com/doi/10.1111/echo.13547/full
 #Ver se os pontos estão corretos
 
-
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib.pyplot as plt
@@ -187,26 +186,7 @@ def Parameters_Plot():
         plt.plot(txt3_sliced_onsets['   YELLOW    '].idxmin(),txt3_sliced_onsets['   YELLOW    '].min(), 'kx')
 
     if prmt == "3":
-        plt.plot(ThirdDiastoleTime,txt_dr.at[ThirdDiastoleTime,'      RED    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt_dr.at[ThirdDiastoleTime,'     BLUE    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt_dr.at[ThirdDiastoleTime,'  MAGENTA    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt_dr.at[ThirdDiastoleTime,'    GREEN    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt_dr.at[ThirdDiastoleTime,'     CYAN    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt_dr.at[ThirdDiastoleTime,'   YELLOW    '], 'kx')
-
-        plt.plot(ThirdDiastoleTime,txt2_dr.at[ThirdDiastoleTime,'      RED    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt2_dr.at[ThirdDiastoleTime,'     BLUE    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt2_dr.at[ThirdDiastoleTime,'  MAGENTA    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt2_dr.at[ThirdDiastoleTime,'    GREEN    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt2_dr.at[ThirdDiastoleTime,'     CYAN    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt2_dr.at[ThirdDiastoleTime,'   YELLOW    '], 'kx')
-
-        plt.plot(ThirdDiastoleTime,txt3_dr.at[ThirdDiastoleTime,'      RED    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt3_dr.at[ThirdDiastoleTime,'     BLUE    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt3_dr.at[ThirdDiastoleTime,'  MAGENTA    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt3_dr.at[ThirdDiastoleTime,'    GREEN    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt3_dr.at[ThirdDiastoleTime,'     CYAN    '], 'kx')
-        plt.plot(ThirdDiastoleTime,txt3_dr.at[ThirdDiastoleTime,'   YELLOW    '], 'kx')
+        ax0.axvline(ThirdDiastoleTime, color='k')
 
     if prmt == "4":
         plt.plot(txt_s['      RED    '].idxmin(),txt_s['      RED    '].min(), 'kx')
@@ -668,26 +648,27 @@ while True:
         DI_C3 = (txt3_dr.at[AVCvalues1[it-4],'     CYAN    '] - txt3_dr.at[ThirdDiastoleTime,'     CYAN    '])/txt3_dr.at[AVCvalues1[it-4],'     CYAN    ']
         DI_Y3 = (txt3_dr.at[AVCvalues1[it-4],'   YELLOW    '] - txt3_dr.at[ThirdDiastoleTime,'   YELLOW    '])/txt3_dr.at[AVCvalues1[it-4],'   YELLOW    ']
 
-        print("\nDiastolic Index - RED 2CH: ",DI_R2*100,"%")
-        print("Diastolic Index - BLUE2 2CH: ",DI_B2*100,"%")
-        print("Diastolic Index - MAGENTA 2CH: ",DI_M2*100,"%")
-        print("Diastolic Index - CYAN2 2CH: ",DI_G2*100,"%")
-        print("Diastolic Index - GREEN 2CH: ",DI_C2*100,"%")
-        print("Diastolic Index - YELLOW 2CH: ",DI_Y2*100,"%")
+        print("\nDiastolic Index:")
+        print("\n\tRED 2CH: ",DI_R2*100,"%")
+        print("\tBLUE2 2CH: ",DI_B2*100,"%")
+        print("\tMAGENTA 2CH: ",DI_M2*100,"%")
+        print("\tCYAN2 2CH: ",DI_G2*100,"%")
+        print("\tGREEN 2CH: ",DI_C2*100,"%")
+        print("\tYELLOW 2CH: ",DI_Y2*100,"%")
 
-        print("\nDiastolic Index - RED 4CH: ",DI_R1*100,"%")
-        print("Diastolic Index - BLUE 4CH: ",DI_B1*100,"%")
-        print("Diastolic Index - MAGENTA 4CH: ",DI_M1*100,"%")
-        print("Diastolic Index - CYAN 4CH: ",DI_G1*100,"%")
-        print("Diastolic Index - GREEN 4CH: ",DI_C1*100,"%")
-        print("Diastolic Index - YELLOW 4CH: ",DI_Y1*100,"%")
+        print("\n\tRED 4CH: ",DI_R1*100,"%")
+        print("\tBLUE 4CH: ",DI_B1*100,"%")
+        print("\tMAGENTA 4CH: ",DI_M1*100,"%")
+        print("\tCYAN 4CH: ",DI_G1*100,"%")
+        print("\tGREEN 4CH: ",DI_C1*100,"%")
+        print("\tYELLOW 4CH: ",DI_Y1*100,"%")
 
-        print("\nDiastolic Index - RED APLAX: ",DI_R3*100,"%")
-        print("Diastolic Index - BLUE APLAX: ",DI_B3*100,"%")
-        print("Diastolic Index - MAGENTA APLAX: ",DI_M3*100,"%")
-        print("Diastolic Index - CYAN APLAX: ",DI_G3*100,"%")
-        print("Diastolic Index - GREEN APLAX: ",DI_C3*100,"%")
-        print("Diastolic Index - YELLOW APLAX: ",DI_Y3*100,"%")
+        print("\n\tRED APLAX: ",DI_R3*100,"%")
+        print("\tBLUE APLAX: ",DI_B3*100,"%")
+        print("\tMAGENTA APLAX: ",DI_M3*100,"%")
+        print("\tCYAN APLAX: ",DI_G3*100,"%")
+        print("\tGREEN APLAX: ",DI_C3*100,"%")
+        print("\tYELLOW APLAX: ",DI_Y3*100,"%")
 
     elif prmt == "4":
         txt_s = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < AVCvalues1[it-4])] #Valores até o AVC - Durante a sístole
