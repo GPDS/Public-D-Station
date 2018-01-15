@@ -295,7 +295,7 @@ def Parameters_Plot():
 #Plotagem dos gráficos de saída final - FIM
 
 
-print("\033c") #Caso queira limpar o terminal
+#print("\033c") #Caso queira limpar o terminal
 #Início da abertura da planilha
 wb = openpyxl.load_workbook('Event_Timing.xlsx')
 sheet = wb.get_sheet_by_name('Sheet1')
