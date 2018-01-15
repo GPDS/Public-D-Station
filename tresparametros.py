@@ -71,7 +71,7 @@ def colorPlot(txt,tcolunas):
             plt.plot(txt.iloc[:,it], 'y')
         else:
             plt.plot(txt.iloc[:,it], 'k')
-    plt.plot(txt.iloc[:,tcolunas-2], 'k.')
+    plt.plot(txt.iloc[:,tcolunas-2], 'k.')                  #Correspondentes ao segmento Global
 #Plotagem com as cores correspondentes ao arquivo - FIM
 
 #Funcao para plotagem das curvas de deformacao e marcação no ECG -  INÍCIO
@@ -87,7 +87,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_locs = np.arange(0.0,END_Time0,0.2)
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
-    colorPlot(txt,tcolunas)
+    colorPlot(txt1,tcolunas1)
     plt.ylabel('Strain - LV\n(%)')
     plt.grid()
     plt.setp(ax0.get_xticklabels(), visible=False)
@@ -115,7 +115,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_locs = np.arange(0.0,END_Time0,0.2)
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
-    plt.plot(txt.loc[:,'ECG : '])
+    plt.plot(txt1.loc[:,'ECG : '])
     plt.xlabel('Time (ms)')
     plt.ylabel('ECG\nVoltage (mV)')
     plt.grid()
@@ -135,101 +135,39 @@ def Parameters_Plot():
     #Definição do subplot das curvas (gráfico do meio)
     ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
     plt.xlim(0, END_Time1)
-    colorPlot(txt,tcolunas)
+    colorPlot(txt1,tcolunas1)
     colorPlot(txt2,tcolunas2)
     colorPlot(txt3,tcolunas3)
 
     #Marcações dos pontos usados para os parâmetros
     if prmt == "1":
-        plt.plot(txt_s['      RED    '].idxmin(),txt_s['      RED    '].min(), 'kx')
-        plt.plot(txt_s['     BLUE    '].idxmin(),txt_s['     BLUE    '].min(), 'kx')
-        plt.plot(txt_s['  MAGENTA    '].idxmin(),txt_s['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt_s['    GREEN    '].idxmin(),txt_s['    GREEN    '].min(), 'kx')
-        plt.plot(txt_s['     CYAN    '].idxmin(),txt_s['     CYAN    '].min(), 'kx')
-        plt.plot(txt_s['   YELLOW    '].idxmin(),txt_s['   YELLOW    '].min(), 'kx')
+        colours=list(txt1_s)
+        for colour_it in range(0,tcolunas1-2):
+            plt.plot(txt1_s[colours[colour_it]].idxmin(), txt1_s[colours[colour_it]].min(), 'kx')
 
-        plt.plot(txt2_s['      RED    '].idxmin(),txt2_s['      RED    '].min(), 'kx')
-        plt.plot(txt2_s['     BLUE    '].idxmin(),txt2_s['     BLUE    '].min(), 'kx')
-        plt.plot(txt2_s['  MAGENTA    '].idxmin(),txt2_s['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt2_s['    GREEN    '].idxmin(),txt2_s['    GREEN    '].min(), 'kx')
-        plt.plot(txt2_s['     CYAN    '].idxmin(),txt2_s['     CYAN    '].min(), 'kx')
-        plt.plot(txt2_s['   YELLOW    '].idxmin(),txt2_s['   YELLOW    '].min(), 'kx')
+        colours=list(txt2_s)
+        for colour_it in range(0,tcolunas2-2):
+            plt.plot(txt2_s[colours[colour_it]].idxmin(), txt2_s[colours[colour_it]].min(), 'k*')
 
-        plt.plot(txt3_s['      RED    '].idxmin(),txt3_s['      RED    '].min(), 'kx')
-        plt.plot(txt3_s['     BLUE    '].idxmin(),txt3_s['     BLUE    '].min(), 'kx')
-        plt.plot(txt3_s['  MAGENTA    '].idxmin(),txt3_s['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt3_s['    GREEN    '].idxmin(),txt3_s['    GREEN    '].min(), 'kx')
-        plt.plot(txt3_s['     CYAN    '].idxmin(),txt3_s['     CYAN    '].min(), 'kx')
-        plt.plot(txt3_s['   YELLOW    '].idxmin(),txt3_s['   YELLOW    '].min(), 'kx')
+        colours=list(txt3_s)
+        for colour_it in range(0,tcolunas3-2):
+            plt.plot(txt3_s[colours[colour_it]].idxmin(), txt3_s[colours[colour_it]].min(), 'k+')
 
     if prmt == "2":
+        colours=list(txt1_sliced_onsets)
+        for colour_it in range(0,tcolunas1-2):
+            plt.plot(txt1_sliced_onsets[colours[colour_it]].idxmin(), txt1_sliced_onsets[colours[colour_it]].min(), 'kx')
 
-        plt.plot(txt_sliced_onsets['      RED    '].idxmin(),txt_sliced_onsets['      RED    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['     BLUE    '].idxmin(),txt_sliced_onsets['     BLUE    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['  MAGENTA    '].idxmin(),txt_sliced_onsets['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['    GREEN    '].idxmin(),txt_sliced_onsets['    GREEN    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['     CYAN    '].idxmin(),txt_sliced_onsets['     CYAN    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['   YELLOW    '].idxmin(),txt_sliced_onsets['   YELLOW    '].min(), 'kx')
+        colours=list(txt2_sliced_onsets)
+        for colour_it in range(0,tcolunas2-2):
+            plt.plot(txt2_sliced_onsets[colours[colour_it]].idxmin(), txt2_sliced_onsets[colours[colour_it]].min(), 'kx')
 
-        plt.plot(txt2_sliced_onsets['      RED    '].idxmin(),txt2_sliced_onsets['      RED    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['     BLUE    '].idxmin(),txt2_sliced_onsets['     BLUE    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['  MAGENTA    '].idxmin(),txt2_sliced_onsets['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['    GREEN    '].idxmin(),txt2_sliced_onsets['    GREEN    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['     CYAN    '].idxmin(),txt2_sliced_onsets['     CYAN    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['   YELLOW    '].idxmin(),txt2_sliced_onsets['   YELLOW    '].min(), 'kx')
-
-        plt.plot(txt3_sliced_onsets['      RED    '].idxmin(),txt3_sliced_onsets['      RED    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['     BLUE    '].idxmin(),txt3_sliced_onsets['     BLUE    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['  MAGENTA    '].idxmin(),txt3_sliced_onsets['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['    GREEN    '].idxmin(),txt3_sliced_onsets['    GREEN    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['     CYAN    '].idxmin(),txt3_sliced_onsets['     CYAN    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['   YELLOW    '].idxmin(),txt3_sliced_onsets['   YELLOW    '].min(), 'kx')
+        colours=list(txt3_sliced_onsets)
+        for colour_it in range(0,tcolunas3-2):
+            plt.plot(txt3_sliced_onsets[colours[colour_it]].idxmin(), txt3_sliced_onsets[colours[colour_it]].min(), 'kx')
 
     if prmt == "3":
         ax0.axvline(ThirdDiastoleTime, color='k')
-
-    if prmt == "4":
-        plt.plot(txt_s['      RED    '].idxmin(),txt_s['      RED    '].min(), 'kx')
-        plt.plot(txt_s['     BLUE    '].idxmin(),txt_s['     BLUE    '].min(), 'kx')
-        plt.plot(txt_s['  MAGENTA    '].idxmin(),txt_s['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt_s['    GREEN    '].idxmin(),txt_s['    GREEN    '].min(), 'kx')
-        plt.plot(txt_s['     CYAN    '].idxmin(),txt_s['     CYAN    '].min(), 'kx')
-        plt.plot(txt_s['   YELLOW    '].idxmin(),txt_s['   YELLOW    '].min(), 'kx')
-
-        plt.plot(txt2_s['      RED    '].idxmin(),txt2_s['      RED    '].min(), 'kx')
-        plt.plot(txt2_s['     BLUE    '].idxmin(),txt2_s['     BLUE    '].min(), 'kx')
-        plt.plot(txt2_s['  MAGENTA    '].idxmin(),txt2_s['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt2_s['    GREEN    '].idxmin(),txt2_s['    GREEN    '].min(), 'kx')
-        plt.plot(txt2_s['     CYAN    '].idxmin(),txt2_s['     CYAN    '].min(), 'kx')
-        plt.plot(txt2_s['   YELLOW    '].idxmin(),txt2_s['   YELLOW    '].min(), 'kx')
-
-        plt.plot(txt3_s['      RED    '].idxmin(),txt3_s['      RED    '].min(), 'kx')
-        plt.plot(txt3_s['     BLUE    '].idxmin(),txt3_s['     BLUE    '].min(), 'kx')
-        plt.plot(txt3_s['  MAGENTA    '].idxmin(),txt3_s['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt3_s['    GREEN    '].idxmin(),txt3_s['    GREEN    '].min(), 'kx')
-        plt.plot(txt3_s['     CYAN    '].idxmin(),txt3_s['     CYAN    '].min(), 'kx')
-        plt.plot(txt3_s['   YELLOW    '].idxmin(),txt3_s['   YELLOW    '].min(), 'kx')
-
-        plt.plot(txt_sliced_onsets['      RED    '].idxmin(),txt_sliced_onsets['      RED    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['     BLUE    '].idxmin(),txt_sliced_onsets['     BLUE    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['  MAGENTA    '].idxmin(),txt_sliced_onsets['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['    GREEN    '].idxmin(),txt_sliced_onsets['    GREEN    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['     CYAN    '].idxmin(),txt_sliced_onsets['     CYAN    '].min(), 'kx')
-        plt.plot(txt_sliced_onsets['   YELLOW    '].idxmin(),txt_sliced_onsets['   YELLOW    '].min(), 'kx')
-
-        plt.plot(txt2_sliced_onsets['      RED    '].idxmin(),txt2_sliced_onsets['      RED    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['     BLUE    '].idxmin(),txt2_sliced_onsets['     BLUE    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['  MAGENTA    '].idxmin(),txt2_sliced_onsets['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['    GREEN    '].idxmin(),txt2_sliced_onsets['    GREEN    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['     CYAN    '].idxmin(),txt2_sliced_onsets['     CYAN    '].min(), 'kx')
-        plt.plot(txt2_sliced_onsets['   YELLOW    '].idxmin(),txt2_sliced_onsets['   YELLOW    '].min(), 'kx')
-
-        plt.plot(txt3_sliced_onsets['      RED    '].idxmin(),txt3_sliced_onsets['      RED    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['     BLUE    '].idxmin(),txt3_sliced_onsets['     BLUE    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['  MAGENTA    '].idxmin(),txt3_sliced_onsets['  MAGENTA    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['    GREEN    '].idxmin(),txt3_sliced_onsets['    GREEN    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['     CYAN    '].idxmin(),txt3_sliced_onsets['     CYAN    '].min(), 'kx')
-        plt.plot(txt3_sliced_onsets['   YELLOW    '].idxmin(),txt3_sliced_onsets['   YELLOW    '].min(), 'kx')
 
     #Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
     ymin, ymax = plt.ylim()
@@ -284,7 +222,7 @@ def Parameters_Plot():
 
     #Definição do subplot do gráfico do ECG (gráfico de baixo)
     ax2 = plt.subplot2grid((16, 1), (13, 0), rowspan = 4, colspan = 1)
-    plt.plot(txt.loc[:,'ECG : '])
+    plt.plot(txt1.loc[:,'ECG : '])
     plt.xlim(0, END_Time1)
     tick_locs = np.arange(0.0,END_Time1,0.2)
     tick_lbls = np.arange(0, int(END_Time1*1000), 200)
@@ -357,7 +295,7 @@ def Parameters_Plot():
 #Plotagem dos gráficos de saída final - FIM
 
 
-#print("\033c") Caso queira limpar o terminal
+print("\033c") #Caso queira limpar o terminal
 #Início da abertura da planilha
 wb = openpyxl.load_workbook('Event_Timing.xlsx')
 sheet = wb.get_sheet_by_name('Sheet1')
@@ -404,10 +342,10 @@ print("\t",exame2)
 print("\t",exame3)
 print("\t",exame_mid)
 if (exame1 == exame2 or exame1 == exame3 or exame2 == exame3):
-    input("\n\n\n\n\n\n\n\n\n\n\n\nWARNING: Some files are the same. To find out which ones are equal check their names above.\n\nPress enter to continue.")
+    input("\n\n\n\n\n\n\n\n\n\n\n\nWARNING: Some files are duplicated. To find out which ones are equal check their names above.\n\nPress enter to continue.")
 if exame_mid != exame_sr_LV:
     print("\t",exame_sr_LV)
-txt=pd.read_csv(exame1, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
+txt1=pd.read_csv(exame1, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
 txt2=pd.read_csv(exame2, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
 txt3=pd.read_csv(exame3, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
 txt_mid=pd.read_csv(exame_mid, sep='\t', engine='python', skiprows=3, index_col=0)
@@ -418,13 +356,13 @@ txt_original = open(exame1, 'r')
 numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
 txt_original.close()
 
-txt.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
+txt1.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
 txt2.drop('Unnamed: 1', axis=1, inplace=True)
 txt3.drop('Unnamed: 1', axis=1, inplace=True)
 txt_mid.drop('Unnamed: 1', axis=1, inplace=True)
 strain_rate_lv.drop('Unnamed: 1', axis=1, inplace=True)
 
-tcolunas=int(((txt.size/len(txt.index))))
+tcolunas1=int(((txt1.size/len(txt1.index))))
 tcolunas2=int(((txt2.size/len(txt2.index))))
 tcolunas3=int(((txt2.size/len(txt2.index))))
 tcolunas_mid=int(((txt_mid.size/len(txt_mid.index))))
@@ -435,17 +373,17 @@ RM_Time = float(numbers[1])
 ES_Time = float(numbers[2])                    #AVC - Aortic Valve Closure
 
 #Determinação do tempo máximo para o gráfico de marcação - Início
-if txt.index[len(txt.index)-1] < strain_rate_lv.index[len(strain_rate_lv.index)-1]:#Determinar o arquivo de texto com menor tempo
-    END_Time0 = txt.index[len(txt.index)-1]                              #para que um gráfico não fique sobrando
+if txt1.index[len(txt1.index)-1] < strain_rate_lv.index[len(strain_rate_lv.index)-1]:#Determinar o arquivo de texto com menor tempo
+    END_Time0 = txt1.index[len(txt1.index)-1]                              #para que um gráfico não fique sobrando
 else:
     END_Time0 = strain_rate_lv.index[len(strain_rate_lv.index)-1]
 #Para o gráfico de marcação - FIM
 
 #Para o gráfico dos parâmetros - Início
 #achar o menor entre os strains e comparar com o do meio
-if txt.index[len(txt.index)-1] < txt2.index[len(txt2.index)-1]:#Determinar o arquivo de texto com menor tempo
-    if txt.index[len(txt.index)-1] < txt3.index[len(txt3.index)-1]:
-        strain_end_time = txt.index[len(txt.index)-1]
+if txt1.index[len(txt1.index)-1] < txt2.index[len(txt2.index)-1]:#Determinar o arquivo de texto com menor tempo
+    if txt1.index[len(txt1.index)-1] < txt3.index[len(txt3.index)-1]:
+        strain_end_time = txt1.index[len(txt1.index)-1]
     else:
         strain_end_time = txt3.index[len(txt3.index)-1]
 else:
@@ -523,98 +461,84 @@ print("\n\n")
 
 while True:
     print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
-    print("\t3. Diastolic Recovery\n\t4. Global Longitudinal Strain and Mechanical Dispersion")
-    print("\t5. Show plot w/o any parameters\n\t0. Terminate program")
+    print("\t3. Diastolic Recovery")
+    print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
     prmt = input("Parameter: ")
 
     if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
-        txt_s = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < AVCvalues1[it-4])] #Valores até o AVC - Durante a sístole
+        txt1_s = txt1[(txt1.index >= EMCvalues1[it-4]) & (txt1.index < AVCvalues1[it-4])] #Valores até o AVC - Durante a sístole
         txt2_s = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < AVCvalues1[it-4])]
         txt3_s = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < AVCvalues1[it-4])]
-        gls = (txt_s['      RED    '].min() + txt_s['     BLUE    '].min() + txt_s['  MAGENTA    '].min() + txt_s['    GREEN    '].min()
-        + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min()+txt2_s['      RED    '].min() + txt2_s['     BLUE    '].min() + txt2_s['  MAGENTA    '].min() + txt2_s['    GREEN    '].min()
-        + txt2_s['     CYAN    '].min() + txt2_s['   YELLOW    '].min()+txt3_s['      RED    '].min() + txt3_s['     BLUE    '].min() + txt3_s['  MAGENTA    '].min() + txt3_s['    GREEN    '].min()
-        + txt3_s['     CYAN    '].min() + txt3_s['   YELLOW    '].min())/((tcolunas-2)+(tcolunas2-2)+(tcolunas3-2))
-
+        #print((tcolunas1-2)+(tcolunas2-2)+(tcolunas3-2)) #quantidade total de segmentos
+        #print(list(txt2_s))                              #lista os nomes dos segmentos
+        #print (colours[:-2])
         print("\n\nPeak negative systolic strain:\n")
+        gls = []
         colours=list(txt2_s)
         for colour_it in range(0,tcolunas2-2):
             print("2CH:", colours[colour_it],":",txt2_s[colours[colour_it]].min(),"%")
+            gls.append(txt2_s[colours[colour_it]].min())
         print("\n")
-        colours=list(txt_s)
-        for colour_it in range(0,tcolunas-2):
-            print("4CH:", colours[colour_it],":",txt_s[colours[colour_it]].min(),"%")
+        colours=list(txt1_s)
+        for colour_it in range(0,tcolunas1-2):
+            print("4CH:", colours[colour_it],":",txt1_s[colours[colour_it]].min(),"%")
+            gls.append(txt1_s[colours[colour_it]].min())
         print("\n")
         colours=list(txt3_s)
         for colour_it in range(0,tcolunas3-2):
             print("APLAX:", colours[colour_it],":",txt3_s[colours[colour_it]].min(),"%")
-
+            gls.append(txt3_s[colours[colour_it]].min())
+        gls=np.mean(gls)
         print("\n\nGlobal Longitudinal Strain: ", gls,"%")
-        #print(tcolunas-2) #Imprime o número de curvas
 
     elif prmt == "2":
-        txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
+        txt1_sliced_onsets = txt1[(txt1.index >= EMCvalues1[it-4]) & (txt1.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
         txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < EMCvalues2[it-4])]
         txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < EMCvalues2[it-4])]
-        global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
-        txt_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
-        txt_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
-        txt_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
-        txt2_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
-        txt2_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
-        txt2_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
-        txt3_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
-        txt3_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
-        txt3_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4]])
-        #print(global_minima_times)
+        global_minima_times = []
         print("\n\nTimes of peak negative strain:\n")
+
         colours=list(txt2_sliced_onsets)
         for colour_it in range(0,tcolunas2-2):
             print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+            global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())
         print("\n")
-        colours=list(txt_sliced_onsets)
-        for colour_it in range(0,tcolunas-2):
-            print("4CH:", colours[colour_it],":",txt_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+
+        colours=list(txt1_sliced_onsets)
+        for colour_it in range(0,tcolunas1-2):
+            print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+            global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())
         print("\n")
+
         colours=list(txt3_sliced_onsets)
         for colour_it in range(0,tcolunas3-2):
             print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
-
-
-        global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin(),
-        txt_sliced_onsets['     BLUE    '].idxmin(), txt_sliced_onsets['  MAGENTA    '].idxmin(),
-        txt_sliced_onsets['    GREEN    '].idxmin(), txt_sliced_onsets['     CYAN    '].idxmin(),
-        txt_sliced_onsets['   YELLOW    '].idxmin(), txt2_sliced_onsets['      RED    '].idxmin(),
-        txt2_sliced_onsets['     BLUE    '].idxmin(), txt2_sliced_onsets['  MAGENTA    '].idxmin(),
-        txt2_sliced_onsets['    GREEN    '].idxmin(), txt2_sliced_onsets['     CYAN    '].idxmin(),
-        txt2_sliced_onsets['   YELLOW    '].idxmin(), txt3_sliced_onsets['      RED    '].idxmin(),
-        txt3_sliced_onsets['     BLUE    '].idxmin(), txt3_sliced_onsets['  MAGENTA    '].idxmin(),
-        txt3_sliced_onsets['    GREEN    '].idxmin(), txt3_sliced_onsets['     CYAN    '].idxmin(),
-        txt3_sliced_onsets['   YELLOW    '].idxmin()])
-        #print(global_minima_times)
+            global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())
 
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "3":
         ThirdDiastoleTime=AVCvalues1[it-4]+((EMCvalues2[it-4]+Dif_LM_OnsetQRS1[it-4])-AVCvalues1[it-4])/3 #EMC2+Diferença do Pico R1 e o onset QRS1-AVC1
         #Criação das células com os valores de AVC e de 1/3 da diástole - Início
-        a = np.full(tcolunas, float('nan'))         #Cria uma linha de tcolunas NaN
-        txt_dr = txt
-        indices = list(txt_dr.index.values)#Rotina para a alteração do índice da lista de forma que os novos indíces sejam o último índice
-        var_t_med = indices[len(txt_dr)-1]/len(txt_dr)    #Nativos da lista incrementados
-        txt_dr.loc[AVCvalues1[it-4]] = a
-        txt_dr.loc[ThirdDiastoleTime] = a
-        txt_dr = txt_dr.sort_index()
-        txt_dr = txt_dr.interpolate(method = 'cubic')
+        a = np.full(tcolunas1, float('nan'))         #Cria uma linha de tcolunas NaN
+        txt1_dr = txt1
+        indices = list(txt1_dr.index.values)#Rotina para a alteração do índice da lista de forma que os novos indíces sejam o último índice
+        var_t_med = indices[len(txt1_dr)-1]/len(txt1_dr)    #Nativos da lista incrementados
+        txt1_dr.loc[AVCvalues1[it-4]] = a
+        txt1_dr.loc[ThirdDiastoleTime] = a
+        txt1_dr = txt1_dr.sort_index()
+        txt1_dr = txt1_dr.interpolate(method = 'cubic')
 
+        a = np.full(tcolunas2, float('nan'))         #Cria uma linha de tcolunas NaN
         txt2_dr = txt2
         indices = list(txt2_dr.index.values)#Rotina para a alteração do índice da lista de forma que os novos indíces sejam o último índice
         var_t_med = indices[len(txt2_dr)-1]/len(txt2_dr)    #Nativos da lista incrementados
         txt2_dr.loc[AVCvalues1[it-4]] = a
         txt2_dr.loc[ThirdDiastoleTime] = a
-        txt2_dr = txt_dr.sort_index()
+        txt2_dr = txt1_dr.sort_index()
         txt2_dr = txt2_dr.interpolate(method = 'cubic')
 
+        a = np.full(tcolunas3, float('nan'))         #Cria uma linha de tcolunas NaN
         txt3_dr = txt3
         indices = list(txt3_dr.index.values)#Rotina para a alteração do índice da lista de forma que os novos indíces sejam o último índice
         var_t_med = indices[len(txt3_dr)-1]/len(txt3_dr)    #Nativos da lista incrementados
@@ -624,105 +548,33 @@ while True:
         txt3_dr = txt3_dr.interpolate(method = 'cubic')
         #Criação das células com os valores de AVC e de 1/3 da diástole - Fim
 
-        #print(txt_dr.at[AVCvalues1[it-4],'      RED    '])
         print("\n\nFirst third of diastole time: ",ThirdDiastoleTime*1000,"ms")
 
-        DI_R1 = (txt_dr.at[AVCvalues1[it-4],'      RED    '] - txt_dr.at[ThirdDiastoleTime,'      RED    '])/txt_dr.at[AVCvalues1[it-4],'      RED    ']
-        DI_B1 = (txt_dr.at[AVCvalues1[it-4],'     BLUE    '] - txt_dr.at[ThirdDiastoleTime,'     BLUE    '])/txt_dr.at[AVCvalues1[it-4],'     BLUE    ']
-        DI_M1 = (txt_dr.at[AVCvalues1[it-4],'  MAGENTA    '] - txt_dr.at[ThirdDiastoleTime,'  MAGENTA    '])/txt_dr.at[AVCvalues1[it-4],'  MAGENTA    ']
-        DI_G1 = (txt_dr.at[AVCvalues1[it-4],'    GREEN    '] - txt_dr.at[ThirdDiastoleTime,'    GREEN    '])/txt_dr.at[AVCvalues1[it-4],'    GREEN    ']
-        DI_C1 = (txt_dr.at[AVCvalues1[it-4],'     CYAN    '] - txt_dr.at[ThirdDiastoleTime,'     CYAN    '])/txt_dr.at[AVCvalues1[it-4],'     CYAN    ']
-        DI_Y1 = (txt_dr.at[AVCvalues1[it-4],'   YELLOW    '] - txt_dr.at[ThirdDiastoleTime,'   YELLOW    '])/txt_dr.at[AVCvalues1[it-4],'   YELLOW    ']
+        DI_2CH = []
+        colours=list(txt2_dr)
+        print("\nDiastolic Index\n\n2CH:")
+        for colour_it in range(0,tcolunas2-2):
+            DI_2CH.append((txt2_dr.at[AVCvalues1[it-4],colours[colour_it]] - txt2_dr.at[ThirdDiastoleTime,colours[colour_it]])/txt2_dr.at[AVCvalues1[it-4],colours[colour_it]])
+            print(colours[colour_it],":", DI_2CH[colour_it]*100,"%")
+        print("\n")
 
-        DI_R2 = (txt2_dr.at[AVCvalues1[it-4],'      RED    '] - txt2_dr.at[ThirdDiastoleTime,'      RED    '])/txt2_dr.at[AVCvalues1[it-4],'      RED    ']
-        DI_B2 = (txt2_dr.at[AVCvalues1[it-4],'     BLUE    '] - txt2_dr.at[ThirdDiastoleTime,'     BLUE    '])/txt2_dr.at[AVCvalues1[it-4],'     BLUE    ']
-        DI_M2 = (txt2_dr.at[AVCvalues1[it-4],'  MAGENTA    '] - txt2_dr.at[ThirdDiastoleTime,'  MAGENTA    '])/txt2_dr.at[AVCvalues1[it-4],'  MAGENTA    ']
-        DI_G2 = (txt2_dr.at[AVCvalues1[it-4],'    GREEN    '] - txt2_dr.at[ThirdDiastoleTime,'    GREEN    '])/txt2_dr.at[AVCvalues1[it-4],'    GREEN    ']
-        DI_C2 = (txt2_dr.at[AVCvalues1[it-4],'     CYAN    '] - txt2_dr.at[ThirdDiastoleTime,'     CYAN    '])/txt2_dr.at[AVCvalues1[it-4],'     CYAN    ']
-        DI_Y2 = (txt2_dr.at[AVCvalues1[it-4],'   YELLOW    '] - txt2_dr.at[ThirdDiastoleTime,'   YELLOW    '])/txt2_dr.at[AVCvalues1[it-4],'   YELLOW    ']
+        DI_4CH = []
+        colours=list(txt1_dr)
+        print("\n4CH:")
+        for colour_it in range(0,tcolunas1-2):
+            DI_4CH.append((txt1_dr.at[AVCvalues1[it-4],colours[colour_it]] - txt1_dr.at[ThirdDiastoleTime,colours[colour_it]])/txt1_dr.at[AVCvalues1[it-4],colours[colour_it]])
+            print(colours[colour_it],":", DI_4CH[colour_it]*100,"%")
+        print("\n")
 
-        DI_R3 = (txt3_dr.at[AVCvalues1[it-4],'      RED    '] - txt3_dr.at[ThirdDiastoleTime,'      RED    '])/txt3_dr.at[AVCvalues1[it-4],'      RED    ']
-        DI_B3 = (txt3_dr.at[AVCvalues1[it-4],'     BLUE    '] - txt3_dr.at[ThirdDiastoleTime,'     BLUE    '])/txt3_dr.at[AVCvalues1[it-4],'     BLUE    ']
-        DI_M3 = (txt3_dr.at[AVCvalues1[it-4],'  MAGENTA    '] - txt3_dr.at[ThirdDiastoleTime,'  MAGENTA    '])/txt3_dr.at[AVCvalues1[it-4],'  MAGENTA    ']
-        DI_G3 = (txt3_dr.at[AVCvalues1[it-4],'    GREEN    '] - txt3_dr.at[ThirdDiastoleTime,'    GREEN    '])/txt3_dr.at[AVCvalues1[it-4],'    GREEN    ']
-        DI_C3 = (txt3_dr.at[AVCvalues1[it-4],'     CYAN    '] - txt3_dr.at[ThirdDiastoleTime,'     CYAN    '])/txt3_dr.at[AVCvalues1[it-4],'     CYAN    ']
-        DI_Y3 = (txt3_dr.at[AVCvalues1[it-4],'   YELLOW    '] - txt3_dr.at[ThirdDiastoleTime,'   YELLOW    '])/txt3_dr.at[AVCvalues1[it-4],'   YELLOW    ']
-
-        print("\nDiastolic Index:")
-        print("\n\tRED 2CH: ",DI_R2*100,"%")
-        print("\tBLUE2 2CH: ",DI_B2*100,"%")
-        print("\tMAGENTA 2CH: ",DI_M2*100,"%")
-        print("\tCYAN2 2CH: ",DI_G2*100,"%")
-        print("\tGREEN 2CH: ",DI_C2*100,"%")
-        print("\tYELLOW 2CH: ",DI_Y2*100,"%")
-
-        print("\n\tRED 4CH: ",DI_R1*100,"%")
-        print("\tBLUE 4CH: ",DI_B1*100,"%")
-        print("\tMAGENTA 4CH: ",DI_M1*100,"%")
-        print("\tCYAN 4CH: ",DI_G1*100,"%")
-        print("\tGREEN 4CH: ",DI_C1*100,"%")
-        print("\tYELLOW 4CH: ",DI_Y1*100,"%")
-
-        print("\n\tRED APLAX: ",DI_R3*100,"%")
-        print("\tBLUE APLAX: ",DI_B3*100,"%")
-        print("\tMAGENTA APLAX: ",DI_M3*100,"%")
-        print("\tCYAN APLAX: ",DI_G3*100,"%")
-        print("\tGREEN APLAX: ",DI_C3*100,"%")
-        print("\tYELLOW APLAX: ",DI_Y3*100,"%")
+        DI_APLAX = []
+        colours=list(txt3_dr)
+        print("\nAPLAX:")
+        for colour_it in range(0,tcolunas3-2):
+            DI_APLAX.append((txt3_dr.at[AVCvalues1[it-4],colours[colour_it]] - txt3_dr.at[ThirdDiastoleTime,colours[colour_it]])/txt3_dr.at[AVCvalues1[it-4],colours[colour_it]])
+            print(colours[colour_it],":", DI_APLAX[colour_it]*100,"%")
+        print("\n")
 
     elif prmt == "4":
-        txt_s = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < AVCvalues1[it-4])] #Valores até o AVC - Durante a sístole
-        txt2_s = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < AVCvalues1[it-4])]
-        txt3_s = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < AVCvalues1[it-4])]
-        gls = (txt_s['      RED    '].min() + txt_s['     BLUE    '].min() + txt_s['  MAGENTA    '].min() + txt_s['    GREEN    '].min()
-        + txt_s['     CYAN    '].min() + txt_s['   YELLOW    '].min()+txt2_s['      RED    '].min() + txt2_s['     BLUE    '].min() + txt2_s['  MAGENTA    '].min() + txt2_s['    GREEN    '].min()
-        + txt2_s['     CYAN    '].min() + txt2_s['   YELLOW    '].min()+txt3_s['      RED    '].min() + txt3_s['     BLUE    '].min() + txt3_s['  MAGENTA    '].min() + txt3_s['    GREEN    '].min()
-        + txt3_s['     CYAN    '].min() + txt3_s['   YELLOW    '].min())/((tcolunas-2)+(tcolunas2-2)+(tcolunas3-2))
-        print("\n\nPeak negative systolic strain:\n")
-        colours=list(txt2_s)
-        for colour_it in range(0,tcolunas2-2):
-            print("2CH:", colours[colour_it],":",txt2_s[colours[colour_it]].min(),"%")
-        print("\n")
-        colours=list(txt_s)
-        for colour_it in range(0,tcolunas-2):
-            print("4CH:", colours[colour_it],":",txt_s[colours[colour_it]].min(),"%")
-        print("\n")
-        colours=list(txt3_s)
-        for colour_it in range(0,tcolunas3-2):
-            print("APLAX:", colours[colour_it],":",txt3_s[colours[colour_it]].min(),"%")
-
-        print("\n\nGlobal Longitudinal Strain: ", gls,"%")
-
-        txt_sliced_onsets = txt[(txt.index >= EMCvalues1[it-4]) & (txt.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
-        txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < EMCvalues2[it-4])]
-        txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < EMCvalues2[it-4])]
-        global_minima_times = np.array([txt_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
-        txt_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
-        txt_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
-        txt_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
-        txt2_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
-        txt2_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt2_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
-        txt2_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['      RED    '].idxmin()-EMCvalues1[it-4],
-        txt3_sliced_onsets['     BLUE    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['  MAGENTA    '].idxmin()-EMCvalues1[it-4],
-        txt3_sliced_onsets['    GREEN    '].idxmin()-EMCvalues1[it-4], txt3_sliced_onsets['     CYAN    '].idxmin()-EMCvalues1[it-4],
-        txt3_sliced_onsets['   YELLOW    '].idxmin()-EMCvalues1[it-4]])
-        #print(global_minima_times)
-        print("\n\nTimes of peak negative strain:\n")
-        colours=list(txt2_sliced_onsets)
-        for colour_it in range(0,tcolunas2-2):
-            print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
-        print("\n")
-        colours=list(txt_sliced_onsets)
-        for colour_it in range(0,tcolunas-2):
-            print("4CH:", colours[colour_it],":",txt_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
-        print("\n")
-        colours=list(txt3_sliced_onsets)
-        for colour_it in range(0,tcolunas3-2):
-            print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
-
-        print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
-
-    elif prmt == "5":
         print("\nPlot w/o any parameters")
 
 
