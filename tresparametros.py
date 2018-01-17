@@ -556,7 +556,6 @@ while True:
         for colour_it in range(0,tcolunas2-2):
             DI_2CH.append((txt2_dr.at[AVCvalues1[it-4],colours[colour_it]] - txt2_dr.at[ThirdDiastoleTime,colours[colour_it]])/txt2_dr.at[AVCvalues1[it-4],colours[colour_it]])
             print(colours[colour_it],":", DI_2CH[colour_it]*100,"%")
-        print("\n")
 
         DI_4CH = []
         colours=list(txt1_dr)
@@ -564,7 +563,6 @@ while True:
         for colour_it in range(0,tcolunas1-2):
             DI_4CH.append((txt1_dr.at[AVCvalues1[it-4],colours[colour_it]] - txt1_dr.at[ThirdDiastoleTime,colours[colour_it]])/txt1_dr.at[AVCvalues1[it-4],colours[colour_it]])
             print(colours[colour_it],":", DI_4CH[colour_it]*100,"%")
-        print("\n")
 
         DI_APLAX = []
         colours=list(txt3_dr)
