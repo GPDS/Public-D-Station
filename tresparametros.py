@@ -552,7 +552,7 @@ while True:
 
         DI_2CH = []
         colours=list(txt2_dr)
-        print("\nDiastolic Index\n\n2CH:")
+        print("\nDiastolic Recovery\n\n2CH:")
         for colour_it in range(0,tcolunas2-2):
             DI_2CH.append((txt2_dr.at[AVCvalues1[it-4],colours[colour_it]] - txt2_dr.at[ThirdDiastoleTime,colours[colour_it]])/txt2_dr.at[AVCvalues1[it-4],colours[colour_it]])
             print(colours[colour_it],":", DI_2CH[colour_it]*100,"%")
@@ -571,6 +571,8 @@ while True:
             DI_APLAX.append((txt3_dr.at[AVCvalues1[it-4],colours[colour_it]] - txt3_dr.at[ThirdDiastoleTime,colours[colour_it]])/txt3_dr.at[AVCvalues1[it-4],colours[colour_it]])
             print(colours[colour_it],":", DI_APLAX[colour_it]*100,"%")
         print("\n")
+        ALL_DI = [DI_2CH, DI_4CH, DI_APLAX]
+        print("\n\nDiastolic Index: ",np.std(ALL_DI),"%")
 
     elif prmt == "4":
         print("\nPlot w/o any parameters")
