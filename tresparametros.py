@@ -296,6 +296,16 @@ def Parameters_Plot():
 #Plotagem dos gráficos de saída final - FIM
 
 #Inínio da Função do Bullseye
+"""
+This example demonstrates how to create the 17 segment model for the left
+ventricle recommended by the American Heart Association (AHA).
+"""
+
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+
 def bullseye_plot(ax, data, segBold=None, cmap=None, norm=None):
     """
     Bullseye representation for the left ventricle.
@@ -331,6 +341,7 @@ def bullseye_plot(ax, data, segBold=None, cmap=None, norm=None):
 
     linewidth = 2
     data = np.array(data).ravel()
+    print(data)
 
     if cmap is None:
         cmap = plt.cm.viridis
@@ -410,8 +421,38 @@ def bullseye_plot(ax, data, segBold=None, cmap=None, norm=None):
     ax.set_ylim([0, 1])
     ax.set_yticklabels([])
     ax.set_xticklabels([])
+#Fim da definição do plot
 
-#Fim da função do Bullseye
+#Inserção dos dados no bullseye
+def DR_bullseye(data):
+    # Make a figure and axes with dimensions as desired.
+    fig, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
+                           subplot_kw=dict(projection='polar'))
+    fig.canvas.set_window_title('Diastolic Recovery Bulls Eye (AHA)')
+
+    # Create the axis for the colorbars
+    axl = fig.add_axes([0.75, 0.1, 0.2, 0.05])	#Orientação
+
+    # Set the colormap and norm to correspond to the data for which
+    # the colorbar will be used.
+    cmap = mpl.cm.viridis
+    norm = mpl.colors.Normalize(vmin=0, vmax=100) #Valores para normalização
+
+    # ColorbarBase derives from ScalarMappable and puts a colorbar
+    # in a specified axes, so it has everything needed for a
+    # standalone colorbar.  There are many more kwargs, but the
+    # following gives a basic continuous colorbar with ticks
+    # and labels.
+    cb1 = mpl.colorbar.ColorbarBase(axl, cmap=cmap, norm=norm,
+                                    orientation='horizontal')
+    cb1.set_label('Diastolic Recovery (%)')
+
+    # Create the 17 segment model
+    bullseye_plot(ax, data, cmap=None, norm=None)
+    ax.set_title('Diastolic Recovery Bulls Eye (AHA)')
+
+    plt.show()
+    #Fim da função do Bullseye
 
 
 #print("\033c") #Caso queira limpar o terminal
@@ -607,10 +648,6 @@ while True:
         for colour_it in range(0,tcolunas3-2):
             print("APLAX:", colours[colour_it],":",txt3_s[colours[colour_it]].min(),"%")
             gls.append(txt3_s[colours[colour_it]].min())
-        print("Teste:", gls)
-
-        #Plotar antes de calcular a média para aproveitar a variável
-
         gls=np.mean(gls)
         print("\n\nGlobal Longitudinal Strain: ", gls,"%")
 
@@ -696,7 +733,9 @@ while True:
             print(colours[colour_it],":", DI_APLAX[colour_it]*100,"%")
         print("\n")
         ALL_DI = [DI_2CH, DI_4CH, DI_APLAX]
-        print("\n\nDiastolic Index: ",np.std(ALL_DI),"%")
+        ALL_DI100 = np.array(ALL_DI)*100
+        DR_bullseye(ALL_DI100)
+        print("\n\nDiastolic Index: ",np.std(ALL_DI))
 
     elif prmt == "4":
         print("\nPlot w/o any parameters")
