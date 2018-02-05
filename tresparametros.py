@@ -735,6 +735,7 @@ while True:
         ALL_DI = [DI_2CH, DI_4CH, DI_APLAX]
         ALL_DI100 = np.array(ALL_DI)*100
         DR_bullseye(ALL_DI100)
+        #Alterar aqui
         print("\n\nDiastolic Index: ",np.std(ALL_DI))
 
     elif prmt == "4":
