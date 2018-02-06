@@ -295,18 +295,12 @@ def Parameters_Plot():
     plt.show()
 #Plotagem dos gráficos de saída final - FIM
 
-#Inínio da Função do Bullseye
+#INÍCIO DO BULLSEYE DE 17 SEGMENTOS
 """
 This example demonstrates how to create the 17 segment model for the left
 ventricle recommended by the American Heart Association (AHA).
 """
-
-import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-
-
-def bullseye_plot(ax, data, segBold=None, cmap=None, norm=None):
+def bullseye_seventeenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
     """
     Bullseye representation for the left ventricle.
 
@@ -421,14 +415,112 @@ def bullseye_plot(ax, data, segBold=None, cmap=None, norm=None):
     ax.set_ylim([0, 1])
     ax.set_yticklabels([])
     ax.set_xticklabels([])
-#Fim da definição do plot
+##FIM DO BULLSEYE DE 17 SEGMENTOS
+
+#INÍCIO DO BULLSEYE DE 18 SEGMENTOS
+def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
+    """
+    Bullseye representation for the left ventricle.
+
+    Parameters
+    ----------
+    ax : axes
+    data : list of int and float
+        The intensity values for each of the 17 segments
+    segBold: list of int, optional
+        A list with the segments to highlight
+    cmap : ColorMap or None, optional
+        Optional argument to set the desired colormap
+    norm : Normalize or None, optional
+        Optional argument to normalize data into the [0.0, 1.0] range
+
+
+    Notes
+    -----
+    This function create the 17 segment model for the left ventricle according
+    to the American Heart Association (AHA) [1]
+
+    ALTERAR ACIMA, CITAR A FUNÇÃO NA QUAL ME BASEEI.
+    """
+    if segBold is None:
+        segBold = []
+
+    linewidth = 2
+    data = np.array(data).ravel()
+
+    if cmap is None:
+        cmap = plt.cm.viridis
+
+    if norm is None:
+        norm = mpl.colors.Normalize(vmin=data.min(), vmax=data.max())
+
+    theta = np.linspace(0, 2*np.pi, 768)
+    r = np.linspace(0, 1, 4)
+
+    # Create the bounds for the segments  1-18
+    for i in range(6):
+        theta_i = i*60*np.pi/180
+        ax.plot([theta_i, theta_i], [r[0], 1], '-k', lw=linewidth)
+
+    # Fill the segments 1-6
+    r0 = r[2:4]
+    r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
+    for i in range(6):
+        # First segment start at 60 degrees
+        theta0 = theta[i*128:i*128+128] + 60*np.pi/180
+        theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+        z = np.ones((128, 2))*data[i]
+        ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+        if i+1 in segBold:
+            ax.plot(theta0, r0, '-k', lw=linewidth+2)
+            ax.plot(theta0[0], [r[2], r[3]], '-k', lw=linewidth+1)
+            ax.plot(theta0[-1], [r[2], r[3]], '-k', lw=linewidth+1)
+        else:
+            ax.plot(theta0, r0, '-k', lw=linewidth)
+
+    # Fill the segments 7-12
+    r0 = r[1:3]
+    r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
+    for i in range(6):
+        # First segment start at 60 degrees
+        theta0 = theta[i*128:i*128+128] + 60*np.pi/180
+        theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+        z = np.ones((128, 2))*data[i+6]
+        ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+        if i+7 in segBold:
+            ax.plot(theta0, r0, '-k', lw=linewidth+2)
+            ax.plot(theta0[0], [r[1], r[2]], '-k', lw=linewidth+1)
+            ax.plot(theta0[-1], [r[1], r[2]], '-k', lw=linewidth+1)
+        else:
+            ax.plot(theta0, r0, '-k', lw=linewidth)
+
+    # Fill the segments 13-18
+    r0 = r[0:2]
+    r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
+    for i in range(6):
+        # First segment start at 60 degrees
+        theta0 = theta[i*128:i*128+128] + 60*np.pi/180
+        theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+        z = np.ones((128, 2))*data[i+9]
+        ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+        if i+13 in segBold:
+            ax.plot(theta0, r0, '-k', lw=linewidth+2)
+            ax.plot(theta0[0], [r[0], r[1]], '-k', lw=linewidth+1)
+            ax.plot(theta0[-1], [r[0], r[1]], '-k', lw=linewidth+1)
+        else:
+            ax.plot(theta0, r0, '-k', lw=linewidth)
+
+    ax.set_ylim([0, 1])
+    ax.set_yticklabels([])
+    ax.set_xticklabels([])
+#FIM DO BULLSEYE DE 18 SEGMENTOS
 
 #Inserção dos dados no bullseye
 def DR_bullseye(data):
     # Make a figure and axes with dimensions as desired.
     fig, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
                            subplot_kw=dict(projection='polar'))
-    fig.canvas.set_window_title('Diastolic Recovery Bulls Eye (AHA)')
+    fig.canvas.set_window_title('Diastolic Recovery Bulls Eye')
 
     # Create the axis for the colorbars
     axl = fig.add_axes([0.75, 0.1, 0.2, 0.05])	#Orientação
@@ -436,7 +528,8 @@ def DR_bullseye(data):
     # Set the colormap and norm to correspond to the data for which
     # the colorbar will be used.
     cmap = mpl.cm.viridis
-    norm = mpl.colors.Normalize(vmin=0, vmax=100) #Valores para normalização
+
+    norm = mpl.colors.Normalize(vmin=np.amin(BullseyeAux)-10, vmax=np.amax(BullseyeAux)+10) #Valores para normalização
 
     # ColorbarBase derives from ScalarMappable and puts a colorbar
     # in a specified axes, so it has everything needed for a
@@ -448,8 +541,8 @@ def DR_bullseye(data):
     cb1.set_label('Diastolic Recovery (%)')
 
     # Create the 17 segment model
-    bullseye_plot(ax, data, cmap=None, norm=None)
-    ax.set_title('Diastolic Recovery Bulls Eye (AHA)')
+    bullseye_eighteenSEG_plot(ax, data, cmap=None, norm=None)
+    ax.set_title('Diastolic Recovery Bulls Eye')
 
     plt.show()
     #Fim da função do Bullseye
@@ -734,8 +827,12 @@ while True:
         print("\n")
         ALL_DI = [DI_2CH, DI_4CH, DI_APLAX]
         ALL_DI100 = np.array(ALL_DI)*100
-        DR_bullseye(ALL_DI100)
-        #Alterar aqui
+        BullseyeAux = [ALL_DI100[0][0], ALL_DI100[2][0], ALL_DI100[1][5], ALL_DI100[0][5], ALL_DI100[2][5], ALL_DI100[1][0], ALL_DI100[0][1], ALL_DI100[2][1], ALL_DI100[1][4], ALL_DI100[0][4],ALL_DI100[2][4], ALL_DI100[1][1], ALL_DI100[0][2], ALL_DI100[2][2], ALL_DI100[1][3], ALL_DI100[0][3], ALL_DI100[2][3]]
+        print(BullseyeAux)
+        DR_bullseye(BullseyeAux)
+
+        #Ver a barra
+
         print("\n\nDiastolic Index: ",np.std(ALL_DI))
 
     elif prmt == "4":
