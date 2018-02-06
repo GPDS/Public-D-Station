@@ -501,7 +501,7 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
         # First segment start at 60 degrees
         theta0 = theta[i*128:i*128+128] + 60*np.pi/180
         theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-        z = np.ones((128, 2))*data[i+9]
+        z = np.ones((128, 2))*data[i+12]
         ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
         if i+13 in segBold:
             ax.plot(theta0, r0, '-k', lw=linewidth+2)
@@ -827,7 +827,8 @@ while True:
         print("\n")
         ALL_DI = [DI_2CH, DI_4CH, DI_APLAX]
         ALL_DI100 = np.array(ALL_DI)*100
-        BullseyeAux = [ALL_DI100[0][0], ALL_DI100[2][0], ALL_DI100[1][5], ALL_DI100[0][5], ALL_DI100[2][5], ALL_DI100[1][0], ALL_DI100[0][1], ALL_DI100[2][1], ALL_DI100[1][4], ALL_DI100[0][4],ALL_DI100[2][4], ALL_DI100[1][1], ALL_DI100[0][2], ALL_DI100[2][2], ALL_DI100[1][3], ALL_DI100[0][3], ALL_DI100[2][3]]
+        BullseyeAux = [ALL_DI100[0][0], ALL_DI100[2][5], ALL_DI100[1][5], ALL_DI100[0][5], ALL_DI100[2][0], ALL_DI100[1][0], ALL_DI100[0][1], ALL_DI100[2][4], ALL_DI100[1][4], ALL_DI100[0][4],ALL_DI100[2][1], ALL_DI100[1][1], ALL_DI100[0][2], ALL_DI100[2][3], ALL_DI100[1][3], ALL_DI100[0][3], ALL_DI100[2][2], ALL_DI100[1][2]]
+        print(ALL_DI100)
         print(BullseyeAux)
         DR_bullseye(BullseyeAux)
 
