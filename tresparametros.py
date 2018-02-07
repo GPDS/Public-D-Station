@@ -828,8 +828,10 @@ while True:
         ALL_DI = [DI_2CH, DI_4CH, DI_APLAX]
         ALL_DI100 = np.array(ALL_DI)*100
         BullseyeAux = [ALL_DI100[0][0], ALL_DI100[2][5], ALL_DI100[1][5], ALL_DI100[0][5], ALL_DI100[2][0], ALL_DI100[1][0], ALL_DI100[0][1], ALL_DI100[2][4], ALL_DI100[1][4], ALL_DI100[0][4],ALL_DI100[2][1], ALL_DI100[1][1], ALL_DI100[0][2], ALL_DI100[2][3], ALL_DI100[1][3], ALL_DI100[0][3], ALL_DI100[2][2], ALL_DI100[1][2]]
-        print(ALL_DI100)
-        print(BullseyeAux)
+        #O vetor APLAX está na ordem inversa.
+        print("Segmentos Bullseye:\n")
+        for i in range(18):
+            print("Segmento ",i+1,"- Valor: ", BullseyeAux[i])
         DR_bullseye(BullseyeAux)
 
         #Ver a barra
