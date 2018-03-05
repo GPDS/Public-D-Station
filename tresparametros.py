@@ -551,7 +551,7 @@ def DR_bullseye(data):
 #print("\033c") #Caso queira limpar o terminal
 #Início da abertura da planilha
 wb = openpyxl.load_workbook('Event_Timing.xlsx')
-sheet = wb.get_sheet_by_name('Sheet1')
+sheet = wb['Sheet1']
 #Fim da abertura da planilha
 
 #Início da abertura dos .txt
