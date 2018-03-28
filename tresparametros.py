@@ -617,6 +617,7 @@ txt3.drop('Unnamed: 1', axis=1, inplace=True)
 txt_mid.drop('Unnamed: 1', axis=1, inplace=True)
 strain_rate_lv.drop('Unnamed: 1', axis=1, inplace=True)
 
+
 tcolunas1=int(((txt1.size/len(txt1.index))))
 tcolunas2=int(((txt2.size/len(txt2.index))))
 tcolunas3=int(((txt2.size/len(txt2.index))))
