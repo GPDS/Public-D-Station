@@ -72,7 +72,7 @@ def colorPlot(txt,tcolunas):
             plt.plot(txt.iloc[:,it], 'y')
         else:
             plt.plot(txt.iloc[:,it], 'k')
-    plt.plot(txt.iloc[:,tcolunas-2], 'k.')                  #Correspondentes ao segmento Global
+    #plt.plot(txt.iloc[:,tcolunas-2], 'k.')                  #Correspondentes ao segmento Global
 #Plotagem com as cores correspondentes ao arquivo - FIM
 
 #Funcao para plotagem das curvas de deformacao e marcação no ECG -  INÍCIO
@@ -88,7 +88,9 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_locs = np.arange(0.0,END_Time0,0.2)
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
-    colorPlot(txt1,tcolunas1)
+    colorPlot(txt1,tcolunas1);
+    colorPlot(txt2,tcolunas2);
+    colorPlot(txt3,tcolunas3);
     plt.ylabel('Strain - LV\n(%)')
     plt.grid()
     plt.setp(ax0.get_xticklabels(), visible=False)
@@ -625,30 +627,14 @@ LM_Time = float(numbers[0])
 RM_Time = float(numbers[1])
 ES_Time = float(numbers[2])                    #AVC - Aortic Valve Closure
 
-#Determinação do tempo máximo para o gráfico de marcação - Início
-if txt1.index[len(txt1.index)-1] < strain_rate_lv.index[len(strain_rate_lv.index)-1]:#Determinar o arquivo de texto com menor tempo
-    END_Time0 = txt1.index[len(txt1.index)-1]                              #para que um gráfico não fique sobrando
-else:
-    END_Time0 = strain_rate_lv.index[len(strain_rate_lv.index)-1]
-#Para o gráfico de marcação - FIM
+
+#Sort para detectar o menor index -  #para que um gráfico não fique sobrando
+
+END_Time0 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1], strain_rate_lv.index[len(strain_rate_lv.index)-1]])[0]
 
 #Para o gráfico dos parâmetros - Início
 #achar o menor entre os strains e comparar com o do meio
-if txt1.index[len(txt1.index)-1] < txt2.index[len(txt2.index)-1]:#Determinar o arquivo de texto com menor tempo
-    if txt1.index[len(txt1.index)-1] < txt3.index[len(txt3.index)-1]:
-        strain_end_time = txt1.index[len(txt1.index)-1]
-    else:
-        strain_end_time = txt3.index[len(txt3.index)-1]
-else:
-    if txt2.index[len(txt2.index)-1] < txt3.index[len(txt3.index)-1]:
-        strain_end_time = txt2.index[len(txt2.index)-1]
-    else:
-        strain_end_time = txt3.index[len(txt3.index)-1]
-
-if strain_end_time < txt_mid.index[len(txt_mid.index)-1]:#Determinar o arquivo de texto com menor tempo
-    END_Time1 = strain_end_time                          #para que um gráfico não fique sobrando
-else:
-    END_Time1 = txt_mid.index[len(txt_mid.index)-1]
+END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1], txt_mid.index[len(txt_mid.index)-1]])[0]
 #Para o gráfico dos parâmetros - Fim
 
 
