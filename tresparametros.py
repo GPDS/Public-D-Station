@@ -620,7 +620,7 @@ strain_rate_lv.drop('Unnamed: 1', axis=1, inplace=True)
 
 tcolunas1=int(((txt1.size/len(txt1.index))))
 tcolunas2=int(((txt2.size/len(txt2.index))))
-tcolunas3=int(((txt2.size/len(txt2.index))))
+tcolunas3=int(((txt3.size/len(txt3.index))))
 tcolunas_mid=int(((txt_mid.size/len(txt_mid.index))))
 tcolunas_strain_rate_lv = int(((strain_rate_lv.size/len(strain_rate_lv.index))))
 
