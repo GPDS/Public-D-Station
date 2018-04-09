@@ -833,6 +833,9 @@ while True:
         print("\n")
         ALL_DI = [DI_2CH, DI_4CH, DI_APLAX]
         ALL_DI100 = np.array(ALL_DI)*100
+
+        #O bull's eye fica como comentário até que seja resolvido onde cada segmento vai
+        """
         BullseyeAux = [ALL_DI100[0][0], ALL_DI100[2][5], ALL_DI100[1][5], ALL_DI100[0][5], ALL_DI100[2][0], ALL_DI100[1][0], ALL_DI100[0][1], ALL_DI100[2][4], ALL_DI100[1][4], ALL_DI100[0][4],ALL_DI100[2][1], ALL_DI100[1][1], ALL_DI100[0][2], ALL_DI100[2][3], ALL_DI100[1][3], ALL_DI100[0][3], ALL_DI100[2][2], ALL_DI100[1][2]]
         #O vetor APLAX está na ordem inversa.
         print("Segmentos Bullseye:\n")
@@ -840,7 +843,8 @@ while True:
             print("Segmento ",i+1,"- Valor: ", BullseyeAux[i])
         DR_bullseye(BullseyeAux)
         #Ver a barra
-        #Geracao de um vetor para calcular std
+        """
+
         #print(type(ALL_DI))
         print("\n\nDiastolic Index: ", np.std(ALL_DI))
 
