@@ -834,19 +834,21 @@ while True:
         ALL_DI = [DI_2CH, DI_4CH, DI_APLAX]
         ALL_DI100 = np.array(ALL_DI)*100
 
-        #O bull's eye fica como comentário até que seja resolvido onde cada segmento vai
-        """
-        BullseyeAux = [ALL_DI100[0][0], ALL_DI100[2][5], ALL_DI100[1][5], ALL_DI100[0][5], ALL_DI100[2][0], ALL_DI100[1][0], ALL_DI100[0][1], ALL_DI100[2][4], ALL_DI100[1][4], ALL_DI100[0][4],ALL_DI100[2][1], ALL_DI100[1][1], ALL_DI100[0][2], ALL_DI100[2][3], ALL_DI100[1][3], ALL_DI100[0][3], ALL_DI100[2][2], ALL_DI100[1][2]]
-        #O vetor APLAX está na ordem inversa.
-        print("Segmentos Bullseye:\n")
-        for i in range(18):
-            print("Segmento ",i+1,"- Valor: ", BullseyeAux[i])
-        DR_bullseye(BullseyeAux)
-        #Ver a barra
-        """
-
-        #print(type(ALL_DI))
-        print("\n\nDiastolic Index: ", np.std(ALL_DI))
+        if op != '5':
+            BullseyeAux = [ALL_DI100[0][0], ALL_DI100[2][5], ALL_DI100[1][5], ALL_DI100[0][5], ALL_DI100[2][0], ALL_DI100[1][0], ALL_DI100[0][1], ALL_DI100[2][4], ALL_DI100[1][4], ALL_DI100[0][4],ALL_DI100[2][1], ALL_DI100[1][1], ALL_DI100[0][2], ALL_DI100[2][3], ALL_DI100[1][3], ALL_DI100[0][3], ALL_DI100[2][2], ALL_DI100[1][2]]
+            #O vetor APLAX está na ordem inversa.
+            print("Segmentos Bullseye:\n")
+            for i in range(18):
+                print("Segmento ",i+1,"- Valor: ", BullseyeAux[i])
+            DR_bullseye(BullseyeAux)
+            #Ver a barra
+            print("\n\nDiastolic Index: ", np.std(ALL_DI))
+        else:
+            DI_op5 = []
+            DI_op5.extend(DI_2CH)
+            DI_op5.extend(DI_4CH)
+            DI_op5.extend(DI_APLAX)
+            print("\n\nDiastolic Index: ", np.std(DI_op5))
 
     elif prmt == "4":
         print("\nPlot w/o any parameters")
