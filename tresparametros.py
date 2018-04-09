@@ -88,9 +88,9 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_locs = np.arange(0.0,END_Time0,0.2)
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
-    colorPlot(txt1,tcolunas1);
-    colorPlot(txt2,tcolunas2);
-    colorPlot(txt3,tcolunas3);
+    colorPlot(txt1,tcolunas1)
+    colorPlot(txt2,tcolunas2)
+    colorPlot(txt3,tcolunas3)
     plt.ylabel('Strain - LV\n(%)')
     plt.grid()
     plt.setp(ax0.get_xticklabels(), visible=False)
@@ -104,7 +104,12 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_locs = np.arange(0.0,END_Time0,0.2)
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
-    colorPlot(strain_rate_lv,tcolunas_strain_rate_lv)
+    if op != '5':
+        colorPlot(strain_rate_lv,tcolunas_strain_rate_lv)
+    else:
+        colorPlot(txt1.diff(),tcolunas1)
+        colorPlot(txt2.diff(),tcolunas2)
+        colorPlot(txt3.diff(),tcolunas3)
     plt.ylabel('Strain Rate - LV\n(1/s)')
     plt.grid()
     plt.setp(ax1.get_xticklabels(), visible=False)
@@ -207,7 +212,12 @@ def Parameters_Plot():
     #Definição do subplot das curvas (gráfico do meio)
     ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
     plt.xlim(0, END_Time1)
-    colorPlot(txt_mid,tcolunas_mid)
+    if op != '5':
+        colorPlot(txt_mid,tcolunas_mid)
+    else:
+        colorPlot(txt1.diff(),tcolunas1)
+        colorPlot(txt2.diff(),tcolunas2)
+        colorPlot(txt3.diff(),tcolunas3)
     plt.grid()
     tick_locs = np.arange(0.0,END_Time1,0.2)
     tick_lbls = np.arange(0, int(END_Time1*1000), 200)
@@ -582,13 +592,13 @@ else:
 
 arq_sr_lv = open('exam_sr_LV', 'r')
 exame1 = arq.readline()
-exame1 = exame1[:len(exame1)-1]    #Retira o \n
+exame1 = exame1[:len(exame1)-1]    #Retira o \n             #SL 4CH
 exame_mid = arq.readline()
-exame_mid = exame_mid[:len(exame_mid)-1]    #Retira o \n
+exame_mid = exame_mid[:len(exame_mid)-1]    #Retira o \n    #SR 4CH
 exame2 = arq.readline()
-exame2 = exame2[:len(exame2)-1]    #Retira o \n
+exame2 = exame2[:len(exame2)-1]    #Retira o \n             #SL 2CH
 exame3 = arq.readline()
-exame3 = exame3[:len(exame3)-1]    #Retira o \n
+exame3 = exame3[:len(exame3)-1]    #Retira o \n             #SL APLAX
 exame_sr_LV = arq_sr_lv.readline()
 exame_sr_LV = exame_sr_LV[:len(exame_sr_LV)-1]    #Retira o \n
 print("\n\nUsing files: ")
@@ -638,17 +648,22 @@ END_Time0 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1]
 END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1], txt_mid.index[len(txt_mid.index)-1]])[0]
 #Para o gráfico dos parâmetros - Fim
 
-
-#Gravação dos valores marcados na planilha do excel - INÍCIO
-print("\n\nMarcacao do Onset QRS 1, ponto de diástase, onset P, pico P, onset QRS 2")
-PlotClick(LM_Time, ES_Time, RM_Time, END_Time0)
-sheet['G'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms
-sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms
-sheet['I'+str(it)] = round(xcoord[2],0) #Houve um arredondamento do tempo em ms
-sheet['J'+str(it)] = round(xcoord[3],0) #Houve um arredondamento do tempo em ms
-sheet['H'+str(it)] = round(xcoord[4],0) #Houve um arredondamento do tempo em ms
-wb.save("Event_Timing.xlsx")
-#Gravação dos valores marcados na planilha do excel - FIM
+if op != '5':
+    #Gravação dos valores marcados na planilha do excel - INÍCIO
+    print("\n\nMarcacao do Onset QRS 1, ponto de diástase, onset P, pico P, onset QRS 2")
+    PlotClick(LM_Time, ES_Time, RM_Time, END_Time0)
+    sheet['G'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms
+    sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms
+    sheet['I'+str(it)] = round(xcoord[2],0) #Houve um arredondamento do tempo em ms
+    sheet['J'+str(it)] = round(xcoord[3],0) #Houve um arredondamento do tempo em ms
+    sheet['H'+str(it)] = round(xcoord[4],0) #Houve um arredondamento do tempo em ms
+    wb.save("Event_Timing.xlsx")
+    #Gravação dos valores marcados na planilha do excel - FIM
+else:
+    print("\n\nMarcacao do ponto de diástase")
+    PlotClick(LM_Time, ES_Time, RM_Time, END_Time0)
+    sheet['Q'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms
+    wb.save("Event_Timing.xlsx")
 
 MVOvalues1.append((int(sheet['C'+str(it)].value)/1000)+LM_Time)#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + LM_Time(em s)
 MVCvalues1.append((int(sheet['D'+str(it)].value)/1000)+LM_Time)#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + LM_Time(em s)
@@ -696,6 +711,10 @@ print("IVRT: ",IVRTvalues[it-4]*1000, "ms")
 print("E: ",Evalues[it-4]*1000, "ms")
 print("Diastasis: ",Diastasisvalues[it-4]*1000, "ms")
 print("Atrial Systole: ",Avalues[it-4]*1000, "ms")
+
+print("Systolic Time: ", AVCvalues1[it-4]-LM_Time)
+print("Diastolic Time: ", RM_Time - (AVCvalues1[it-4]-LM_Time))
+print("Ratio: Systolic Time/Diastolic Time: ",(AVCvalues1[it-4]-LM_Time)/(RM_Time - (AVCvalues1[it-4]-LM_Time)))
 print("\n\n")
 #Trabalho com Excel - FIM
 
@@ -768,7 +787,7 @@ while True:
         txt1_dr.loc[AVCvalues1[it-4]] = a
         txt1_dr.loc[ThirdDiastoleTime] = a
         txt1_dr = txt1_dr.sort_index()
-        txt1_dr = txt1_dr.interpolate(method = 'cubic')
+        txt1_dr = txt1_dr.interpolate(method = 'linear') #Antes era cubic
 
         a = np.full(tcolunas2, float('nan'))         #Cria uma linha de tcolunas NaN
         txt2_dr = txt2
@@ -777,7 +796,7 @@ while True:
         txt2_dr.loc[AVCvalues1[it-4]] = a
         txt2_dr.loc[ThirdDiastoleTime] = a
         txt2_dr = txt1_dr.sort_index()
-        txt2_dr = txt2_dr.interpolate(method = 'cubic')
+        txt2_dr = txt2_dr.interpolate(method = 'linear')
 
         a = np.full(tcolunas3, float('nan'))         #Cria uma linha de tcolunas NaN
         txt3_dr = txt3
@@ -786,7 +805,7 @@ while True:
         txt3_dr.loc[AVCvalues1[it-4]] = a
         txt3_dr.loc[ThirdDiastoleTime] = a
         txt3_dr = txt3_dr.sort_index()
-        txt3_dr = txt3_dr.interpolate(method = 'cubic')
+        txt3_dr = txt3_dr.interpolate(method = 'linear')
         #Criação das células com os valores de AVC e de 1/3 da diástole - Fim
 
         print("\n\nFirst third of diastole time: ",ThirdDiastoleTime*1000,"ms")
@@ -820,10 +839,10 @@ while True:
         for i in range(18):
             print("Segmento ",i+1,"- Valor: ", BullseyeAux[i])
         DR_bullseye(BullseyeAux)
-
         #Ver a barra
-
-        print("\n\nDiastolic Index: ",np.std(ALL_DI))
+        #Geracao de um vetor para calcular std
+        #print(type(ALL_DI))
+        print("\n\nDiastolic Index: ", np.std(ALL_DI))
 
     elif prmt == "4":
         print("\nPlot w/o any parameters")
