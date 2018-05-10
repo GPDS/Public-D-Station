@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-#Cálculo dos parâmetros com a quantidade de segmentos e marcação dos pontos em todas as curvas
-#Saber quais segmentos existem - talvez usando txt.iloc
-#Switchs para parâmetros depois das 18 curvas
-
-#http://onlinelibrary.wiley.com/doi/10.1111/echo.13547/full
-#Ver se os pontos estão corretos
 
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
@@ -198,16 +192,18 @@ def Parameters_Plot():
     plt.text(AVOvalues2[it-4]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center')
     plt.text(AVCvalues1[it-4]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center')
     plt.text(AVCvalues2[it-4]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center')
-    plt.text(EMCvalues1[it-4]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center')
-    plt.text(EMCvalues2[it-4]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center')
+    if op != '5':
+        plt.text(EMCvalues1[it-4]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center')
+        plt.text(EMCvalues2[it-4]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center')
     plt.text(IVCvalues1[it-4]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center')
     plt.text(IVCvalues2[it-4]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center')
     plt.text(EjectionTimevalues1[it-4]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center')
     plt.text(EjectionTimevalues2[it-4]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center')
     plt.text(IVRTvalues[it-4]+x_inc, txt_height_2, "IVRT" , rotation=0, verticalalignment='center')
     plt.text(Evalues[it-4]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center')
-    plt.text(Diastasisvalues[it-4]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
-    plt.text(Avalues[it-4]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center')
+    if op != '5':
+        plt.text(Diastasisvalues[it-4]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
+        plt.text(Avalues[it-4]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center')
 
     #Definição do subplot das curvas (gráfico do meio)
     ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
@@ -253,16 +249,18 @@ def Parameters_Plot():
     ax0.axvline(x=AVOvalues2[it-4], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=AVCvalues1[it-4], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
     ax0.axvline(x=AVCvalues2[it-4], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=EMCvalues1[it-4], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-    ax0.axvline(x=EMCvalues2[it-4], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+    if op != '5':
+        ax0.axvline(x=EMCvalues1[it-4], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+        ax0.axvline(x=EMCvalues2[it-4], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
     ax0.axvline(x=IVCvalues1[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=IVCvalues2[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=EjectionTimevalues1[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=EjectionTimevalues2[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=IVRTvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=Evalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=Avalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+    if op != '5':
+        ax0.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+        ax0.axvline(x=Avalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
     ax1.axvline(x=MVOvalues1[it-4], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=MVOvalues2[it-4], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
@@ -272,16 +270,18 @@ def Parameters_Plot():
     ax1.axvline(x=AVOvalues2[it-4], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=AVCvalues1[it-4], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
     ax1.axvline(x=AVCvalues2[it-4], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=EMCvalues1[it-4], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-    ax1.axvline(x=EMCvalues2[it-4], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+    if op != '5':
+        ax1.axvline(x=EMCvalues1[it-4], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+        ax1.axvline(x=EMCvalues2[it-4], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
     ax1.axvline(x=IVCvalues1[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=IVCvalues2[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=EjectionTimevalues1[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=EjectionTimevalues2[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=IVRTvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=Evalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=Avalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+    if op != '5':
+        ax1.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+        ax1.axvline(x=Avalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
     ax2.axvline(x=MVOvalues1[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=MVOvalues2[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
@@ -291,16 +291,18 @@ def Parameters_Plot():
     ax2.axvline(x=AVOvalues2[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=AVCvalues1[it-4], c="g",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
     ax2.axvline(x=AVCvalues2[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=EMCvalues1[it-4], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-    ax2.axvline(x=EMCvalues2[it-4], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+    if op != '5':
+        ax2.axvline(x=EMCvalues1[it-4], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+        ax2.axvline(x=EMCvalues2[it-4], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
     ax2.axvline(x=IVCvalues1[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=IVCvalues2[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=EjectionTimevalues1[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=EjectionTimevalues2[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=IVRTvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=Evalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=Diastasisvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=Avalues[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+    if op != '5':
+        ax2.axvline(x=Diastasisvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+        ax2.axvline(x=Avalues[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     #Plotagem das linhas entre os subplots - FIM
 
     plt.tight_layout()
@@ -659,11 +661,7 @@ if op != '5':
     sheet['H'+str(it)] = round(xcoord[4],0) #Houve um arredondamento do tempo em ms
     wb.save("Event_Timing.xlsx")
     #Gravação dos valores marcados na planilha do excel - FIM
-else:
-    print("\n\nMarcacao do ponto de diástase")
-    PlotClick(LM_Time, ES_Time, RM_Time, END_Time0)
-    sheet['Q'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms
-    wb.save("Event_Timing.xlsx")
+
 
 MVOvalues1.append((int(sheet['C'+str(it)].value)/1000)+LM_Time)#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + LM_Time(em s)
 MVCvalues1.append((int(sheet['D'+str(it)].value)/1000)+LM_Time)#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + LM_Time(em s)
@@ -673,26 +671,30 @@ MVOvalues2.append((int(sheet['C'+str(it)].value)/1000)+RM_Time)#Valor do MVO à 
 MVCvalues2.append((int(sheet['D'+str(it)].value)/1000)+RM_Time)#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + RM_Time(em s)
 AVOvalues2.append((int(sheet['E'+str(it)].value)/1000)+RM_Time)#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + RM_Time(em s)
 AVCvalues2.append((int(sheet['F'+str(it)].value)/1000)+RM_Time)#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + RM_Time(em s)
-Dif_LM_OnsetQRS1.append(LM_Time - (int(sheet['G'+str(it)].value)/1000)) #Diferença entre o Onset QRS 1 e o LM_Time
+if op != '5':
+    Dif_LM_OnsetQRS1.append(LM_Time - (int(sheet['G'+str(it)].value)/1000)) #Diferença entre o Onset QRS 1 e o LM_Time
 
 #Recomputação devido à limitações do package para pegar valores da planilha - Não é preciso adicionar LM_Time aos valores marcados no programa
-EMCvalues1.append((int(sheet['G'+str(it)].value)/1000))                 #Início de EMC1 = Onset QRS 1(em ms)/1000
-EMCvalues2.append((int(sheet['H'+str(it)].value)/1000))                 #Início de EMC2 = Onset QRS 2(em ms)/1000
-IVCvalues1.append((int(sheet['D'+str(it)].value)/1000+LM_Time))         #Início de IVC1 = MVC(em ms)/1000 + LM_Time
-IVCvalues2.append((int(sheet['D'+str(it)].value)/1000+RM_Time))         #Início de IVC2 = MVC(em ms)/1000 + RM_Time
-EjectionTimevalues1.append((int(sheet['E'+str(it)].value)/1000+LM_Time))#Início de EjectionTime1 = AVO(em ms)/1000 + LM_Time
-EjectionTimevalues2.append((int(sheet['E'+str(it)].value)/1000+RM_Time))#Início de EjectionTime2 = AVO(em ms)/1000 + RM_Time
-IVRTvalues.append((int(sheet['F'+str(it)].value)/1000+LM_Time))         #Início de IVRT = AVC(em ms)/1000 + LM_Time
-Evalues.append((int(sheet['C'+str(it)].value)/1000+LM_Time))            #Início de E = MVO(em ms)/1000 + LM_Time
-Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Início da Diastase = D point/1000
-Avalues.append((int(sheet['I'+str(it)].value)/1000))                    #Início de A = Onset P(em ms)/1000
-Avalues.append((int(sheet['I'+str(it)].value)/1000))                    #Início de A = Onset P(em ms)/1000
+if op != '5':
+    EMCvalues1.append((int(sheet['G'+str(it)].value)/1000))                 #Início de EMC1 = Onset QRS 1(em ms)/1000
+    EMCvalues2.append((int(sheet['H'+str(it)].value)/1000))                 #Início de EMC2 = Onset QRS 2(em ms)/1000
+IVCvalues1.append((int(sheet['D'+str(it)].value)/1000+LM_Time))             #Início de IVC1 = MVC(em ms)/1000 + LM_Time
+IVCvalues2.append((int(sheet['D'+str(it)].value)/1000+RM_Time))             #Início de IVC2 = MVC(em ms)/1000 + RM_Time
+EjectionTimevalues1.append((int(sheet['E'+str(it)].value)/1000+LM_Time))    #Início de EjectionTime1 = AVO(em ms)/1000 + LM_Time
+EjectionTimevalues2.append((int(sheet['E'+str(it)].value)/1000+RM_Time))    #Início de EjectionTime2 = AVO(em ms)/1000 + RM_Time
+IVRTvalues.append((int(sheet['F'+str(it)].value)/1000+LM_Time))             #Início de IVRT = AVC(em ms)/1000 + LM_Time
+Evalues.append((int(sheet['C'+str(it)].value)/1000+LM_Time))                #Início de E = MVO(em ms)/1000 + LM_Time
+if op != '5':
+    Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Início da Diastase = D point/1000
+    Avalues.append((int(sheet['I'+str(it)].value)/1000))                    #Início de A = Onset P(em ms)/1000
+
 #Os valores acima são usados na separação das fases
 
 #Impressão dos valores trabalhados no terminal
 print("\nLM_Time: ",LM_Time*1000, "ms")
 print("RM_Time: ",RM_Time)
-print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[it-4]*1000, "ms")
+if op != '5':
+    print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[it-4]*1000, "ms")
 print("\nMVO1: ",MVOvalues1[it-4]*1000, "ms")
 print("MVO2: ",MVOvalues2[it-4]*1000, "ms")
 print("MVC1: ",MVCvalues1[it-4]*1000, "ms")
@@ -701,20 +703,23 @@ print("AVO1: ",AVOvalues1[it-4]*1000, "ms")
 print("AVO2: ",AVOvalues2[it-4]*1000, "ms")
 print("AVC1: ",AVCvalues1[it-4]*1000, "ms")
 print("AVC2: ",AVCvalues2[it-4]*1000, "ms")
-print("\nEMC1: ",EMCvalues1[it-4]*1000, "ms")
-print("EMC2: ",EMCvalues2[it-4]*1000, "ms")
+if op != '5':
+    print("\nEMC1: ",EMCvalues1[it-4]*1000, "ms")
+    print("EMC2: ",EMCvalues2[it-4]*1000, "ms")
 print("IVC1: ",IVCvalues1[it-4]*1000, "ms")
 print("IVC2: ",IVCvalues2[it-4]*1000, "ms")
 print("Ejection Time1: ",EjectionTimevalues1[it-4]*1000, "ms")
 print("Ejection Time2: ",EjectionTimevalues2[it-4]*1000, "ms")
 print("IVRT: ",IVRTvalues[it-4]*1000, "ms")
 print("E: ",Evalues[it-4]*1000, "ms")
-print("Diastasis: ",Diastasisvalues[it-4]*1000, "ms")
-print("Atrial Systole: ",Avalues[it-4]*1000, "ms")
-
-print("Systolic Time: ", AVCvalues1[it-4]-LM_Time)
-print("Diastolic Time: ", RM_Time - (AVCvalues1[it-4]-LM_Time))
-print("Ratio: Systolic Time/Diastolic Time: ",(AVCvalues1[it-4]-LM_Time)/(RM_Time - (AVCvalues1[it-4]-LM_Time)))
+if op != '5':
+    print("Diastasis: ",Diastasisvalues[it-4]*1000, "ms")
+    print("Atrial Systole: ",Avalues[it-4]*1000, "ms")
+else:
+    systolic_time = (AVCvalues1[it-4]-MVCvalues1[it-4])
+    print("Systolic Time: ", systolic_time*1000)
+    print("Diastolic Time: ", (RM_Time - systolic_time)*1000)
+    print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time - systolic_time)))
 print("\n\n")
 #Trabalho com Excel - FIM
 
@@ -725,9 +730,14 @@ while True:
     prmt = input("Parameter: ")
 
     if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
-        txt1_s = txt1[(txt1.index >= EMCvalues1[it-4]) & (txt1.index < AVCvalues1[it-4])] #Valores até o AVC - Durante a sístole
-        txt2_s = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < AVCvalues1[it-4])]
-        txt3_s = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < AVCvalues1[it-4])]
+        if op == '5':
+            txt1_s = txt1[(txt1.index >= MVCvalues1[it-4]) & (txt1.index < AVCvalues1[it-4])] #Valores até o AVC - Durante a sístole
+            txt2_s = txt2[(txt2.index >= MVCvalues1[it-4]) & (txt2.index < AVCvalues1[it-4])]
+            txt3_s = txt3[(txt3.index >= MVCvalues1[it-4]) & (txt3.index < AVCvalues1[it-4])]
+        else:
+            txt1_s = txt1[(txt1.index >= EMCvalues1[it-4]) & (txt1.index < AVCvalues1[it-4])] #Valores até o AVC - Durante a sístole
+            txt2_s = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < AVCvalues1[it-4])]
+            txt3_s = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < AVCvalues1[it-4])]
         #print((tcolunas1-2)+(tcolunas2-2)+(tcolunas3-2)) #quantidade total de segmentos
         #print(list(txt2_s))                              #lista os nomes dos segmentos
         #print (colours[:-2])
@@ -752,33 +762,50 @@ while True:
 
 
     elif prmt == "2":
-        txt1_sliced_onsets = txt1[(txt1.index >= EMCvalues1[it-4]) & (txt1.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
-        txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < EMCvalues2[it-4])]
-        txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < EMCvalues2[it-4])]
+        if op == '5':
+            txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)]#Obtenção da Mechanical Dispersion
+            txt2_sliced_onsets = txt2[(txt2.index >= LM_Time) & (txt2.index < RM_Time)]
+            txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
+        else:
+            txt1_sliced_onsets = txt1[(txt1.index >= EMCvalues1[it-4]) & (txt1.index < EMCvalues2[it-4])]#Obtenção da Mechanical Dispersion
+            txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[it-4]) & (txt2.index < EMCvalues2[it-4])]
+            txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[it-4]) & (txt3.index < EMCvalues2[it-4])]
         global_minima_times = []
         print("\n\nTimes of peak negative strain:\n")
 
         colours=list(txt2_sliced_onsets)
         for colour_it in range(0,tcolunas2-2):
-            print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+            if op == '5':
+                print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+            else:
+                print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
             global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())
         print("\n")
 
         colours=list(txt1_sliced_onsets)
         for colour_it in range(0,tcolunas1-2):
-            print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+            if op == '5':
+                print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+            else:
+                print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
             global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())
         print("\n")
 
         colours=list(txt3_sliced_onsets)
         for colour_it in range(0,tcolunas3-2):
-            print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+            if op == '5':
+                print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+            else:
+                priAVCvalues1nt("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
             global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())
 
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
 
     elif prmt == "3":
-        ThirdDiastoleTime=AVCvalues1[it-4]+((EMCvalues2[it-4]+Dif_LM_OnsetQRS1[it-4])-AVCvalues1[it-4])/3 #EMC2+Diferença do Pico R1 e o onset QRS1-AVC1
+        if op == '5':
+            ThirdDiastoleTime = AVCvalues1[it-4]+(RM_Time-systolic_time)/3 #Tempo de AVC + tempo de diastole/3
+        else:
+            ThirdDiastoleTime = AVCvalues1[it-4]+((EMCvalues2[it-4]+Dif_LM_OnsetQRS1[it-4])-AVCvalues1[it-4])/3 #EMC2+Diferença do Pico R1 e o onset QRS1-AVC1
         #Criação das células com os valores de AVC e de 1/3 da diástole - Início
         a = np.full(tcolunas1, float('nan'))         #Cria uma linha de tcolunas NaN
         txt1_dr = txt1
@@ -843,6 +870,7 @@ while True:
             DR_bullseye(BullseyeAux)
             #Ver a barra
             print("\n\nDiastolic Index: ", np.std(ALL_DI))
+            print("\n\nATENCAO: REVISAR ESSE VALOR")
         else:
             DI_op5 = []
             DI_op5.extend(DI_2CH)
