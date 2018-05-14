@@ -692,7 +692,7 @@ if op != '5':
 
 #Impressão dos valores trabalhados no terminal
 print("\nLM_Time: ",LM_Time*1000, "ms")
-print("RM_Time: ",RM_Time)
+print("RM_Time: ",RM_Time*1000, "ms")
 if op != '5':
     print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[it-4]*1000, "ms")
 print("\nMVO1: ",MVOvalues1[it-4]*1000, "ms")
