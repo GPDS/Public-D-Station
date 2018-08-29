@@ -1,5 +1,20 @@
 # -*- coding: utf-8 -*-
 
+"""
+O que fazer:
+
+Entradas:
+	  IdExame, NomePaciente -> Planilha onde os resultados ficarão armazenados
+
+A partir do IdExame ele identificará as pastas com os exames que ficarão numa pasta na mesma pasta que o programa.
+
+Os arquivos txt serão identificados com base em seus nomes
+
+Retirar o ponto de diástase e o pico da onda P das marcações.
+
+Todos os parâmetros são calculados automaticamente e vão para a planilha, mostra o plot selecionado.
+"""
+
 import pandas as pd                     #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib as mpl
@@ -7,6 +22,8 @@ import matplotlib.pyplot as plt
 import re                               #Package padrão - Para extrair números da string
 import openpyxl                         #Package para trabalhar com os arquivos .xlsx
 import scipy
+from os import listdir
+from os.path import isfile, join
 
 #Constantes a serem definidas
 it = 4   #Iterador para a marcação na planilha (Depende da linha inicial nela, nesse caso os valores estão a partir da linha 4)
@@ -568,58 +585,106 @@ wb = openpyxl.load_workbook('Event_Timing.xlsx')
 sheet = wb['Sheet1']
 #Fim da abertura da planilha
 
+#Início das edições
+
 #Início da abertura dos .txt
-print("\nPatient:", sheet['A'+str(it)].value)
+
+#idPacient = input('Pacient ID: ')
+idPacient = 'Aristoteles'
+
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. TESTE")
-op = input("Option: ")
+#op = input("Option: ")
+op = '1'
+#Primeiro: Obter os nomes dos arquivos na pasta com a partir do ID
+
+exams_path = (idPacient)
+print(exams_path)
+
+list_txtfiles = [f for f in listdir(exams_path) if isfile(join(exams_path, f))]
+#O erro está na linha acima, ele pega os arquivos do diretorio de tresparametros ao invés de pegar da pasta desejada
+print(list_txtfiles)
+
+#Achar os arquivos de strain LV e SR LV
 if op == "1":
-    arq = open('main_option', 'r')
+    for f in list_txtfiles:
+        if '4CH_SL_TRACE' in f:
+            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
+        if '4CH_SrL4CH SR LV_TRACE' in f:
+            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            strain_rate_lv = txt_mid
+        if '2CH_SL_TRACE' in f:
+            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if 'APLAX_SL_TRACE' in f:
+            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "2":
-    arq = open('alt_option1', 'r')
+    for f in list_txtfiles:
+        if '4CH_SL_TRACE' in f:
+            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '4CH_SL4CH ATRIO ESQUERD_TRACE' in f:
+            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '4CH_SrL4CH SR LV_TRACE' in f:
+            strain_rate_lv=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '2CH_SL_TRACE' in f:
+            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if 'APLAX_SL_TRACE' in f:
+            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "3":
-    arq = open('alt_option2', 'r')
-
+    for f in list_txtfiles:
+        if '4CH_SL_TRACE' in f:
+            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '4CH_SrL4CH SR ATRIO_TRACE' in f:
+            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            strain_rate_lv = txt_mid
+        if '4CH_SrL4CH SR LV_TRACE' in f:
+            strain_rate_lv=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '2CH_SL_TRACE' in f:
+            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if 'APLAX_SL_TRACE' in f:
+            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
 elif op == "4":
-    arq = open('alt_option3', 'r')
+    for f in list_txtfiles:
+        if '4CH_SL_TRACE' in f:
+            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '4CH_SLVD_TRACE' in f:
+            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            strain_rate_lv = txt_mid
+        if '4CH_SrL4CH SR LV_TRACE' in f:
+            strain_rate_lv=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '2CH_SL_TRACE' in f:
+            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if 'APLAX_SL_TRACE' in f:
+            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "5":
-    arq = open('test_option', 'r')
+    for f in list_txtfiles:
+        if '4CH_teste' in f:
+            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '4CH_SrL4CH SR LV_TRACE' in f:
+            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0) #Colocar para derivar a curva de strain
+            strain_rate_lv = txt_mid
+        if '2CH_teste' in f:
+            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if 'APLAX_teste' in f:
+            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 else:
-    arq = open('main_option', 'r')
-
-arq_sr_lv = open('exam_sr_LV', 'r')
-exame1 = arq.readline()
-exame1 = exame1[:len(exame1)-1]    #Retira o \n             #SL 4CH
-exame_mid = arq.readline()
-exame_mid = exame_mid[:len(exame_mid)-1]    #Retira o \n    #SR 4CH
-exame2 = arq.readline()
-exame2 = exame2[:len(exame2)-1]    #Retira o \n             #SL 2CH
-exame3 = arq.readline()
-exame3 = exame3[:len(exame3)-1]    #Retira o \n             #SL APLAX
-exame_sr_LV = arq_sr_lv.readline()
-exame_sr_LV = exame_sr_LV[:len(exame_sr_LV)-1]    #Retira o \n
-print("\n\nUsing files: ")
-print("\t",exame1)
-print("\t",exame2)
-print("\t",exame3)
-print("\t",exame_mid)
-if (exame1 == exame2 or exame1 == exame3 or exame2 == exame3):
-    input("\n\n\n\n\n\n\n\n\n\n\n\nWARNING: Some files are duplicated. To find out which ones are equal check their names above.\n\nPress enter to continue.")
-if exame_mid != exame_sr_LV:
-    print("\t",exame_sr_LV)
-txt1=pd.read_csv(exame1, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
-txt2=pd.read_csv(exame2, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
-txt3=pd.read_csv(exame3, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
-txt_mid=pd.read_csv(exame_mid, sep='\t', engine='python', skiprows=3, index_col=0)
-strain_rate_lv=pd.read_csv(exame_sr_LV, sep='\t', engine='python', skiprows=3, index_col=0)
+    for f in list_txtfiles:
+        if '4CH_SL_TRACE' in f:
+            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if '4CH_SrL4CH SR LV_TRACE' in f:
+            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            strain_rate_lv = txt_mid
+        if '2CH_SL_TRACE' in f:
+            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+        if 'APLAX_SL_TRACE' in f:
+            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
 #Fim da abertura dos .txt
 
-txt_original = open(exame1, 'r')
+txt_original = open(list_txtfiles[0], 'r')
 numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
 txt_original.close()
 
@@ -627,8 +692,8 @@ txt1.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é li
 txt2.drop('Unnamed: 1', axis=1, inplace=True)
 txt3.drop('Unnamed: 1', axis=1, inplace=True)
 txt_mid.drop('Unnamed: 1', axis=1, inplace=True)
-strain_rate_lv.drop('Unnamed: 1', axis=1, inplace=True)
-
+#strain_rate_lv.drop('Unnamed: 1', axis=1, inplace=True)
+#Fim das edições
 
 tcolunas1=int(((txt1.size/len(txt1.index))))
 tcolunas2=int(((txt2.size/len(txt2.index))))
