@@ -6,10 +6,6 @@ O que fazer:
 Entradas:
 	  IdExame, NomePaciente -> Planilha onde os resultados ficarão armazenados
 
-A partir do IdExame ele identificará as pastas com os exames que ficarão numa pasta na mesma pasta que o programa.
-
-Os arquivos txt serão identificados com base em seus nomes
-
 Retirar o ponto de diástase e o pico da onda P das marcações.
 
 Todos os parâmetros são calculados automaticamente e vão para a planilha, mostra o plot selecionado.
@@ -595,81 +591,76 @@ idPacient = 'Aristoteles'
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. TESTE")
-#op = input("Option: ")
-op = '1'
-#Primeiro: Obter os nomes dos arquivos na pasta com a partir do ID
+op = input("Option: ")
+#op = '1'
 
 exams_path = (idPacient)
-print(exams_path)
 
 list_txtfiles = [f for f in listdir(exams_path) if isfile(join(exams_path, f))]
-#O erro está na linha acima, ele pega os arquivos do diretorio de tresparametros ao invés de pegar da pasta desejada
-print(list_txtfiles)
 
-#Achar os arquivos de strain LV e SR LV
 if op == "1":
     for f in list_txtfiles:
         if '4CH_SL_TRACE' in f:
-            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
+            txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
         if '4CH_SrL4CH SR LV_TRACE' in f:
-            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
         if '2CH_SL_TRACE' in f:
-            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if 'APLAX_SL_TRACE' in f:
-            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "2":
     for f in list_txtfiles:
         if '4CH_SL_TRACE' in f:
-            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '4CH_SL4CH ATRIO ESQUERD_TRACE' in f:
-            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '4CH_SrL4CH SR LV_TRACE' in f:
-            strain_rate_lv=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '2CH_SL_TRACE' in f:
-            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if 'APLAX_SL_TRACE' in f:
-            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "3":
     for f in list_txtfiles:
         if '4CH_SL_TRACE' in f:
-            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '4CH_SrL4CH SR ATRIO_TRACE' in f:
-            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
         if '4CH_SrL4CH SR LV_TRACE' in f:
-            strain_rate_lv=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '2CH_SL_TRACE' in f:
-            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if 'APLAX_SL_TRACE' in f:
-            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 elif op == "4":
     for f in list_txtfiles:
         if '4CH_SL_TRACE' in f:
-            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '4CH_SLVD_TRACE' in f:
-            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
         if '4CH_SrL4CH SR LV_TRACE' in f:
-            strain_rate_lv=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '2CH_SL_TRACE' in f:
-            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if 'APLAX_SL_TRACE' in f:
-            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "5":
     for f in list_txtfiles:
         if '4CH_teste' in f:
-            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '4CH_SrL4CH SR LV_TRACE' in f:
-            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0) #Colocar para derivar a curva de strain
+            txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0) #Colocar para derivar a curva de strain
             strain_rate_lv = txt_mid
         if '2CH_teste' in f:
-            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if 'APLAX_teste' in f:
-            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 else:
     for f in list_txtfiles:
@@ -682,11 +673,12 @@ else:
             txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
         if 'APLAX_SL_TRACE' in f:
             txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
-#Fim da abertura dos .txt
 
-txt_original = open(list_txtfiles[0], 'r')
+
+txt_original = open(exams_path+'/'+list_txtfiles[0], 'r')
 numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
 txt_original.close()
+#Fim da abertura dos .txt
 
 txt1.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
 txt2.drop('Unnamed: 1', axis=1, inplace=True)
@@ -955,6 +947,3 @@ while True:
         continue
     Parameters_Plot()
     print("\n")
-
-arq.close()
-arq_sr_lv.close()
