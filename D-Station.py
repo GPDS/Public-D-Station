@@ -605,7 +605,7 @@ if op == "1":
     for f in list_txtfiles:
         if '4CH_SL_TRACE' in f:
             txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
-        if '4CH_SrL4CH SR LV_TRACE' in f:
+        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE') in f :
             txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
         if '2CH_SL_TRACE' in f:
@@ -619,7 +619,7 @@ elif op == "2":
             txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '4CH_SL4CH ATRIO ESQUERD_TRACE' in f:
             txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if '4CH_SrL4CH SR LV_TRACE' in f:
+        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE') in f:
             strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '2CH_SL_TRACE' in f:
             txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
@@ -633,7 +633,7 @@ elif op == "3":
         if '4CH_SrL4CH SR ATRIO_TRACE' in f:
             txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
-        if '4CH_SrL4CH SR LV_TRACE' in f:
+        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE') in f:
             strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '2CH_SL_TRACE' in f:
             txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
@@ -646,7 +646,7 @@ elif op == "4":
         if '4CH_SLVD_TRACE' in f:
             txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
-        if '4CH_SrL4CH SR LV_TRACE' in f:
+        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE') in f:
             strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '2CH_SL_TRACE' in f:
             txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
