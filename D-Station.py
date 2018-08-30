@@ -602,55 +602,55 @@ else:
 list_txtfiles = [f for f in listdir(exams_path) if isfile(join(exams_path, f))]
 
 if op == "1":
-    for f in list_txtfiles:
-        if '4CH_SL_TRACE' in f:
-            txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
-        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE') in f :
-            txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-            strain_rate_lv = txt_mid
-        if '2CH_SL_TRACE' in f:
-            txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if 'APLAX_SL_TRACE' in f:
-            txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
+	for f in list_txtfiles:
+		if ('4CH_SL_TRACE' in f) or ('4CH_SL4CH STRAIN_TRACE' in f) or ('4CH_Peak dose_SL_TRACE' in f):
+			txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
+		if ('4CH_SrL' in f) or ('4CH_SrL4CH SR LV_TRACE' in f) or ('4CH_SrL4CH SR_TRACE' in f) or ('4CH_Peak dose_SrL_TRACE' in f):
+			txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
+			strain_rate_lv = txt_mid
+		if ('2CH_SL_TRACE' in f) or ('2CH_SL2CH STRAIN_TRACE' in f) or ('2CH_Low dose_SL_TRACE' in f):
+			txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
+		if ('APLAX_SL_TRACE' in f) or ('APLAX_SL3CH STRAIN_TRACE' in f) or ('APLAX_Low dose_SL_TRACE' in f):
+			txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
-elif op == "2":
+elif op == "2":#Deixar as demais condições nessa forma de if
     for f in list_txtfiles:
-        if '4CH_SL_TRACE' in f:
+        if ('4CH_SL_TRACE' or '4CH_SL4CH STRAIN_TRACE' or '4CH_Peak dose_SL_TRACE') in f:
             txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if '4CH_SL4CH ATRIO ESQUERD_TRACE' in f:
+        if ('4CH_SL4CH ATRIO ESQUERD_TRACE' or '4CH_Peak dose_SLLA_TRACE') in f:
             txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE') in f:
+        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE' or '4CH_SrL4CH SR_TRACE' or '4CH_Peak dose_SrL_TRACE') in f:
             strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if '2CH_SL_TRACE' in f:
+        if ('2CH_SL_TRACE' or '2CH_SL2CH STRAIN_TRACE' or '2CH_Low dose_SL_TRACE') in f:
             txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if 'APLAX_SL_TRACE' in f:
+        if ('APLAX_SL_TRACE' or 'APLAX_SL3CH STRAIN_TRACE' or 'APLAX_Low dose_SL_TRACE') in f:
             txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "3":
     for f in list_txtfiles:
-        if '4CH_SL_TRACE' in f:
+        if ('4CH_SL_TRACE' or '4CH_SL4CH STRAIN_TRACE' or '4CH_Peak dose_SL_TRACE') in f:
             txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '4CH_SrL4CH SR ATRIO_TRACE' in f:
             txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
-        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE') in f:
+        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE' or '4CH_SrL4CH SR_TRACE' or '4CH_Peak dose_SrL_TRACE') in f:
             strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if '2CH_SL_TRACE' in f:
+        if ('2CH_SL_TRACE' or '2CH_SL2CH STRAIN_TRACE' or '2CH_Low dose_SL_TRACE') in f:
             txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if 'APLAX_SL_TRACE' in f:
+        if ('APLAX_SL_TRACE' or 'APLAX_SL3CH STRAIN_TRACE' or 'APLAX_Low dose_SL_TRACE') in f:
             txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 elif op == "4":
     for f in list_txtfiles:
-        if '4CH_SL_TRACE' in f:
+        if ('4CH_SL_TRACE' or '4CH_SL4CH STRAIN_TRACE' or '4CH_Peak dose_SL_TRACE') in f:
             txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if '4CH_SLVD_TRACE' in f:
             txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
-        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE') in f:
+        if ('4CH_SrL' or '4CH_SrL4CH SR LV_TRACE' or '4CH_SrL4CH SR_TRACE' or '4CH_Peak dose_SrL_TRACE') in f:
             strain_rate_lv=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if '2CH_SL_TRACE' in f:
+        if ('2CH_SL_TRACE' or '2CH_SL2CH STRAIN_TRACE' or '2CH_Low dose_SL_TRACE') in f:
             txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if 'APLAX_SL_TRACE' in f:
+        if ('APLAX_SL_TRACE' or 'APLAX_SL3CH STRAIN_TRACE' or 'APLAX_Low dose_SL_TRACE') in f:
             txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "5":
