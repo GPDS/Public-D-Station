@@ -585,8 +585,8 @@ sheet = wb['Sheet1']
 
 #Início da abertura dos .txt
 
-#idPacient = input('Pacient ID: ')
-idPacient = 'Aristoteles'
+idPacient = input('Pacient ID: ')
+#idPacient = 'Aristoteles'
 
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
@@ -594,7 +594,10 @@ print("\t5. TESTE")
 op = input("Option: ")
 #op = '1'
 
-exams_path = (idPacient)
+if(op!='5'):
+	exams_path = ('Patients/'+idPacient)
+else:
+	exams_path = ('Simulations/'+idPacient)
 
 list_txtfiles = [f for f in listdir(exams_path) if isfile(join(exams_path, f))]
 
@@ -651,28 +654,27 @@ elif op == "4":
             txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 elif op == "5":
-    for f in list_txtfiles:
-        if '4CH_teste' in f:
-            txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if '4CH_SrL4CH SR LV_TRACE' in f:
-            txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0) #Colocar para derivar a curva de strain
-            strain_rate_lv = txt_mid
-        if '2CH_teste' in f:
-            txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-        if 'APLAX_teste' in f:
-            txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
+	for f in list_txtfiles:
+		if '4CH_teste' in f:
+			txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
+			txt_mid=txt1.diff()
+			strain_rate_lv = txt_mid
+		if '2CH_teste' in f:
+			txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
+		if 'APLAX_teste' in f:
+			txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 else:
     for f in list_txtfiles:
         if '4CH_SL_TRACE' in f:
-            txt1=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt1=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0) #Parte do índice arrumada
         if '4CH_SrL4CH SR LV_TRACE' in f:
-            txt_mid=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt_mid=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
             strain_rate_lv = txt_mid
         if '2CH_SL_TRACE' in f:
-            txt2=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt2=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
         if 'APLAX_SL_TRACE' in f:
-            txt3=pd.read_csv(f, sep='\t', engine='python', skiprows=3, index_col=0)
+            txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 
 txt_original = open(exams_path+'/'+list_txtfiles[0], 'r')
