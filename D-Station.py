@@ -215,7 +215,7 @@ def Parameters_Plot():
     plt.text(IVRTvalues[it-4]+x_inc, txt_height_2, "IVRT" , rotation=0, verticalalignment='center')
     plt.text(Evalues[it-4]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center')
     if op != '5':
-        plt.text(Diastasisvalues[it-4]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
+        #plt.text(Diastasisvalues[it-4]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
         plt.text(Avalues[it-4]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center')
 
     #Definição do subplot das curvas (gráfico do meio)
@@ -272,7 +272,7 @@ def Parameters_Plot():
     ax0.axvline(x=IVRTvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=Evalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     if op != '5':
-        ax0.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+        #ax0.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
         ax0.axvline(x=Avalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
     ax1.axvline(x=MVOvalues1[it-4], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
@@ -293,7 +293,7 @@ def Parameters_Plot():
     ax1.axvline(x=IVRTvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=Evalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     if op != '5':
-        ax1.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+        #ax1.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
         ax1.axvline(x=Avalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
     ax2.axvline(x=MVOvalues1[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
@@ -314,7 +314,7 @@ def Parameters_Plot():
     ax2.axvline(x=IVRTvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=Evalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     if op != '5':
-        ax2.axvline(x=Diastasisvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+        #ax2.axvline(x=Diastasisvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
         ax2.axvline(x=Avalues[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     #Plotagem das linhas entre os subplots - FIM
 
@@ -711,13 +711,12 @@ END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1]
 
 if op != '5':
     #Gravação dos valores marcados na planilha do excel - INÍCIO
-    print("\n\nMarcacao do Onset QRS 1, ponto de diástase, onset P, pico P, onset QRS 2")
+    print("\n\nMarcacao do Onset QRS 1, onset P, onset QRS 2")
     PlotClick(LM_Time, ES_Time, RM_Time, END_Time0)
-    sheet['G'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms
-    sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms
-    sheet['I'+str(it)] = round(xcoord[2],0) #Houve um arredondamento do tempo em ms
-    sheet['J'+str(it)] = round(xcoord[3],0) #Houve um arredondamento do tempo em ms
-    sheet['H'+str(it)] = round(xcoord[4],0) #Houve um arredondamento do tempo em ms
+    sheet['G'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms - ONSET QRS 1
+    #sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - Ponto de Diástase
+    sheet['I'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - ONSET P
+    sheet['H'+str(it)] = round(xcoord[2],0) #Houve um arredondamento do tempo em ms - #ONSET QRS 2
     wb.save("Event_Timing.xlsx")
     #Gravação dos valores marcados na planilha do excel - FIM
 
@@ -744,7 +743,7 @@ EjectionTimevalues2.append((int(sheet['E'+str(it)].value)/1000+RM_Time))    #In�
 IVRTvalues.append((int(sheet['F'+str(it)].value)/1000+LM_Time))             #Início de IVRT = AVC(em ms)/1000 + LM_Time
 Evalues.append((int(sheet['C'+str(it)].value)/1000+LM_Time))                #Início de E = MVO(em ms)/1000 + LM_Time
 if op != '5':
-    Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Início da Diastase = D point/1000
+    #Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Início da Diastase = D point/1000
     Avalues.append((int(sheet['I'+str(it)].value)/1000))                    #Início de A = Onset P(em ms)/1000
 
 #Os valores acima são usados na separação das fases
@@ -772,7 +771,7 @@ print("Ejection Time2: ",EjectionTimevalues2[it-4]*1000, "ms")
 print("IVRT: ",IVRTvalues[it-4]*1000, "ms")
 print("E: ",Evalues[it-4]*1000, "ms")
 if op != '5':
-    print("Diastasis: ",Diastasisvalues[it-4]*1000, "ms")
+    #print("Diastasis: ",Diastasisvalues[it-4]*1000, "ms")
     print("Atrial Systole: ",Avalues[it-4]*1000, "ms")
 else:
     systolic_time = (AVCvalues1[it-4]-MVCvalues1[it-4])
@@ -855,7 +854,7 @@ while True:
             if op == '5':
                 print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
             else:
-                priAVCvalues1nt("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
+                print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[it-4],"ms")
             global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())
 
         print("\n\nMechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
