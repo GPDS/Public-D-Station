@@ -44,7 +44,7 @@ IVCvalues1 = []
 IVCvalues2 = []
 EjectionTimevalues1 = []
 EjectionTimevalues2 = []
-IVRTvalues = []
+IVRvalues = []
 Evalues = []
 Diastasisvalues = []
 Avalues = []
@@ -213,7 +213,7 @@ def Parameters_Plot():
     plt.text(IVCvalues2[it-4]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center')
     plt.text(EjectionTimevalues1[it-4]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center')
     plt.text(EjectionTimevalues2[it-4]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center')
-    plt.text(IVRTvalues[it-4]+x_inc, txt_height_2, "IVRT" , rotation=0, verticalalignment='center')
+    plt.text(IVRvalues[it-4]+x_inc, txt_height_2, "IVR" , rotation=0, verticalalignment='center')
     plt.text(Evalues[it-4]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center')
     if op != test_op:
         #plt.text(Diastasisvalues[it-4]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
@@ -270,7 +270,7 @@ def Parameters_Plot():
     ax0.axvline(x=IVCvalues2[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=EjectionTimevalues1[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=EjectionTimevalues2[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=IVRTvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+    ax0.axvline(x=IVRvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax0.axvline(x=Evalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     if op != test_op:
         #ax0.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
@@ -291,7 +291,7 @@ def Parameters_Plot():
     ax1.axvline(x=IVCvalues2[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=EjectionTimevalues1[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=EjectionTimevalues2[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=IVRTvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+    ax1.axvline(x=IVRvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax1.axvline(x=Evalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     if op != test_op:
         #ax1.axvline(x=Diastasisvalues[it-4], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
@@ -312,7 +312,7 @@ def Parameters_Plot():
     ax2.axvline(x=IVCvalues2[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=EjectionTimevalues1[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=EjectionTimevalues2[it-4], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=IVRTvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+    ax2.axvline(x=IVRvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     ax2.axvline(x=Evalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     if op != test_op:
         #ax2.axvline(x=Diastasisvalues[it-4], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
@@ -753,7 +753,7 @@ IVCvalues1.append((int(sheet['D'+str(it)].value)/1000+LM_Time))             #In�
 IVCvalues2.append((int(sheet['D'+str(it)].value)/1000+RM_Time))             #Início de IVC2 = MVC(em ms)/1000 + RM_Time
 EjectionTimevalues1.append((int(sheet['E'+str(it)].value)/1000+LM_Time))    #Início de EjectionTime1 = AVO(em ms)/1000 + LM_Time
 EjectionTimevalues2.append((int(sheet['E'+str(it)].value)/1000+RM_Time))    #Início de EjectionTime2 = AVO(em ms)/1000 + RM_Time
-IVRTvalues.append((int(sheet['F'+str(it)].value)/1000+LM_Time))             #Início de IVRT = AVC(em ms)/1000 + LM_Time
+IVRvalues.append((int(sheet['F'+str(it)].value)/1000+LM_Time))             #Início de IVR = AVC(em ms)/1000 + LM_Time
 Evalues.append((int(sheet['C'+str(it)].value)/1000+LM_Time))                #Início de E = MVO(em ms)/1000 + LM_Time
 if op != test_op:
     #Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Início da Diastase = D point/1000
@@ -781,7 +781,7 @@ print("IVC1: ",IVCvalues1[it-4]*1000, "ms")
 print("IVC2: ",IVCvalues2[it-4]*1000, "ms")
 print("Ejection Time1: ",EjectionTimevalues1[it-4]*1000, "ms")
 print("Ejection Time2: ",EjectionTimevalues2[it-4]*1000, "ms")
-print("IVRT: ",IVRTvalues[it-4]*1000, "ms")
+print("IVR: ",IVRvalues[it-4]*1000, "ms")
 print("E: ",Evalues[it-4]*1000, "ms")
 if op != test_op:
     #print("Diastasis: ",Diastasisvalues[it-4]*1000, "ms")
