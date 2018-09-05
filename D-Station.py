@@ -3,6 +3,8 @@
 """
 O que fazer:
 
+Corrigir a opção de teste (está pegando valores da planilha, deve pegar dos txt)
+
 Entradas:
 	  IdExame, NomePaciente -> Planilha onde os resultados ficarão armazenados
 
