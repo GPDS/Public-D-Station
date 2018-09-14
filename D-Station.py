@@ -9,12 +9,12 @@ semelhante à pasta.
 Todos os parâmetros são calculados automaticamente e vão para a planilha, mostra o plot selecionado.
 """
 
-import pandas as pd                     #Package usado no trabalho com os arquivos .txt
+import pandas as pd              #Package usado no trabalho com os arquivos .txt
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import re                               #Package padrão - Para extrair números da string
-import openpyxl                         #Package para trabalhar com os arquivos .xlsx
+import re                        #Package padrão - Para extrair números da string
+import openpyxl                  #Package para trabalhar com os arquivos .xlsx - Para trabalhar com grandes quantidades deve-se ver a documentação
 from os import listdir
 from os.path import isfile, join
 
