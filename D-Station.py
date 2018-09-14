@@ -3,12 +3,8 @@
 """
 O que fazer:
 
-Corrigir a opção de teste (está pegando valores da planilha, deve pegar dos txt)
-
-Entradas:
-	  IdExame, NomePaciente -> Planilha onde os resultados ficarão armazenados
-
-Retirar o ponto de diástase e o pico da onda P das marcações.
+Os valores de todos os casos ficarão na planilha e a linha, it, será achada com base no nome dado, de forma
+semelhante à pasta.
 
 Todos os parâmetros são calculados automaticamente e vão para a planilha, mostra o plot selecionado.
 """
@@ -19,7 +15,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import re                               #Package padrão - Para extrair números da string
 import openpyxl                         #Package para trabalhar com os arquivos .xlsx
-import scipy
 from os import listdir
 from os.path import isfile, join
 
