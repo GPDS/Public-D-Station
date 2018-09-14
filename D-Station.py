@@ -7,6 +7,8 @@ Os valores de todos os casos ficarão na planilha e a linha, it, será achada co
 semelhante à pasta.
 
 Todos os parâmetros são calculados automaticamente e vão para a planilha, mostra o plot selecionado.
+
+Pode ser útil para identificação do QRS e P onset: https://ecg-kit.readthedocs.io/en/master/ECGdelineation.html
 """
 
 import pandas as pd              #Package usado no trabalho com os arquivos .txt
