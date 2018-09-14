@@ -1,9 +1,10 @@
 Instruções:
 
+
+Para o funcionamento do programa são necessárias as seguintes condições:
+
 Os arquivos .txt devem estar numa pasta contida na pasta Patients, caso sejam de pacientes reais, ou numa pasta contida em Simulations, caso sejam simulações provenientes do CircAdapt, de forma semelhante aos arquivos de exemplo.
-Os tempos de abertura e fechamento das valvas devem estar na linha 4 do arquivo Event_Timing.
-Estando no diretório do programa pelo terminal, o comando para executá-lo é:
 
-python3 D-Station.py
+Os tempos de abertura e fechamento das valvas devem estar no arquivo Event_Timing.
 
-O programa pedirá então para que seja inserido o Patient ID, isto é, o nome da pasta que contém os exames(e.g. Aristoteles). O usuário deve então escolher uma das opções de visualização oferecidas e marcar os seguintes pontos: QRS 1 Onset, P Onset, QRS 2 Onset. Serão exibidos então os tempos de início de cada fase e o usuário pode escolher o parâmetro que deseja obter.
+Executando o arquivo D-Station, o programa inicia-se pedindo para que seja inserido o Patient ID, isto é, o nome da pasta que contém os exames(e.g. Aristoteles). O usuário deve então escolher uma das opções de visualização oferecidas (simulações funcionam apenas com a Test Option) e marcar os seguintes pontos: QRS 1 Onset, P Onset, QRS 2 Onset e serão exibidos então os tempos de início de cada fase, caso seja um paciente real. Por fim o usuário pode escolher o parâmetro que deseja visualizar.
