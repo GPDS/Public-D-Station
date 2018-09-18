@@ -3,10 +3,7 @@
 """
 O que fazer:
 
-Os valores de todos os casos ficarão na planilha e a linha, it, será achada com base no nome dado, de forma
-semelhante à pasta.
-
-Todos os parâmetros são calculados automaticamente e vão para a planilha, mostra o plot selecionado.
+Todos os parâmetros vão para a planilha
 
 Pode ser útil para identificação do QRS e P onset: https://ecg-kit.readthedocs.io/en/master/ECGdelineation.html
 """
