@@ -765,7 +765,7 @@ def DI_calc():             #Função para calculo do DI
 
         if prmt == '3':
             print("\n\n")
-        print("ATENCAO: REVISAR ESSE VALOR -> Diastolic Index: ", np.std(ALL_DI))
+            print("ATENCAO: REVISAR ESSE VALOR -> Diastolic Index: ", np.std(ALL_DI))
     else:
         DI_op5 = []
         DI_op5.extend(DI_2CH)
@@ -925,7 +925,7 @@ for cell in sheet['A']:
     if(cell.value is not None): #We need to check that the cell is not empty.
         if idPatient in cell.value: #Check if the value of the cell contains the idPatient
             it = format(cell.row)
-print(it) ##Aristoteles = 4, #Teste1 = 8
+#print(it) ##Aristoteles = 4, #Teste1 = 8
 #Fim da abertura da planilha
 
 
@@ -1001,13 +1001,13 @@ else:
 
 GLS_calc()
 MD_calc()
-DI_calc()
+#DI_calc()
 print("\n\n")
 #Trabalho com Excel - FIM
 
 while True:
     print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
-    print("\t3. Diastolic Recovery")
+    #print("\t3. Diastolic Recovery")
     print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
     prmt = input("Parameter: ")
 
@@ -1017,9 +1017,9 @@ while True:
     elif prmt == "2":
         MD_calc()
 
-    elif prmt == "3":
-        DI_calc()
-        DR_bullseye(BullseyeAux)
+    #elif prmt == "3":
+    #    DI_calc()
+    #    DR_bullseye(BullseyeAux)
         #Ver a barra
     elif prmt == "4":
         print("\nPlot w/o any parameters")
