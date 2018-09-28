@@ -59,7 +59,7 @@ pd.DataFrame.front = front
 def onclick(event):
     #print ("\nValue: Time = %f milliseconds"%(event.xdata*1000))
     xcoord.append(event.xdata*1000)
-#Função para marcação dos pontos no ECG - FIM
+#Função para marcação dos pontos no ECG - FM
 
 #Plotagem com as cores correspondentes ao arquivo - INÍCIO
 def colorPlot(txt,tcolunas):
@@ -621,6 +621,7 @@ def GLS_calc():             #Função para calculo do GLS
     print("Global Longitudinal Strain: ", gls,"%")
     if prmt != '0':
         Parameters_Plot()
+    sheet['J'+str(it)] = round(gls, 2)
 
 def MD_calc():             #Função para calculo do MD
 
@@ -676,6 +677,7 @@ def MD_calc():             #Função para calculo do MD
     print("Mechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
     if prmt != '0':
         Parameters_Plot()
+    sheet['K'+str(it)] = round(np.std(global_minima_times)*1000, 2)
 
 
 def DI_calc():             #Função para calculo do DI
@@ -937,7 +939,6 @@ if op != test_op:
     #sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - Ponto de Diástase
     sheet['I'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - ONSET P
     sheet['H'+str(it)] = round(xcoord[2],0) #Houve um arredondamento do tempo em ms - #ONSET QRS 2
-    wb.save("Event_Timing.xlsx")
     #Gravação dos valores marcados na planilha do excel - FIM
 
 
@@ -1003,7 +1004,7 @@ GLS_calc()
 MD_calc()
 #DI_calc()
 print("\n\n")
-#Trabalho com Excel - FIM
+
 
 while True:
     print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
@@ -1032,3 +1033,5 @@ while True:
         print("\n\nInvalid option\n\n\n")
         continue
     print("\n")
+
+wb.save("Event_Timing.xlsx")
