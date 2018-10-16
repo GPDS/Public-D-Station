@@ -318,7 +318,7 @@ def Parameters_Plot():
         ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     #Plotagem das linhas entre os subplots - FIM
 
-    plt.tight_layout()
+    #plt.tight_layout()
     plt.show()
 #Plotagem dos gráficos de saída final - FIM
 
@@ -630,7 +630,7 @@ def MD_calc():             #Função para calculo do MD
     global txt3_sliced_onsets
 
     if op == test_op:
-        txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)]#Obtenção da Mechanical Dispersion
+        txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)] #Obtenção da Mechanical Dispersion
         txt2_sliced_onsets = txt2[(txt2.index >= LM_Time) & (txt2.index < RM_Time)]
         txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
     else:
@@ -674,10 +674,10 @@ def MD_calc():             #Função para calculo do MD
 
     if prmt == '2':
         print("\n\n")
-    print("Mechanical Dispersion: ",np.std(global_minima_times)*1000, "ms")
+    print("Mechanical Dispersion: ",np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, "ms") #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
     if prmt != '0':
         Parameters_Plot()
-    sheet['K'+str(it)] = round(np.std(global_minima_times)*1000, 2)
+    sheet['K'+str(it)] = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2) #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
 
 
 def DI_calc():             #Função para calculo do DI
