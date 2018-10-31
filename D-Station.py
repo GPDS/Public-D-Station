@@ -20,7 +20,7 @@ from os.path import isfile, join
 #Constantes a serem definidas
 height_line = 1.025 #Tamanho que a linha das fases ultrapassa o gráfico
 test_op = '6'
-
+SizeFont = 18
 
 #Declaração de variaveis
 xcoord = []
@@ -98,7 +98,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     colorPlot(txt1,tcolunas1)
     colorPlot(txt2,tcolunas2)
     colorPlot(txt3,tcolunas3)
-    plt.ylabel('Strain - LV\n(%)')
+    plt.ylabel('Strain - LV\n(%)', fontsize=SizeFont)
     plt.grid()
     plt.setp(ax0.get_xticklabels(), visible=False)
 
@@ -117,7 +117,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
         colorPlot(txt1.diff(),tcolunas1)
         colorPlot(txt2.diff(),tcolunas2)
         colorPlot(txt3.diff(),tcolunas3)
-    plt.ylabel('Strain Rate - LV\n(1/s)')
+    plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
     plt.grid()
     plt.setp(ax1.get_xticklabels(), visible=False)
 
@@ -131,8 +131,8 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
     plt.plot(txt1.loc[:,'ECG : '])
-    plt.xlabel('Time (ms)')
-    plt.ylabel('ECG\nVoltage (mV)')
+    plt.xlabel('Time (ms)', fontsize=SizeFont)
+    plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
     plt.grid()
     #Fim das definições dos subplots
     #Marcacao dos pontos no gráfico - INÍCIO
@@ -193,7 +193,7 @@ def Parameters_Plot():
     tick_locs = np.arange(0.0,END_Time1,0.2)
     tick_lbls = np.arange(0, int(END_Time1*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
-    plt.ylabel('\nStrain - LV\n(%)')
+    plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
     plt.setp(ax0.get_xticklabels(), visible=False)
     #
 
@@ -232,14 +232,14 @@ def Parameters_Plot():
     tick_lbls = np.arange(0, int(END_Time1*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
 
-    if op == "1" or op == "5":
-        plt.ylabel('Strain Rate - LV\n(1/s)')
+    if op == "1" or op == "5" or op == test_op:
+        plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
     if op == "2":
-        plt.ylabel('Strain - LA\n(%)')
+        plt.ylabel('Strain - LA\n(%)', fontsize=SizeFont)
     if op == "3":
-        plt.ylabel('Strain Rate - LA\n(1/s)')
+        plt.ylabel('Strain Rate - LA\n(1/s)', fontsize=SizeFont)
     if op == "4":
-        plt.ylabel('Strain - RV\n(%)')
+        plt.ylabel('Strain - RV\n(%)', fontsize=SizeFont)
     plt.setp(ax1.get_xticklabels(), visible=False)
 
     #Definição do subplot do gráfico do ECG (gráfico de baixo)
@@ -249,8 +249,8 @@ def Parameters_Plot():
     tick_locs = np.arange(0.0,END_Time1,0.2)
     tick_lbls = np.arange(0, int(END_Time1*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
-    plt.xlabel('Time (ms)')
-    plt.ylabel('ECG\nVoltage (mV)')
+    plt.xlabel('Time (ms)', fontsize=SizeFont)
+    plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
     plt.grid()
 
     #Plotagem das linhas entre os subplots - INÍCIO
