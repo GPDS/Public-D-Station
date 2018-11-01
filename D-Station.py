@@ -20,7 +20,7 @@ from os.path import isfile, join
 #Constantes a serem definidas
 height_line = 1.025 #Tamanho que a linha das fases ultrapassa o gráfico
 test_op = '6'
-SizeFont = 18
+SizeFont = 12
 
 #Declaração de variaveis
 xcoord = []
@@ -621,7 +621,7 @@ def GLS_calc():             #Função para calculo do GLS
     print("Global Longitudinal Strain: ", gls,"%")
     if prmt != '0':
         Parameters_Plot()
-    sheet['J'+str(it)] = round(gls, 2)
+    sheet['V'+str(it)] = round(gls, 2)
 
 def MD_calc():             #Função para calculo do MD
 
@@ -677,7 +677,7 @@ def MD_calc():             #Função para calculo do MD
     print("Mechanical Dispersion: ",np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, "ms") #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
     if prmt != '0':
         Parameters_Plot()
-    sheet['K'+str(it)] = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2) #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
+    sheet['W'+str(it)] = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2) #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
 
 
 def DI_calc():             #Função para calculo do DI
@@ -984,21 +984,35 @@ print("AVC1: ",AVCvalues1[0]*1000, "ms")
 print("AVC2: ",AVCvalues2[0]*1000, "ms")
 if op != test_op:
     print("\nEMC1: ",EMCvalues1[0]*1000, "ms")
+    sheet['J'+str(it)] = round(EMCvalues1[0]*1000)
     print("EMC2: ",EMCvalues2[0]*1000, "ms")
+    sheet['P'+str(it)] = round(EMCvalues2[0]*1000)
 print("IVC1: ",IVCvalues1[0]*1000, "ms")
+sheet['K'+str(it)] = round(IVCvalues1[0]*1000)
 print("IVC2: ",IVCvalues2[0]*1000, "ms")
+sheet['Q'+str(it)] = round(IVCvalues2[0]*1000)
 print("Ejection Time1: ",EjectionTimevalues1[0]*1000, "ms")
+sheet['L'+str(it)] = round(EjectionTimevalues1[0]*1000)
 print("Ejection Time2: ",EjectionTimevalues2[0]*1000, "ms")
+sheet['R'+str(it)] = round(EjectionTimevalues2[0]*1000)
 print("IVR: ",IVRvalues[0]*1000, "ms")
+sheet['M'+str(it)] = round(IVRvalues[0]*1000)
 print("E: ",Evalues[0]*1000, "ms")
+sheet['N'+str(it)] = round(Evalues[0]*1000)
 if op != test_op:
     #print("Diastasis: ",Diastasisvalues[0]*1000, "ms")
     print("Atrial Systole: ",Avalues[0]*1000, "ms")
-else:
-    systolic_time = (AVCvalues1[0]-MVCvalues1[0])
-    print("Systolic Time: ", systolic_time*1000)
-    print("Diastolic Time: ", (RM_Time - systolic_time)*1000)
-    print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time - systolic_time)))
+    sheet['O'+str(it)] = round(Avalues[0]*1000)
+
+systolic_time = (AVCvalues1[0]-MVCvalues1[0])
+print("Systolic Time: ", systolic_time*1000)
+sheet['S'+str(it)] = (systolic_time*1000)
+print("Diastolic Time: ", (RM_Time - systolic_time)*1000)
+sheet['T'+str(it)] = ((RM_Time - systolic_time)*1000)
+print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time - systolic_time)))
+sheet['U'+str(it)] = (systolic_time/(RM_Time - systolic_time))
+
+
 
 GLS_calc()
 MD_calc()
