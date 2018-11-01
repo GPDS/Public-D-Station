@@ -3,8 +3,6 @@
 """
 O que fazer:
 
-Todos os parâmetros vão para a planilha
-
 Pode ser útil para identificação do QRS e P onset: https://ecg-kit.readthedocs.io/en/master/ECGdelineation.html
 """
 
