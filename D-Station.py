@@ -1001,14 +1001,14 @@ if op != test_op:
     #print("Diastasis: ",Diastasisvalues[0]*1000, "ms")
     print("Atrial Systole: ",Avalues[0]*1000, "ms")
     sheet['O'+str(it)] = round(Avalues[0]*1000)
-
-systolic_time = (AVCvalues1[0]-MVCvalues1[0])
-print("Systolic Time: ", systolic_time*1000)
-sheet['S'+str(it)] = (systolic_time*1000)
-print("Diastolic Time: ", (RM_Time - systolic_time)*1000)
-sheet['T'+str(it)] = ((RM_Time - systolic_time)*1000)
-print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time - systolic_time)))
-sheet['U'+str(it)] = (systolic_time/(RM_Time - systolic_time))
+else:
+    systolic_time = (AVCvalues1[0]-MVCvalues1[0])
+    print("Systolic Time: ", systolic_time*1000)
+    sheet['S'+str(it)] = (systolic_time*1000)
+    print("Diastolic Time: ", (RM_Time - systolic_time)*1000)
+    sheet['T'+str(it)] = ((RM_Time - systolic_time)*1000)
+    print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time - systolic_time)))
+    sheet['U'+str(it)] = (systolic_time/(RM_Time - systolic_time))
 
 
 
