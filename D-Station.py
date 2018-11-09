@@ -3,6 +3,14 @@
 """
 O que fazer:
 
+Prioridade: Sincronizar as curvas do 4CH com os demais.
+
+	Igualar LM_Time, ES_Time e RM_Time - Posso usar o AVC?
+
+LM_Time e RM_Time para o cálculo dos parâmetros (feito, mas ver o MD)
+
+Igualar os três para sincronizar as curvas
+
 Pode ser útil para identificação do QRS e P onset: https://ecg-kit.readthedocs.io/en/master/ECGdelineation.html
 """
 
@@ -1049,7 +1057,8 @@ while True:
     print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
     #print("\t3. Diastolic Recovery")
     print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
-    prmt = input("Parameter: ")
+    #prmt = input("Parameter: ")
+    prmt="0"
 
     if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
         GLS_calc()
