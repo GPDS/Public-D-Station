@@ -136,7 +136,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     #Marcacao dos pontos no gráfico - INÍCIO
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
     #Marcacao dos pontos no gráfico - FIM
-    #plt.tight_layout()
+    plt.tight_layout()
     plt.show()
     fig.canvas.mpl_disconnect(cid)
     #Processo de plotagem - FIM
@@ -223,8 +223,8 @@ def Parameters_Plot():
         colorPlot(txt_mid,tcolunas_mid)
     else:
         colorPlot(txt1.diff(),tcolunas1)
-        colorPlot(txt2.diff(),tcolunas2)
-        colorPlot(txt3.diff(),tcolunas3)
+        #colorPlot(txt2.diff(),tcolunas2)
+        #colorPlot(txt3.diff(),tcolunas3)
     plt.grid()
     tick_locs = np.arange(0.0,END_Time1,0.2)
     tick_lbls = np.arange(0, int(END_Time1*1000), 200)
@@ -316,7 +316,7 @@ def Parameters_Plot():
         ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
     #Plotagem das linhas entre os subplots - FIM
 
-    #plt.tight_layout()
+    plt.tight_layout()
     plt.show()
 #Plotagem dos gráficos de saída final - FIM
 
@@ -584,9 +584,9 @@ def GLS_calc():             #Função para calculo do GLS
     else:
         #Valores até o AVC - Durante a sístole
 
-        txt1_s = txt1[(txt1.index >= EMCvalues1[0]) & (txt1.index < AVCvalues1[0])]
-        txt2_s = txt2[(txt2.index >= EMCvalues1[0]) & (txt2.index < AVCvalues1[0])]
-        txt3_s = txt3[(txt3.index >= EMCvalues1[0]) & (txt3.index < AVCvalues1[0])]
+        txt1_s = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < ES_Time[0])]
+        txt2_s = txt2[(txt2.index >= LM_Time[1]) & (txt2.index < ES_Time[1])]
+        txt3_s = txt3[(txt3.index >= LM_Time[2]) & (txt3.index < ES_Time[2])]
     #print((tcolunas1-2)+(tcolunas2-2)+(tcolunas3-2)) #quantidade total de segmentos
     #print(list(txt2_s))                              #lista os nomes dos segmentos
     #print (colours[:-2])
@@ -632,9 +632,9 @@ def MD_calc():             #Função para calculo do MD
         txt2_sliced_onsets = txt2[(txt2.index >= LM_Time) & (txt2.index < RM_Time)]
         txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
     else:
-        txt1_sliced_onsets = txt1[(txt1.index >= EMCvalues1[0]) & (txt1.index < EMCvalues2[0])]#Obtenção da Mechanical Dispersion
-        txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[0]) & (txt2.index < EMCvalues2[0])]
-        txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[0]) & (txt3.index < EMCvalues2[0])]
+        txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])]#Obtenção da Mechanical Dispersion
+        txt2_sliced_onsets = txt2[(txt2.index >= LM_Time[1]) & (txt2.index < RM_Time[1])]
+        txt3_sliced_onsets = txt3[(txt3.index >= LM_Time[2]) & (txt3.index < RM_Time[2])]
     global_minima_times = []
     if prmt == '2':
         print("\n\nTimes of peak negative strain:\n")
@@ -781,16 +781,16 @@ def DI_calc():             #Função para calculo do DI
 #print("\033c") #Caso queira limpar o terminal
 
 #Início da abertura dos .txt
-"""
-idPatient = input('Patient ID: ')
 
+idPatient = input('Patient ID: ')
+"""
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
 """
 
-idPatient = 'Diogenes2'
+#idPatient = 'Aristoteles'
 op = '5'
 
 if op != test_op:
@@ -888,9 +888,38 @@ else:
             txt3=pd.read_csv(exams_path+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
 
 
-txt_original = open(exams_path+'/'+list_txtfiles[0], 'r')
-numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
-txt_original.close()
+LM_Time = []
+RM_Time = []
+ES_Time = []
+
+for f in list_txtfiles:
+    if ('4CH_SL_TRACE' in f) or ('4CH_SL4CH STRAIN_TRACE' in f) or ('4CH_Peak dose_SL_TRACE' in f):
+        txt_original = open(exams_path+'/'+f, 'r')
+        numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
+        txt_original.close()
+        LM_Time.append(float(numbers[0]))
+        RM_Time.append(float(numbers[1]))
+        ES_Time.append(float(numbers[2]))
+
+for f in list_txtfiles:
+    if ('2CH_SL_TRACE' in f) or ('2CH_SL2CH STRAIN_TRACE' in f) or ('2CH_Low dose_SL_TRACE' in f):
+        txt_original = open(exams_path+'/'+f, 'r')
+        numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
+        txt_original.close()
+        LM_Time.append(float(numbers[0]))
+        RM_Time.append(float(numbers[1]))
+        ES_Time.append(float(numbers[2]))
+
+for f in list_txtfiles:
+    if ('APLAX_SL_TRACE' in f) or ('APLAX_SL3CH STRAIN_TRACE' in f) or ('APLAX_Low dose_SL_TRACE' in f):
+        txt_original = open(exams_path+'/'+f, 'r')
+        numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
+        txt_original.close()
+        LM_Time.append(float(numbers[0]))
+        RM_Time.append(float(numbers[1]))
+        ES_Time.append(float(numbers[2]))
+
+
 #Fim da abertura dos .txt
 
 txt1.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
@@ -904,11 +933,6 @@ tcolunas2=int(((txt2.size/len(txt2.index))))
 tcolunas3=int(((txt3.size/len(txt3.index))))
 tcolunas_mid=int(((txt_mid.size/len(txt_mid.index))))
 tcolunas_strain_rate_lv = int(((strain_rate_lv.size/len(strain_rate_lv.index))))
-
-LM_Time = float(numbers[0])
-RM_Time = float(numbers[1])
-ES_Time = float(numbers[2])                    #AVC - Aortic Valve Closure
-
 
 #Sort para detectar o menor index -  #para que um gráfico não fique sobrando
 
@@ -934,7 +958,7 @@ for cell in sheet['A']:
 if op != test_op:
     #Gravação dos valores marcados na planilha do excel - INÍCIO
     print("\n\nMarcacao do Onset QRS 1, onset P, onset QRS 2")
-    PlotClick(LM_Time, ES_Time, RM_Time, END_Time0)
+    PlotClick(LM_Time[0], ES_Time[0], RM_Time[0], END_Time0)
     sheet['G'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms - ONSET QRS 1
     #sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - Ponto de Diástase
     sheet['I'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - ONSET P
@@ -942,27 +966,27 @@ if op != test_op:
     #Gravação dos valores marcados na planilha do excel - FIM
 
 
-MVOvalues1.append((int(sheet['C'+str(it)].value)/1000)+LM_Time)#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + LM_Time(em s)
-MVCvalues1.append((int(sheet['D'+str(it)].value)/1000)+LM_Time)#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + LM_Time(em s)
-AVOvalues1.append((int(sheet['E'+str(it)].value)/1000)+LM_Time)#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + LM_Time(em s)
-AVCvalues1.append((int(sheet['F'+str(it)].value)/1000)+LM_Time)#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + LM_Time(em s)
-MVOvalues2.append((int(sheet['C'+str(it)].value)/1000)+RM_Time)#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + RM_Time(em s)
-MVCvalues2.append((int(sheet['D'+str(it)].value)/1000)+RM_Time)#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + RM_Time(em s)
-AVOvalues2.append((int(sheet['E'+str(it)].value)/1000)+RM_Time)#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + RM_Time(em s)
-AVCvalues2.append((int(sheet['F'+str(it)].value)/1000)+RM_Time)#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + RM_Time(em s)
+MVOvalues1.append((int(sheet['C'+str(it)].value)/1000)+LM_Time[0])#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + LM_Time(em s)
+MVCvalues1.append((int(sheet['D'+str(it)].value)/1000)+LM_Time[0])#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + LM_Time(em s)
+AVOvalues1.append((int(sheet['E'+str(it)].value)/1000)+LM_Time[0])#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + LM_Time(em s)
+AVCvalues1.append((int(sheet['F'+str(it)].value)/1000)+LM_Time[0])#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + LM_Time(em s)
+MVOvalues2.append((int(sheet['C'+str(it)].value)/1000)+RM_Time[0])#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + RM_Time(em s)
+MVCvalues2.append((int(sheet['D'+str(it)].value)/1000)+RM_Time[0])#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + RM_Time(em s)
+AVOvalues2.append((int(sheet['E'+str(it)].value)/1000)+RM_Time[0])#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + RM_Time(em s)
+AVCvalues2.append((int(sheet['F'+str(it)].value)/1000)+RM_Time[0])#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + RM_Time(em s)
 if op != test_op:
-    Dif_LM_OnsetQRS1.append(LM_Time - (int(sheet['G'+str(it)].value)/1000)) #Diferença entre o Onset QRS 1 e o LM_Time
+    Dif_LM_OnsetQRS1.append(LM_Time[0] - (int(sheet['G'+str(it)].value)/1000)) #Diferença entre o Onset QRS 1 e o LM_Time
 
 #Recomputação devido à limitações do package para pegar valores da planilha - Não é preciso adicionar LM_Time aos valores marcados no programa
 if op != test_op:
     EMCvalues1.append((int(sheet['G'+str(it)].value)/1000))                 #Início de EMC1 = Onset QRS 1(em ms)/1000
     EMCvalues2.append((int(sheet['H'+str(it)].value)/1000))                 #Início de EMC2 = Onset QRS 2(em ms)/1000
-IVCvalues1.append((int(sheet['D'+str(it)].value)/1000+LM_Time))             #Início de IVC1 = MVC(em ms)/1000 + LM_Time
-IVCvalues2.append((int(sheet['D'+str(it)].value)/1000+RM_Time))             #Início de IVC2 = MVC(em ms)/1000 + RM_Time
-EjectionTimevalues1.append((int(sheet['E'+str(it)].value)/1000+LM_Time))    #Início de EjectionTime1 = AVO(em ms)/1000 + LM_Time
-EjectionTimevalues2.append((int(sheet['E'+str(it)].value)/1000+RM_Time))    #Início de EjectionTime2 = AVO(em ms)/1000 + RM_Time
-IVRvalues.append((int(sheet['F'+str(it)].value)/1000+LM_Time))             #Início de IVR = AVC(em ms)/1000 + LM_Time
-Evalues.append((int(sheet['C'+str(it)].value)/1000+LM_Time))                #Início de E = MVO(em ms)/1000 + LM_Time
+IVCvalues1.append((int(sheet['D'+str(it)].value)/1000+LM_Time[0]))             #Início de IVC1 = MVC(em ms)/1000 + LM_Time
+IVCvalues2.append((int(sheet['D'+str(it)].value)/1000+RM_Time[0]))             #Início de IVC2 = MVC(em ms)/1000 + RM_Time
+EjectionTimevalues1.append((int(sheet['E'+str(it)].value)/1000+LM_Time[0]))    #Início de EjectionTime1 = AVO(em ms)/1000 + LM_Time
+EjectionTimevalues2.append((int(sheet['E'+str(it)].value)/1000+RM_Time[0]))    #Início de EjectionTime2 = AVO(em ms)/1000 + RM_Time
+IVRvalues.append((int(sheet['F'+str(it)].value)/1000+LM_Time[0]))             #Início de IVR = AVC(em ms)/1000 + LM_Time
+Evalues.append((int(sheet['C'+str(it)].value)/1000+LM_Time[0]))                #Início de E = MVO(em ms)/1000 + LM_Time
 if op != test_op:
     #Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Início da Diastase = D point/1000
     Avalues.append((int(sheet['I'+str(it)].value)/1000))                    #Início de A = Onset P(em ms)/1000
@@ -970,8 +994,8 @@ if op != test_op:
 #Os valores acima são usados na separação das fases
 
 #Impressão dos valores trabalhados no terminal
-print("\nLM_Time: ",LM_Time*1000, "ms")
-print("RM_Time: ",RM_Time*1000, "ms")
+print("\nLM_Time: ",LM_Time[0]*1000, "ms")
+print("RM_Time: ",RM_Time[0]*1000, "ms")
 if op != test_op:
     print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[0]*1000, "ms")
 print("\nMVO1: ",MVOvalues1[0]*1000, "ms")
@@ -1003,17 +1027,18 @@ if op != test_op:
     #print("Diastasis: ",Diastasisvalues[0]*1000, "ms")
     print("Atrial Systole: ",Avalues[0]*1000, "ms")
     sheet['O'+str(it)] = round(Avalues[0]*1000)
+    print("\n\nLM_Time: ",LM_Time[0],"s\nEMC1: ",EMCvalues1[0], "s\nDifference between txt and chosen markers: 4CH -",LM_Time[0]-EMCvalues1[0],"s")
 else:
     systolic_time = (AVCvalues1[0]-MVCvalues1[0])
     print("Systolic Time: ", systolic_time*1000)
     sheet['S'+str(it)] = (systolic_time*1000)
-    print("Diastolic Time: ", (RM_Time - systolic_time)*1000)
-    sheet['T'+str(it)] = ((RM_Time - systolic_time)*1000)
-    print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time - systolic_time)))
-    sheet['U'+str(it)] = (systolic_time/(RM_Time - systolic_time))
+    print("Diastolic Time: ", (RM_Time[0] - systolic_time)*1000)
+    sheet['T'+str(it)] = ((RM_Time[0] - systolic_time)*1000)
+    print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time[0] - systolic_time)))
+    sheet['U'+str(it)] = (systolic_time/(RM_Time[0] - systolic_time))
 
 
-
+print("\n")
 GLS_calc()
 MD_calc()
 #DI_calc()
