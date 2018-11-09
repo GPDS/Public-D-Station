@@ -94,8 +94,8 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     tick_lbls = np.arange(0, int(END_Time0*1000), 200)
     plt.xticks(tick_locs, tick_lbls)
     colorPlot(txt1,tcolunas1)
-    colorPlot(txt2,tcolunas2)
-    colorPlot(txt3,tcolunas3)
+    #colorPlot(txt2,tcolunas2)
+    #colorPlot(txt3,tcolunas3)
     plt.ylabel('Strain - LV\n(%)', fontsize=SizeFont)
     plt.grid()
     plt.setp(ax0.get_xticklabels(), visible=False)
@@ -113,8 +113,8 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
         colorPlot(strain_rate_lv,tcolunas_strain_rate_lv)
     else:
         colorPlot(txt1.diff(),tcolunas1)
-        colorPlot(txt2.diff(),tcolunas2)
-        colorPlot(txt3.diff(),tcolunas3)
+        #colorPlot(txt2.diff(),tcolunas2)
+        #colorPlot(txt3.diff(),tcolunas3)
     plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
     plt.grid()
     plt.setp(ax1.get_xticklabels(), visible=False)
@@ -136,7 +136,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
     #Marcacao dos pontos no gráfico - INÍCIO
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
     #Marcacao dos pontos no gráfico - FIM
-    plt.tight_layout()
+    #plt.tight_layout()
     plt.show()
     fig.canvas.mpl_disconnect(cid)
     #Processo de plotagem - FIM
@@ -149,8 +149,8 @@ def Parameters_Plot():
     ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
     plt.xlim(0, END_Time1)
     colorPlot(txt1,tcolunas1)
-    colorPlot(txt2,tcolunas2)
-    colorPlot(txt3,tcolunas3)
+    #colorPlot(txt2,tcolunas2)
+    #colorPlot(txt3,tcolunas3)
 
     #Marcações dos pontos usados para os parâmetros
     if prmt == "1":
@@ -781,15 +781,17 @@ def DI_calc():             #Função para calculo do DI
 #print("\033c") #Caso queira limpar o terminal
 
 #Início da abertura dos .txt
-
+"""
 idPatient = input('Patient ID: ')
-#idPatient = 'Aristoteles'
 
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
-#op = '1'
+"""
+
+idPatient = 'Diogenes2'
+op = '5'
 
 if op != test_op:
 	exams_path = ('Patients/'+idPatient)
