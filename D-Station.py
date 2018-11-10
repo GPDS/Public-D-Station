@@ -90,242 +90,252 @@ def colorPlot(txt,tcolunas):
 
 #Funcao para plotagem das curvas de deformacao e marcação no ECG -  INÍCIO
 def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
-    #Processo de plotagem -  INÍCIO
-    fig = plt.figure(figsize=(12, 8))               #Definição do tamanho da figura
-    #Definição do subplot das curvas (gráfico de cima)
-    ax0 = plt.subplot2grid((12,1),(0,0), rowspan = 4, colspan = 1)
-    plt.xlim(0, END_Time0)
-    ax0.axvline(LM_Time, color='y')
-    ax0.axvline(ES_Time, color='g')
-    ax0.axvline(RM_Time, color='y')
-    tick_locs = np.arange(0.0,END_Time0,0.2)
-    tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-    plt.xticks(tick_locs, tick_lbls)
-    colorPlot(txt1,tcolunas1)
-    #colorPlot(txt2,tcolunas2)
-    #colorPlot(txt3,tcolunas3)
-    plt.ylabel('Strain - LV\n(%)', fontsize=SizeFont)
-    plt.grid()
-    plt.setp(ax0.get_xticklabels(), visible=False)
+	#Processo de plotagem -  INÍCIO
+	fig = plt.figure(figsize=(12, 8))               #Definição do tamanho da figura
+	#Definição do subplot das curvas (gráfico de cima)
+	ax0 = plt.subplot2grid((12,1),(0,0), rowspan = 4, colspan = 1)
+	plt.xlim(0, END_Time0)
+	ax0.axvline(LM_Time, color='y')
+	ax0.axvline(ES_Time, color='g')
+	ax0.axvline(RM_Time, color='y')
+	tick_locs = np.arange(0.0,END_Time0,0.2)
+	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	colorPlot(txt1,tcolunas1)
+	#colorPlot(txt2_mod,tcolunas2)
+	#colorPlot(txt3_mod,tcolunas3)
+	plt.ylabel('Strain - LV\n(%)', fontsize=SizeFont)
+	plt.grid()
+	plt.setp(ax0.get_xticklabels(), visible=False)
 
-    #Definição do subplot das curvas de strain LA (gráfico do meio)
-    ax1 = plt.subplot2grid((12,1),(4,0), rowspan = 4, colspan = 1)
-    plt.xlim(0, END_Time0)
-    ax1.axvline(LM_Time, color='y')
-    ax1.axvline(ES_Time, color='g')
-    ax1.axvline(RM_Time, color='y')
-    tick_locs = np.arange(0.0,END_Time0,0.2)
-    tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-    plt.xticks(tick_locs, tick_lbls)
-    if op != test_op:
-        colorPlot(strain_rate_lv,tcolunas_strain_rate_lv)
-    else:
-        colorPlot(txt1.diff(),tcolunas1)
-        #colorPlot(txt2.diff(),tcolunas2)
-        #colorPlot(txt3.diff(),tcolunas3)
-    plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
-    plt.grid()
-    plt.setp(ax1.get_xticklabels(), visible=False)
+	#Definição do subplot das curvas de strain LA (gráfico do meio)
+	ax1 = plt.subplot2grid((12,1),(4,0), rowspan = 4, colspan = 1)
+	plt.xlim(0, END_Time0)
+	ax1.axvline(LM_Time, color='y')
+	ax1.axvline(ES_Time, color='g')
+	ax1.axvline(RM_Time, color='y')
+	tick_locs = np.arange(0.0,END_Time0,0.2)
+	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	if op != test_op:
+		colorPlot(strain_rate_lv,tcolunas_strain_rate_lv)
+	else:
+		colorPlot(txt1.diff(),tcolunas1)
+		#colorPlot(txt2_mod.diff(),tcolunas2)
+		#colorPlot(txt3_mod.diff(),tcolunas3)
+	plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
+	plt.grid()
+	plt.setp(ax1.get_xticklabels(), visible=False)
 
-    #Definição do subplot do gráfico do ECG (gráfico de baixo)
-    ax2 = plt.subplot2grid((12, 1), (8, 0), rowspan = 4, colspan = 1)
-    plt.xlim(0, END_Time0)
-    ax2.axvline(LM_Time, color='y')
-    ax2.axvline(ES_Time, color='g')
-    ax2.axvline(RM_Time, color='y')
-    tick_locs = np.arange(0.0,END_Time0,0.2)
-    tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-    plt.xticks(tick_locs, tick_lbls)
-    plt.plot(txt1.loc[:,'ECG : '])
-    plt.xlabel('Time (ms)', fontsize=SizeFont)
-    plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
-    plt.grid()
-    #Fim das definições dos subplots
-    #Marcacao dos pontos no gráfico - INÍCIO
-    cid = fig.canvas.mpl_connect('button_press_event', onclick)
-    #Marcacao dos pontos no gráfico - FIM
-    plt.tight_layout()
-    plt.show()
-    fig.canvas.mpl_disconnect(cid)
+	#Definição do subplot do gráfico do ECG (gráfico de baixo)
+	ax2 = plt.subplot2grid((12, 1), (8, 0), rowspan = 4, colspan = 1)
+	plt.xlim(0, END_Time0)
+	ax2.axvline(LM_Time, color='y')
+	ax2.axvline(ES_Time, color='g')
+	ax2.axvline(RM_Time, color='y')
+	tick_locs = np.arange(0.0,END_Time0,0.2)
+	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	plt.plot(txt1.loc[:,'ECG : '])
+	plt.xlabel('Time (ms)', fontsize=SizeFont)
+	plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
+	plt.grid()
+	#Fim das definições dos subplots
+	#Marcacao dos pontos no gráfico - INÍCIO
+	cid = fig.canvas.mpl_connect('button_press_event', onclick)
+	#Marcacao dos pontos no gráfico - FIM
+	plt.tight_layout()
+	plt.show()
+	fig.canvas.mpl_disconnect(cid)
     #Processo de plotagem - FIM
 #Funcao para plotagem das curvas de deformacao e marcação no ECG -  FIM
 
 #Plotagem dos gráficos de saída final - INÍCIO
 def Parameters_Plot():
-    fig = plt.figure(figsize=(16, 8))               #Definição do tamanho da figura
-    #Definição do subplot das curvas (gráfico do meio)
-    ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
-    plt.xlim(0, END_Time1)
-    colorPlot(txt1,tcolunas1)
-    #colorPlot(txt2,tcolunas2)
-    #colorPlot(txt3,tcolunas3)
+	fig = plt.figure(figsize=(16, 8))               #Definição do tamanho da figura
+	#Definição do subplot das curvas (gráfico do meio)
+	ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
+	plt.xlim(0, END_Time1)
+	colorPlot(txt1,tcolunas1)
+	colorPlot(txt2_mod,tcolunas2)
+	colorPlot(txt3_mod,tcolunas3)
 
-    #Marcações dos pontos usados para os parâmetros
-    if prmt == "1":
-        colours=list(txt1_s)
-        for colour_it in range(0,tcolunas1-2):
-            plt.plot(txt1_s[colours[colour_it]].idxmin(), txt1_s[colours[colour_it]].min(), 'kx')
+	#Marcações dos pontos usados para os parâmetros
+	if prmt == "1":
+		colours=list(txt1_s)
+		for colour_it in range(0,tcolunas1-2):
+			plt.plot(txt1_s[colours[colour_it]].idxmin(), txt1_s[colours[colour_it]].min(), 'kx')
 
-        colours=list(txt2_s)
-        for colour_it in range(0,tcolunas2-2):
-            plt.plot(txt2_s[colours[colour_it]].idxmin(), txt2_s[colours[colour_it]].min(), 'k*')
+		colours=list(txt2_s)
+		for colour_it in range(0,tcolunas2-2):
+			plt.plot(txt2_s[colours[colour_it]].idxmin(), txt2_s[colours[colour_it]].min(), 'k*')
 
-        colours=list(txt3_s)
-        for colour_it in range(0,tcolunas3-2):
-            plt.plot(txt3_s[colours[colour_it]].idxmin(), txt3_s[colours[colour_it]].min(), 'k+')
+		colours=list(txt3_s)
+		for colour_it in range(0,tcolunas3-2):
+			plt.plot(txt3_s[colours[colour_it]].idxmin(), txt3_s[colours[colour_it]].min(), 'k+')
 
-    if prmt == "2":
-        colours=list(txt1_sliced_onsets)
-        for colour_it in range(0,tcolunas1-2):
-            plt.plot(txt1_sliced_onsets[colours[colour_it]].idxmin(), txt1_sliced_onsets[colours[colour_it]].min(), 'kx')
+	if prmt == "2":
+		colours=list(txt1_sliced_onsets)
+		for colour_it in range(0,tcolunas1-2):
+			plt.plot(txt1_sliced_onsets[colours[colour_it]].idxmin(), txt1_sliced_onsets[colours[colour_it]].min(), 'kx')
 
-        colours=list(txt2_sliced_onsets)
-        for colour_it in range(0,tcolunas2-2):
-            plt.plot(txt2_sliced_onsets[colours[colour_it]].idxmin(), txt2_sliced_onsets[colours[colour_it]].min(), 'kx')
+		colours=list(txt2_sliced_onsets)
+		for colour_it in range(0,tcolunas2-2):
+			plt.plot(txt2_sliced_onsets[colours[colour_it]].idxmin(), txt2_sliced_onsets[colours[colour_it]].min(), 'kx')
 
-        colours=list(txt3_sliced_onsets)
-        for colour_it in range(0,tcolunas3-2):
-            plt.plot(txt3_sliced_onsets[colours[colour_it]].idxmin(), txt3_sliced_onsets[colours[colour_it]].min(), 'kx')
+		colours=list(txt3_sliced_onsets)
+		for colour_it in range(0,tcolunas3-2):
+			plt.plot(txt3_sliced_onsets[colours[colour_it]].idxmin(), txt3_sliced_onsets[colours[colour_it]].min(), 'kx')
 
-    if prmt == "3":
-        ax0.axvline(ThirdDiastoleTime, color='k')
+	if prmt == "3":
+		ax0.axvline(ThirdDiastoleTime, color='k')
 
-    #Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
-    ymin, ymax = plt.ylim()
-    txt_height_1 = ymax+0.15*(ymax-ymin)
-    txt_height_2 = ymax+0.05*(ymax-ymin)
-    x_inc=0.002
-    plt.grid()
-    tick_locs = np.arange(0.0,END_Time1,0.2)
-    tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-    plt.xticks(tick_locs, tick_lbls)
-    plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
-    plt.setp(ax0.get_xticklabels(), visible=False)
-    #
+	#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
+	ymin, ymax = plt.ylim()
+	txt_height_1 = ymax+0.15*(ymax-ymin)
+	txt_height_2 = ymax+0.05*(ymax-ymin)
+	x_inc=0.002
+	plt.grid()
+	tick_locs = np.arange(0.0,END_Time1,0.2)
+	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
+	plt.setp(ax0.get_xticklabels(), visible=False)
+	#
 
-    plt.text(MVOvalues1[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center')
-    plt.text(MVOvalues2[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center')
-    plt.text(MVCvalues1[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center')
-    plt.text(MVCvalues2[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center')
-    plt.text(AVOvalues1[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center')
-    plt.text(AVOvalues2[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center')
-    plt.text(AVCvalues1[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center')
-    plt.text(AVCvalues2[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center')
-    if op != test_op:
-        plt.text(EMCvalues1[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center')
-        plt.text(EMCvalues2[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center')
-    plt.text(IVCvalues1[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center')
-    plt.text(IVCvalues2[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center')
-    plt.text(EjectionTimevalues1[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center')
-    plt.text(EjectionTimevalues2[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center')
-    plt.text(IVRvalues[0]+x_inc, txt_height_2, "IVR" , rotation=0, verticalalignment='center')
-    plt.text(Evalues[0]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center')
-    if op != test_op:
-        #plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
-        plt.text(Avalues[0]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center')
+	plt.text(MVOvalues1[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center')
+	plt.text(MVCvalues1[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center')
+	plt.text(AVOvalues1[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center')
+	plt.text(AVCvalues1[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center')
+	if op != test_op:
+		plt.text(EMCvalues1[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center')
+	plt.text(IVCvalues1[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center')
+	plt.text(EjectionTimevalues1[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center')
+	plt.text(IVRvalues[0]+x_inc, txt_height_2, "IVR" , rotation=0, verticalalignment='center')
+	plt.text(Evalues[0]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center')
+	if op != test_op:
+		#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
+		plt.text(Avalues[0]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center')
 
-    #Definição do subplot das curvas (gráfico do meio)
-    ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
-    plt.xlim(0, END_Time1)
-    if op != test_op:
-        colorPlot(txt_mid,tcolunas_mid)
-    else:
-        colorPlot(txt1.diff(),tcolunas1)
-        #colorPlot(txt2.diff(),tcolunas2)
-        #colorPlot(txt3.diff(),tcolunas3)
-    plt.grid()
-    tick_locs = np.arange(0.0,END_Time1,0.2)
-    tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-    plt.xticks(tick_locs, tick_lbls)
+	#Definição do subplot das curvas (gráfico do meio)
+	ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
+	plt.xlim(0, END_Time1)
+	if op != test_op:
+		colorPlot(txt_mid,tcolunas_mid)
+	else:
+		colorPlot(txt1.diff(),tcolunas1)
+		#colorPlot(txt2.diff(),tcolunas2)
+		#colorPlot(txt3.diff(),tcolunas3)
+	plt.grid()
+	tick_locs = np.arange(0.0,END_Time1,0.2)
+	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
 
-    if op == "1" or op == "5" or op == test_op:
-        plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
-    if op == "2":
-        plt.ylabel('Strain - LA\n(%)', fontsize=SizeFont)
-    if op == "3":
-        plt.ylabel('Strain Rate - LA\n(1/s)', fontsize=SizeFont)
-    if op == "4":
-        plt.ylabel('Strain - RV\n(%)', fontsize=SizeFont)
-    plt.setp(ax1.get_xticklabels(), visible=False)
+	if op == "1" or op == "5" or op == test_op:
+		plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
+	if op == "2":
+		plt.ylabel('Strain - LA\n(%)', fontsize=SizeFont)
+	if op == "3":
+		plt.ylabel('Strain Rate - LA\n(1/s)', fontsize=SizeFont)
+	if op == "4":
+		plt.ylabel('Strain - RV\n(%)', fontsize=SizeFont)
+	plt.setp(ax1.get_xticklabels(), visible=False)
 
-    #Definição do subplot do gráfico do ECG (gráfico de baixo)
-    ax2 = plt.subplot2grid((16, 1), (13, 0), rowspan = 4, colspan = 1)
-    plt.plot(txt1.loc[:,'ECG : '])
-    plt.xlim(0, END_Time1)
-    tick_locs = np.arange(0.0,END_Time1,0.2)
-    tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-    plt.xticks(tick_locs, tick_lbls)
-    plt.xlabel('Time (ms)', fontsize=SizeFont)
-    plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
-    plt.grid()
+	#Definição do subplot do gráfico do ECG (gráfico de baixo)
+	ax2 = plt.subplot2grid((16, 1), (13, 0), rowspan = 4, colspan = 1)
+	plt.plot(txt1.loc[:,'ECG : '])
+	plt.xlim(0, END_Time1)
+	tick_locs = np.arange(0.0,END_Time1,0.2)
+	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	plt.xlabel('Time (ms)', fontsize=SizeFont)
+	plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
+	plt.grid()
 
-    #Plotagem das linhas entre os subplots - INÍCIO
-    ax0.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
-    ax0.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    if op != test_op:
-        ax0.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-        ax0.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-    ax0.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax0.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    if op != test_op:
-        #ax0.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-        ax0.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	#Plotagem das linhas entre os subplots - INÍCIO
+	ax0.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
+	if op != test_op:
+		ax0.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+	ax0.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op:
+		#ax0.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax0.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-    ax1.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
-    ax1.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    if op != test_op:
-        ax1.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-        ax1.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-    ax1.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax1.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    if op != test_op:
-        #ax1.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-        ax1.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
+	if op != test_op:
+		ax1.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+	ax1.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op:
+		#ax1.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax1.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-    ax2.axvline(x=MVOvalues1[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=MVOvalues2[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=MVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=MVCvalues2[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=AVOvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=AVOvalues2[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=AVCvalues1[0], c="g",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-    ax2.axvline(x=AVCvalues2[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    if op != test_op:
-        ax2.axvline(x=EMCvalues1[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-        ax2.axvline(x=EMCvalues2[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-    ax2.axvline(x=IVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=IVCvalues2[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=IVRvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    ax2.axvline(x=Evalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    if op != test_op:
-        #ax2.axvline(x=Diastasisvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-        ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-    #Plotagem das linhas entre os subplots - FIM
+	ax2.axvline(x=MVOvalues1[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=MVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=AVOvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=AVCvalues1[0], c="g",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+	if op != test_op:
+		ax2.axvline(x=EMCvalues1[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+	ax2.axvline(x=IVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=IVRvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=Evalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op:
+		#ax2.axvline(x=Diastasisvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-    plt.tight_layout()
-    plt.show()
+	#ifs para definir o que aparecerá na figura com base no final dela
+	if MVOvalues2[0]<END_Time1:
+		plt.text(MVOvalues2[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center')
+		ax0.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax1.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax2.axvline(x=MVOvalues2[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if MVCvalues2[0]<END_Time1:
+		plt.text(MVCvalues2[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center')
+		ax0.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax1.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax2.axvline(x=MVCvalues2[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVOvalues2[0]<END_Time1:
+		plt.text(AVOvalues2[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center')
+		ax0.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax1.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax2.axvline(x=AVOvalues2[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVCvalues2[0]<END_Time1:
+		plt.text(AVCvalues2[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center')
+		ax0.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax1.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax2.axvline(x=AVCvalues2[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op and EMCvalues2 < END_Time1:
+		plt.text(EMCvalues2[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center')
+		ax0.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+		ax1.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+		ax2.axvline(x=EMCvalues2[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+	if IVCvalues2[0]<END_Time1:
+		plt.text(IVCvalues2[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center')
+		ax0.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax1.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax2.axvline(x=IVCvalues2[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if EjectionTimevalues2[0]<END_Time1:
+		plt.text(EjectionTimevalues2[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center')
+		ax0.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax1.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax2.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+	#Plotagem das linhas entre os subplots - FIM
+
+	plt.tight_layout()
+	plt.show()
 #Plotagem dos gráficos de saída final - FIM
 
 #INÍCIO DO BULLSEYE DE 17 SEGMENTOS
@@ -927,7 +937,6 @@ for f in list_txtfiles:
         RM_Time.append(float(numbers[1]))
         ES_Time.append(float(numbers[2]))
 
-
 #Fim da abertura dos .txt
 
 txt1.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
@@ -935,6 +944,11 @@ txt2.drop('Unnamed: 1', axis=1, inplace=True)
 txt3.drop('Unnamed: 1', axis=1, inplace=True)
 txt_mid.drop('Unnamed: 1', axis=1, inplace=True)
 #strain_rate_lv.drop('Unnamed: 1', axis=1, inplace=True)
+
+txt2_mod=txt2.copy(deep=True)  		#Se deep for false é uma shallow copy, index e data são compartilhados
+txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])
+txt3_mod=txt3.copy(deep=True)
+txt3_mod.index = txt3_mod.index-(LM_Time[2]-LM_Time[0])
 
 tcolunas1=int(((txt1.size/len(txt1.index))))
 tcolunas2=int(((txt2.size/len(txt2.index))))
@@ -1057,8 +1071,8 @@ while True:
     print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
     #print("\t3. Diastolic Recovery")
     print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
-    #prmt = input("Parameter: ")
-    prmt="0"
+    prmt = input("Parameter: ")
+    #prmt="0"
 
     if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
         GLS_calc()
