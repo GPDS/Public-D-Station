@@ -168,11 +168,11 @@ def Parameters_Plot():
 
 		colours=list(txt2_s)
 		for colour_it in range(0,tcolunas2-2):
-			plt.plot(txt2_s[colours[colour_it]].idxmin(), txt2_s[colours[colour_it]].min(), 'k*')
+			plt.plot(txt2_s[colours[colour_it]].idxmin()-(LM_Time[1]-LM_Time[0]), txt2_s[colours[colour_it]].min(), 'k*')
 
 		colours=list(txt3_s)
 		for colour_it in range(0,tcolunas3-2):
-			plt.plot(txt3_s[colours[colour_it]].idxmin(), txt3_s[colours[colour_it]].min(), 'k+')
+			plt.plot(txt3_s[colours[colour_it]].idxmin()-(LM_Time[2]-LM_Time[0]), txt3_s[colours[colour_it]].min(), 'k+')
 
 	if prmt == "2":
 		colours=list(txt1_sliced_onsets)
@@ -181,11 +181,11 @@ def Parameters_Plot():
 
 		colours=list(txt2_sliced_onsets)
 		for colour_it in range(0,tcolunas2-2):
-			plt.plot(txt2_sliced_onsets[colours[colour_it]].idxmin(), txt2_sliced_onsets[colours[colour_it]].min(), 'kx')
+			plt.plot(txt2_sliced_onsets[colours[colour_it]].idxmin()-(LM_Time[1]-LM_Time[0]), txt2_sliced_onsets[colours[colour_it]].min(), 'kx')
 
 		colours=list(txt3_sliced_onsets)
 		for colour_it in range(0,tcolunas3-2):
-			plt.plot(txt3_sliced_onsets[colours[colour_it]].idxmin(), txt3_sliced_onsets[colours[colour_it]].min(), 'kx')
+			plt.plot(txt3_sliced_onsets[colours[colour_it]].idxmin()-(LM_Time[2]-LM_Time[0]), txt3_sliced_onsets[colours[colour_it]].min(), 'kx')
 
 	if prmt == "3":
 		ax0.axvline(ThirdDiastoleTime, color='k')
