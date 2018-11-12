@@ -689,59 +689,61 @@ def GLS_calc():             #Função para calculo do GLS
 
 def MD_calc():             #Função para calculo do MD
 
-    global txt1_sliced_onsets
-    global txt2_sliced_onsets
-    global txt3_sliced_onsets
+	global txt1_sliced_onsets
+	global txt2_sliced_onsets
+	global txt3_sliced_onsets
 
-    if op == test_op:
-        txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)] #Obtenção da Mechanical Dispersion
-        txt2_sliced_onsets = txt2[(txt2.index >= LM_Time) & (txt2.index < RM_Time)]
-        txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
-    else:
-        txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])]#Obtenção da Mechanical Dispersion
-        txt2_sliced_onsets = txt2_mod[(txt2_mod.index >= LM_Time[1]) & (txt2_mod.index < RM_Time[1])]
-        txt3_sliced_onsets = txt3_mod[(txt3_mod.index >= LM_Time[2]) & (txt3_mod.index < RM_Time[2])]
-    global_minima_times = []
-    if prmt == '2':
-        print("\n\nTimes of peak negative strain:\n")
+	if op == test_op:
+		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)] #Obtenção da Mechanical Dispersion
+		txt2_sliced_onsets = txt2[(txt2.index >= LM_Time) & (txt2.index < RM_Time)]
+		txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
+	else:
+		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])]#Obtenção da Mechanical Dispersion
+		txt2_sliced_onsets = txt2_mod[(txt2_mod.index >= LM_Time[1]) & (txt2_mod.index < RM_Time[1])]
+		txt3_sliced_onsets = txt3_mod[(txt3_mod.index >= LM_Time[2]) & (txt3_mod.index < RM_Time[2])]
+	global_minima_times = []
+	if prmt == '2':
+		print("\n\nTimes of peak negative strain:\n")
 
-    colours=list(txt2_sliced_onsets)
-    for colour_it in range(0,tcolunas2-2):
-        if prmt == '2':
-            if op == test_op:
-                print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-            else:
-                print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-        global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())
-    if prmt == '2':
-        print("\n")
+	colours=list(txt2_sliced_onsets)
+	for colour_it in range(0,tcolunas2-2):
+		if prmt == '2':
+			if op == test_op:
+				print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+			else:
+				print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+			global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())
+	if prmt == '2':
+		print("\n")
 
-    colours=list(txt1_sliced_onsets)
-    for colour_it in range(0,tcolunas1-2):
-        if prmt == '2':
-            if op == test_op:
-                print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-            else:
-                print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-        global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())
-    if prmt == '2':
-        print("\n")
+	colours=list(txt1_sliced_onsets)
+	for colour_it in range(0,tcolunas1-2):
+		if prmt == '2':
+			if op == test_op:
+				print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+			else:
+				print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+			global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())
+	if prmt == '2':
+		print("\n")
 
-    colours=list(txt3_sliced_onsets)
-    for colour_it in range(0,tcolunas3-2):
-        if prmt == '2':
-            if op == test_op:
-                print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-            else:
-                print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-        global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())
+	colours=list(txt3_sliced_onsets)
+	for colour_it in range(0,tcolunas3-2):
+		if prmt == '2':
+			if op == test_op:
+				print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+			else:
+				print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
+		global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())
 
-    if prmt == '2':
-        print("\n\n")
-    print("Mechanical Dispersion: ",np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, "ms") #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
-    if prmt != '0':
-        Parameters_Plot()
-    sheet['W'+str(it)] = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2) #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
+	if prmt == '2':
+		print("\n\n")
+	print("Mechanical Dispersion: ",np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, "ms") #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
+
+	if prmt != '0':
+		Parameters_Plot()
+
+	sheet['W'+str(it)] = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2) #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
 
 
 def DI_calc():             #Função para calculo do DI
@@ -1017,15 +1019,10 @@ wb = openpyxl.load_workbook('Event_Timing.xlsx')
 sheet = wb['Sheet1']
 #Determinar a linha correspondente ao paciente:
 for cell in sheet['A']:
-    if(cell.value is not None): #We need to check that the cell is not empty.
-        if idPatient is cell.value: #Check if the value of the cell contains the idPatient
-            it = format(cell.row)
-#print(it) ##Aristoteles = 4, #Teste1 = 8
+	if(cell.value is not None): #We need to check that the cell is not empty.
+		if idPatient == cell.value: #Check if the value of the cell contains the idPatient
+			it = format(cell.row)
 #Fim da abertura da planilha
-
-
-Highest_LM = max(LM_Time) #Para adicionar ao Event_Timing
-Highest_RM = max(RM_Time)
 
 if op != test_op:
     #Gravação dos valores marcados na planilha do excel - INÍCIO
@@ -1042,7 +1039,6 @@ MVOvalues1.append((int(sheet['C'+str(it)].value)/1000)+LM_Time[0])#Valor do MVO 
 MVCvalues1.append((int(sheet['D'+str(it)].value)/1000)+LM_Time[0])#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + LM_Time(em s)
 AVOvalues1.append((int(sheet['E'+str(it)].value)/1000)+LM_Time[0])#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + LM_Time(em s)
 AVCvalues1.append((int(sheet['F'+str(it)].value)/1000)+LM_Time[0])#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + LM_Time(em s)
-print((int(sheet['F'+str(it)].value)/1000),"+", LM_Time[0])
 MVOvalues2.append((int(sheet['C'+str(it)].value)/1000)+RM_Time[0])#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + RM_Time(em s)
 MVCvalues2.append((int(sheet['D'+str(it)].value)/1000)+RM_Time[0])#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + RM_Time(em s)
 AVOvalues2.append((int(sheet['E'+str(it)].value)/1000)+RM_Time[0])#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + RM_Time(em s)
@@ -1067,7 +1063,7 @@ if op != test_op:
 #Os valores acima são usados na separação das fases
 
 #Impressão dos valores trabalhados no terminal
-print("\nLM_Time: ",Highest_LM*1000, "ms")
+print("\nLM_Time: ",LM_Time[0]*1000, "ms")
 print("RM_Time: ",RM_Time[0]*1000, "ms")
 if op != test_op:
     print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[0]*1000, "ms")
@@ -1100,7 +1096,6 @@ if op != test_op:
     #print("Diastasis: ",Diastasisvalues[0]*1000, "ms")
     print("Atrial Systole: ",Avalues[0]*1000, "ms")
     sheet['O'+str(it)] = round(Avalues[0]*1000)
-    print("\n\nLM_Time: ",Highest_LM,"s\nEMC1: ",EMCvalues1[0], "s\nDifference between txt and chosen markers: 4CH -",Highest_LM-EMCvalues1[0],"s")
 else:
     systolic_time = (AVCvalues1[0]-MVCvalues1[0])
     print("Systolic Time: ", systolic_time*1000)
@@ -1122,8 +1117,8 @@ while True:
     print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
     #print("\t3. Diastolic Recovery")
     print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
-    prmt = input("Parameter: ")
-    #prmt="0"
+    #prmt = input("Parameter: ")
+    prmt="0"
 
     if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
         GLS_calc()
