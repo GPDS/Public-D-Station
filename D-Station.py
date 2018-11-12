@@ -146,7 +146,7 @@ def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
 	#Marcacao dos pontos no gráfico - INÍCIO
 	cid = fig.canvas.mpl_connect('button_press_event', onclick)
 	#Marcacao dos pontos no gráfico - FIM
-	plt.tight_layout()
+	#plt.tight_layout()
 	plt.show()
 	fig.canvas.mpl_disconnect(cid)
     #Processo de plotagem - FIM
@@ -355,7 +355,7 @@ def Parameters_Plot():
 
 	#Plotagem das linhas entre os subplots - FIM
 
-	plt.tight_layout()
+	#plt.tight_layout()
 	plt.show()
 #Plotagem dos gráficos de saída final - FIM
 
