@@ -184,11 +184,11 @@ def Parameters_Plot():
 
 		colours=list(txt2_sliced_onsets)
 		for colour_it in range(0,tcolunas2-2):
-			plt.plot(txt2_sliced_onsets[colours[colour_it]].idxmin()-(LM_Time[1]-LM_Time[0]), txt2_sliced_onsets[colours[colour_it]].min(), 'kx')
+			plt.plot(txt2_sliced_onsets[colours[colour_it]].idxmin(), txt2_sliced_onsets[colours[colour_it]].min(), 'kx')
 
 		colours=list(txt3_sliced_onsets)
 		for colour_it in range(0,tcolunas3-2):
-			plt.plot(txt3_sliced_onsets[colours[colour_it]].idxmin()-(LM_Time[2]-LM_Time[0]), txt3_sliced_onsets[colours[colour_it]].min(), 'kx')
+			plt.plot(txt3_sliced_onsets[colours[colour_it]].idxmin(), txt3_sliced_onsets[colours[colour_it]].min(), 'kx')
 
 	if prmt == "3":
 		ax0.axvline(ThirdDiastoleTime, color='k')
@@ -686,6 +686,7 @@ def GLS_calc():             #Função para calculo do GLS
 		Parameters_Plot()
 	sheet['V'+str(it)] = round(gls, 2)
 
+
 def MD_calc():             #Função para calculo do MD
 
     global txt1_sliced_onsets
@@ -698,8 +699,8 @@ def MD_calc():             #Função para calculo do MD
         txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
     else:
         txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])]#Obtenção da Mechanical Dispersion
-        txt2_sliced_onsets = txt2[(txt2.index >= LM_Time[1]) & (txt2.index < RM_Time[1])]
-        txt3_sliced_onsets = txt3[(txt3.index >= LM_Time[2]) & (txt3.index < RM_Time[2])]
+        txt2_sliced_onsets = txt2_mod[(txt2_mod.index >= LM_Time[1]) & (txt2_mod.index < RM_Time[1])]
+        txt3_sliced_onsets = txt3_mod[(txt3_mod.index >= LM_Time[2]) & (txt3_mod.index < RM_Time[2])]
     global_minima_times = []
     if prmt == '2':
         print("\n\nTimes of peak negative strain:\n")
@@ -710,7 +711,7 @@ def MD_calc():             #Função para calculo do MD
             if op == test_op:
                 print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
             else:
-                print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[0],"ms")
+                print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
         global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())
     if prmt == '2':
         print("\n")
@@ -721,7 +722,7 @@ def MD_calc():             #Função para calculo do MD
             if op == test_op:
                 print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
             else:
-                print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[0],"ms")
+                print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
         global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())
     if prmt == '2':
         print("\n")
@@ -732,7 +733,7 @@ def MD_calc():             #Função para calculo do MD
             if op == test_op:
                 print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
             else:
-                print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin()-EMCvalues1[0],"ms")
+                print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
         global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())
 
     if prmt == '2':
@@ -1037,28 +1038,28 @@ if op != test_op:
     #Gravação dos valores marcados na planilha do excel - FIM
 
 
-MVOvalues1.append((int(sheet['C'+str(it)].value)/1000)+Highest_LM)#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + LM_Time(em s)
-MVCvalues1.append((int(sheet['D'+str(it)].value)/1000)+Highest_LM)#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + LM_Time(em s)
-AVOvalues1.append((int(sheet['E'+str(it)].value)/1000)+Highest_LM)#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + LM_Time(em s)
-AVCvalues1.append((int(sheet['F'+str(it)].value)/1000)+Highest_LM)#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + LM_Time(em s)
-print((int(sheet['F'+str(it)].value)/1000),"+", Highest_LM)
-MVOvalues2.append((int(sheet['C'+str(it)].value)/1000)+Highest_RM)#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + RM_Time(em s)
-MVCvalues2.append((int(sheet['D'+str(it)].value)/1000)+Highest_RM)#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + RM_Time(em s)
-AVOvalues2.append((int(sheet['E'+str(it)].value)/1000)+Highest_RM)#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + RM_Time(em s)
-AVCvalues2.append((int(sheet['F'+str(it)].value)/1000)+Highest_RM)#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + RM_Time(em s)
+MVOvalues1.append((int(sheet['C'+str(it)].value)/1000)+LM_Time[0])#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + LM_Time(em s)
+MVCvalues1.append((int(sheet['D'+str(it)].value)/1000)+LM_Time[0])#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + LM_Time(em s)
+AVOvalues1.append((int(sheet['E'+str(it)].value)/1000)+LM_Time[0])#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + LM_Time(em s)
+AVCvalues1.append((int(sheet['F'+str(it)].value)/1000)+LM_Time[0])#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + LM_Time(em s)
+print((int(sheet['F'+str(it)].value)/1000),"+", LM_Time[0])
+MVOvalues2.append((int(sheet['C'+str(it)].value)/1000)+RM_Time[0])#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + RM_Time(em s)
+MVCvalues2.append((int(sheet['D'+str(it)].value)/1000)+RM_Time[0])#Valor do MVC à esquerda: Valor de MVC da planilha(em ms)/1000 + RM_Time(em s)
+AVOvalues2.append((int(sheet['E'+str(it)].value)/1000)+RM_Time[0])#Valor do AVO à esquerda: Valor de AVO da planilha(em ms)/1000 + RM_Time(em s)
+AVCvalues2.append((int(sheet['F'+str(it)].value)/1000)+RM_Time[0])#Valor do AVC à esquerda: Valor de AVC da planilha(em ms)/1000 + RM_Time(em s)
 if op != test_op:
-    Dif_LM_OnsetQRS1.append(Highest_LM - (int(sheet['G'+str(it)].value)/1000)) #Diferença entre o Onset QRS 1 e o LM_Time
+    Dif_LM_OnsetQRS1.append(LM_Time[0] - (int(sheet['G'+str(it)].value)/1000)) #Diferença entre o Onset QRS 1 e o LM_Time
 
 #Recomputação devido à limitações do package para pegar valores da planilha - Não é preciso adicionar LM_Time aos valores marcados no programa
 if op != test_op:
     EMCvalues1.append((int(sheet['G'+str(it)].value)/1000))                 #Início de EMC1 = Onset QRS 1(em ms)/1000
     EMCvalues2.append((int(sheet['H'+str(it)].value)/1000))                 #Início de EMC2 = Onset QRS 2(em ms)/1000
-IVCvalues1.append((int(sheet['D'+str(it)].value)/1000+Highest_LM))             #Início de IVC1 = MVC(em ms)/1000 + LM_Time
-IVCvalues2.append((int(sheet['D'+str(it)].value)/1000+Highest_RM))             #Início de IVC2 = MVC(em ms)/1000 + RM_Time
-EjectionTimevalues1.append((int(sheet['E'+str(it)].value)/1000+Highest_LM))    #Início de EjectionTime1 = AVO(em ms)/1000 + LM_Time
-EjectionTimevalues2.append((int(sheet['E'+str(it)].value)/1000+Highest_RM))    #Início de EjectionTime2 = AVO(em ms)/1000 + RM_Time
-IVRvalues.append((int(sheet['F'+str(it)].value)/1000+Highest_LM))             #Início de IVR = AVC(em ms)/1000 + LM_Time
-Evalues.append((int(sheet['C'+str(it)].value)/1000+Highest_LM))                #Início de E = MVO(em ms)/1000 + LM_Time
+IVCvalues1.append((int(sheet['D'+str(it)].value)/1000+LM_Time[0]))             #Início de IVC1 = MVC(em ms)/1000 + LM_Time
+IVCvalues2.append((int(sheet['D'+str(it)].value)/1000+RM_Time[0]))             #Início de IVC2 = MVC(em ms)/1000 + RM_Time
+EjectionTimevalues1.append((int(sheet['E'+str(it)].value)/1000+LM_Time[0]))    #Início de EjectionTime1 = AVO(em ms)/1000 + LM_Time
+EjectionTimevalues2.append((int(sheet['E'+str(it)].value)/1000+RM_Time[0]))    #Início de EjectionTime2 = AVO(em ms)/1000 + RM_Time
+IVRvalues.append((int(sheet['F'+str(it)].value)/1000+LM_Time[0]))             #Início de IVR = AVC(em ms)/1000 + LM_Time
+Evalues.append((int(sheet['C'+str(it)].value)/1000+LM_Time[0]))                #Início de E = MVO(em ms)/1000 + LM_Time
 if op != test_op:
     #Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Início da Diastase = D point/1000
     Avalues.append((int(sheet['I'+str(it)].value)/1000))                    #Início de A = Onset P(em ms)/1000
@@ -1067,7 +1068,7 @@ if op != test_op:
 
 #Impressão dos valores trabalhados no terminal
 print("\nLM_Time: ",Highest_LM*1000, "ms")
-print("RM_Time: ",Highest_RM*1000, "ms")
+print("RM_Time: ",RM_Time[0]*1000, "ms")
 if op != test_op:
     print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[0]*1000, "ms")
 print("\nMVO1: ",MVOvalues1[0]*1000, "ms")
@@ -1104,10 +1105,10 @@ else:
     systolic_time = (AVCvalues1[0]-MVCvalues1[0])
     print("Systolic Time: ", systolic_time*1000)
     sheet['S'+str(it)] = (systolic_time*1000)
-    print("Diastolic Time: ", (Highest_RM - systolic_time)*1000)
-    sheet['T'+str(it)] = ((Highest_RM - systolic_time)*1000)
-    print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(Highest_RM - systolic_time)))
-    sheet['U'+str(it)] = (systolic_time/(Highest_RM - systolic_time))
+    print("Diastolic Time: ", (RM_Time[0] - systolic_time)*1000)
+    sheet['T'+str(it)] = ((RM_Time[0] - systolic_time)*1000)
+    print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time[0] - systolic_time)))
+    sheet['U'+str(it)] = (systolic_time/(RM_Time[0] - systolic_time))
 
 
 print("\n")
