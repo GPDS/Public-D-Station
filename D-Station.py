@@ -1117,8 +1117,8 @@ while True:
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
 	#print("\t3. Diastolic Recovery")
 	print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
-	#prmt = input("Parameter: ")
-	prmt="0"
+	prmt = input("Parameter: ")
+	#prmt="0"
 
 	if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
 		GLS_calc()
