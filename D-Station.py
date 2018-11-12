@@ -712,7 +712,7 @@ def MD_calc():             #Função para calculo do MD
 				print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
 			else:
 				print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-			global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())
+		global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())
 	if prmt == '2':
 		print("\n")
 
@@ -723,7 +723,7 @@ def MD_calc():             #Função para calculo do MD
 				print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
 			else:
 				print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-			global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())
+		global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())
 	if prmt == '2':
 		print("\n")
 
@@ -738,7 +738,7 @@ def MD_calc():             #Função para calculo do MD
 
 	if prmt == '2':
 		print("\n\n")
-	print("Mechanical Dispersion: ",np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, "ms") #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
+	print("Mechanical Dispersion: ",round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2), "ms") #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
 
 	if prmt != '0':
 		Parameters_Plot()
@@ -1114,32 +1114,31 @@ print("\n\n")
 
 
 while True:
-    print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
-    #print("\t3. Diastolic Recovery")
-    print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
-    #prmt = input("Parameter: ")
-    prmt="0"
+	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
+	#print("\t3. Diastolic Recovery")
+	print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
+	#prmt = input("Parameter: ")
+	prmt="0"
 
-    if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
-        GLS_calc()
+	if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
+		GLS_calc()
 
-    elif prmt == "2":
-        MD_calc()
+	elif prmt == "2":
+		MD_calc()
+	#elif prmt == "3":
+	#    DI_calc()
+	#    DR_bullseye(BullseyeAux)
+    	#Ver a barra
+	elif prmt == "4":
+		print("\nPlot w/o any parameters")
+		Parameters_Plot()
 
-    #elif prmt == "3":
-    #    DI_calc()
-    #    DR_bullseye(BullseyeAux)
-        #Ver a barra
-    elif prmt == "4":
-        print("\nPlot w/o any parameters")
-        Parameters_Plot()
+	elif prmt == "0":
+		break
 
-    elif prmt == "0":
-        break
-
-    else:
-        print("\n\nInvalid option\n\n\n")
-        continue
-    print("\n")
+	else:
+		print("\n\nInvalid option\n\n\n")
+		continue
+	print("\n")
 
 wb.save("Event_Timing.xlsx")
