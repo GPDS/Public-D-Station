@@ -851,15 +851,15 @@ def DI_calc():             #Função para calculo do DI
 #Início da abertura dos .txt
 
 idPatient = input('Patient ID: ')
-"""
+
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
-"""
+
 
 #idPatient = 'Aristoteles'
-op = '5'
+#op = '5'
 
 if op != test_op:
 	exams_path = ('Patients/'+idPatient)
