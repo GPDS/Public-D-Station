@@ -236,12 +236,12 @@ def Parameters_Plot():
 	#Definição do subplot das curvas (gráfico do meio)
 	ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
 	plt.xlim(0, END_Time1)
-	if op != test_op:
+	if op != test_op and op != '5':
 		colorPlot(txt_mid,tcolunas_mid)
-	else:
+	elif op == '5':
 		colorPlot(txt1.diff(),tcolunas1)
-		#colorPlot(txt2.diff(),tcolunas2)
-		#colorPlot(txt3.diff(),tcolunas3)
+		colorPlot(txt2.diff(),tcolunas2)
+		colorPlot(txt3.diff(),tcolunas3)
 	plt.grid()
 	tick_locs = np.arange(0.0,END_Time1,0.2)
 	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
