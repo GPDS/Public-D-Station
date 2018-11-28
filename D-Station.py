@@ -689,8 +689,8 @@ def MD_calc():             #Função para calculo do MD
 		txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
 	else:
 		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])]#Obtenção da Mechanical Dispersion
-		txt2_sliced_onsets = txt2_mod[(txt2_mod.index >= LM_Time[1]) & (txt2_mod.index < RM_Time[1])]
-		txt3_sliced_onsets = txt3_mod[(txt3_mod.index >= LM_Time[2]) & (txt3_mod.index < RM_Time[2])]
+		txt2_sliced_onsets = txt2_mod[(txt2_mod.index >= (LM_Time[1]+LM_Time[0])) & (txt2_mod.index < (RM_Time[1]-LM_Time[0]))]
+		txt3_sliced_onsets = txt3_mod[(txt3_mod.index >= (LM_Time[2]+LM_Time[0])) & (txt3_mod.index < (RM_Time[2]-LM_Time[0]))]
 	global_minima_times = []
 	if prmt == '2':
 		print("\n\nTimes of peak negative strain:\n")
@@ -836,7 +836,7 @@ def DI_calc():             #Função para calculo do DI
         Parameters_Plot()
 
 
-#print("\033c") #Caso queira limpar o terminal
+print("\033c", end='') #Caso queira limpar o terminal
 
 #Início da abertura dos .txt
 
@@ -845,11 +845,11 @@ idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
-op = input("Option: ")
+#op = input("Option: ")
 
 
-#idPatient = 'Aristoteles'
-#op = '5'
+#idPatient = 'Rosemeire'
+op = '5'
 
 if op != test_op:
 	exams_path = ('Patients/'+idPatient)
@@ -951,13 +951,13 @@ RM_Time = []
 ES_Time = []
 
 for f in list_txtfiles:
-    if ('4CH_SL_TRACE' in f) or ('4CH_SL4CH STRAIN_TRACE' in f) or ('4CH_Peak dose_SL_TRACE' in f):
-        txt_original = open(exams_path+'/'+f, 'r')
-        numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
-        txt_original.close()
-        LM_Time.append(float(numbers[0]))
-        RM_Time.append(float(numbers[1]))
-        ES_Time.append(float(numbers[2]))
+	if ('4CH_SL_TRACE' in f) or ('4CH_SL4CH STRAIN_TRACE' in f) or ('4CH_Peak dose_SL_TRACE' in f):
+		txt_original = open(exams_path+'/'+f, 'r')
+		numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
+		txt_original.close()
+		LM_Time.append(float(numbers[0]))
+		RM_Time.append(float(numbers[1]))
+		ES_Time.append(float(numbers[2]))
 
 for f in list_txtfiles:
     if ('2CH_SL_TRACE' in f) or ('2CH_SL2CH STRAIN_TRACE' in f) or ('2CH_Low dose_SL_TRACE' in f):
@@ -969,13 +969,13 @@ for f in list_txtfiles:
         ES_Time.append(float(numbers[2]))
 
 for f in list_txtfiles:
-    if ('APLAX_SL_TRACE' in f) or ('APLAX_SL3CH STRAIN_TRACE' in f) or ('APLAX_Low dose_SL_TRACE' in f):
-        txt_original = open(exams_path+'/'+f, 'r')
-        numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
-        txt_original.close()
-        LM_Time.append(float(numbers[0]))
-        RM_Time.append(float(numbers[1]))
-        ES_Time.append(float(numbers[2]))
+	if ('APLAX_SL_TRACE' in f) or ('APLAX_SL3CH STRAIN_TRACE' in f) or ('APLAX_Low dose_SL_TRACE' in f):
+		txt_original = open(exams_path+'/'+f, 'r')
+		numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Numeros extraidos da linha 3 do txt - LM_Time, ES_Time e RM_Time
+		txt_original.close()
+		LM_Time.append(float(numbers[0]))
+		RM_Time.append(float(numbers[1]))
+		ES_Time.append(float(numbers[2]))
 #Fim da abertura dos .txt
 
 txt1.drop('Unnamed: 1', axis=1, inplace=True) #Retira a coluna inútil que é lida (devido à tabulação exagerada do arquivo exportado)
@@ -988,6 +988,7 @@ txt2_mod=txt2.copy(deep=True)  		#Se deep for false é uma shallow copy, index e
 txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])
 txt3_mod=txt3.copy(deep=True)
 txt3_mod.index = txt3_mod.index-(LM_Time[2]-LM_Time[0])
+
 
 tcolunas1=int(((txt1.size/len(txt1.index))))
 tcolunas2=int(((txt2.size/len(txt2.index))))
