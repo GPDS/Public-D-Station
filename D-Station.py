@@ -601,7 +601,7 @@ def DR_bullseye(data):
     plt.show()
     #Fim da função do Bullseye
 
-def GLS_calc():             #Função para calculo do GLS
+def GLS_calc():             #Função para calculo do GLS - Novo branch para testar método alternativo
 	global txt1_s
 	global txt2_s
 	global txt3_s
