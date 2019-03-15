@@ -3,7 +3,11 @@
 """
 O que fazer:
 
-Exibir a curva de ECG completa
+Picos sistolicos
+Verificar sincronia das curvas agora - com os txts
+Adicionar a variação do Strain e SR em cada fase
+Falar o segmento por nome
+Taxa de amostragem (pegar do txt) -> Relacionar com HR
 
 """
 
