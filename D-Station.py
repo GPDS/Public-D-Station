@@ -3,14 +3,26 @@
 """
 O que fazer:
 
+Ordenar os events e fazer a nova separacao
 Verificar ordem dos eventos e fazer a separação de fases
 Picos sistolicos
 Verificar sincronia das curvas agora - com os txts
 Adicionar a variação do Strain e SR em cada fase
 Falar o segmento por nome
 Taxa de amostragem (pegar do txt) -> Relacionar com HR
+Retirar essas variáveis globais e modularizar o código - fica melhor ate para editar funcoes e o main ao mesmo tempo
 
 
+Para o IVA:
+
+Plotar 1 segmento por vez e marcar (iterar por eles, por paciente)
+Marcar os pontos em cada um deles
+Armazenar valores marcados na memória
+Colocar em 18 colunas
+
+
+Ideia: Ir retirando funcoes aos poucos e reimplementando para evitar a dependencia entre elas
+e aos poucos reorganizar o codigo para divulga-lo
 """
 
 import pandas as pd              #Package usado no trabalho com os arquivos .txt
@@ -22,13 +34,14 @@ import openpyxl                  #Package para trabalhar com os arquivos .xlsx -
 from os import listdir
 from os.path import isfile, join
 
+
 #Constantes a serem definidas
 height_line = 1.025 #Tamanho que a linha das fases ultrapassa o gráfico
-test_op = '6'
-SizeFont = 12
+test_op = '6'		#Defines that the option in which the simulated strain curves are used
+SizeFont = 12		#Defines the font size in the plots
 
 #Declaração de variaveis
-xcoord = []
+xcoord = []			#List where the selected xvalues in the first plot are stored
 
 Dif_LM_OnsetQRS1 = []
 MVOvalues1 = []
@@ -169,9 +182,9 @@ def Parameters_Plot():
 		colorPlot(txt1,tcolunas1)
 		colorPlot(txt2_mod,tcolunas2)
 		colorPlot(txt3_mod,tcolunas3)
-	else:
-		plt.plot(avg_SR_LV, 'k.')
-		plt.plot(avg_SR_LV_IVC, 'r')
+	else: #Parte relativa ao IVA, colocar de forma que plote uma curva de cada vez
+		plt.plot(segment, 'k.')
+		plt.plot(segment_IVC, 'r')
 	#Marcações dos pontos usados para os parâmetros
 	if prmt == "1":
 
@@ -850,12 +863,52 @@ def DI_calc():             #Função para calculo do DI
 	if prmt != '0':
 		Parameters_Plot()
 
+
 def IVA_calc():
+	global segment
+	global segment_IVC
+	global calculated_IVA
+
+	IVA_aux = strain_rate_lv4ch
+	IVA_aux = pd.concat([IVA_aux.iloc[:,0:-2], strain_rate_lv2ch.iloc[:,0:-2], strain_rate_lv3ch.iloc[:,0:-2]], axis=1, sort = False) #Junta todas as curvas de SR
+	IVA_aux = IVA_aux.interpolate(method ='quadratic')
+
+	for segment_number in range(IVA_aux.shape[1]): #Cada segmento sera plotado para marcacao
+		calculated_IVA = 0
+		segment = IVA_aux.iloc[:,segment_number]
+		a = float('NaN')
+		segment.loc[IVCvalues1[0]] = a
+		segment.loc[EjectionTimevalues1[0]] = a
+		segment = segment.sort_index()
+		segment = segment.interpolate(method = 'quadratic')
+		segment_IVC = segment[(segment.index >= IVCvalues1[0]) & (segment.index <= EjectionTimevalues1[0])] #Usou para pegar o ponto mais proximo - fazer algo semelhante para um segmento
+		Parameters_Plot()
+		#Colocar algo pro caso da lista ser vazia(sem iva possível)
+		if (not times_IVA):
+			print("\n\nIVA could not be calculated. No points were marked.\n")
+
+		else: #Vai para os pontos mais proximos aos marcados no dataframe
+			print("\n\nTime Values(s): ",segment_IVC.index[segment_IVC.index.get_loc(times_IVA[0], method = 'nearest')], segment_IVC.index[segment_IVC.index.get_loc(times_IVA[1], method = 'nearest')],"\nSR Values (1/s): ", segment_IVC.iloc[segment_IVC.index.get_loc(times_IVA[0], method = 'nearest')], segment_IVC.iloc[segment_IVC.index.get_loc(times_IVA[1], method = 'nearest')])
+			T_initvar = segment_IVC.index[segment_IVC.index.get_loc(times_IVA[0], method = 'nearest')]
+			T_endvar =  segment_IVC.index[segment_IVC.index.get_loc(times_IVA[1], method = 'nearest')]	#Fiz assim por uma questão de saúde mental
+			SR_initvar = segment_IVC.iloc[segment_IVC.index.get_loc(times_IVA[0], method = 'nearest')]
+			SR_endvar = segment_IVC.iloc[segment_IVC.index.get_loc(times_IVA[1], method = 'nearest')]
+			IVA = (SR_endvar-SR_initvar)/(T_endvar-T_initvar)
+
+			print("IVA = ",IVA,"m/s²\n")
+			calculated_IVA = 1
+			cells = ['Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP']
+			sheet[cells[segment_number]+str(it)] = IVA
+			#Parameters_Plot()
+			#Colocar tudo num bullseye depois
+
+def old_IVA_calc(): #Calculo do IVA usando a media das curvas de SR
 	global avg_SR_LV
 	global avg_SR_LV_IVC
 	global calculated_IVA
 
 	#calcula a média
+	#Possivelmente altero aqui abaixo para calcular por segmento
 	IVA_aux = strain_rate_lv4ch
 	IVA_aux = pd.concat([IVA_aux.iloc[:,0:-2], strain_rate_lv2ch.iloc[:,0:-2], strain_rate_lv3ch.iloc[:,0:-2]], axis=1, sort = False)
 	IVA_aux = IVA_aux.interpolate(method ='quadratic')
@@ -867,42 +920,13 @@ def IVA_calc():
 	avg_SR_LV.loc[EjectionTimevalues1[0]] = a
 	avg_SR_LV = avg_SR_LV.sort_index()
 	avg_SR_LV = avg_SR_LV.interpolate(method = 'quadratic')
-	avg_SR_LV_IVC = avg_SR_LV[(avg_SR_LV.index >= IVCvalues1[0]) & (avg_SR_LV.index <= EjectionTimevalues1[0])]
-
-
-	""" Fica para uma implementação automática no futuro
-	#Calcular a derivada do SR para ver os pontos de inflexão
-	a = float('NaN')
-	avg_SR_LV_deriv = avg_SR_LV.diff()/avg_SR_LV.truediv(avg_SR_LV.index.to_series().diff(), axis = 0)
-	avg_SR_LV_deriv.loc[IVCvalues1[0]] = a
-	avg_SR_LV_deriv.loc[EjectionTimevalues1[0]] = a
-	avg_SR_LV_deriv = avg_SR_LV_deriv.sort_index()
-	avg_SR_LV_deriv = avg_SR_LV_deriv.interpolate(method = 'quadratic')
-	avg_SR_LV_deriv_IVC = avg_SR_LV_deriv[(avg_SR_LV_deriv.index >= IVCvalues1[0]) & (avg_SR_LV_deriv.index <= EjectionTimevalues1[0])] #Derivada nos pontos entre IVC e Ejec
-
-	#pega os pontos mais proximos de 0 do df(são os de inflexao)
-	zero_points = avg_SR_LV_deriv_IVC[(avg_SR_LV_deriv_IVC>=-0.01) & (avg_SR_LV_deriv_IVC<=0.01)] #Ver como calibrar melhor
-	#fim_inflex =
-	zero_points = zero_points[zero_points.index >= zero_points.idxmin()]
-	print(zero_points)
-	#Ver se é crescente:
-
-	if(avg_SR_LV_IVC.loc[zero_points.index[0]] < avg_SR_LV_IVC.loc[zero_points.index[1]]):
-		print(avg_SR_LV_IVC.loc[zero_points.index[0]],"menor que",avg_SR_LV_IVC.loc[zero_points.index[1]] )
-		print("Crescente")
-
-	else:
-		print("Decrescente")
-
-		#Com os pontos de inflexao pegamos o SR e calculamos sua variacao media
-	"""
-
+	avg_SR_LV_IVC = avg_SR_LV[(avg_SR_LV.index >= IVCvalues1[0]) & (avg_SR_LV.index <= EjectionTimevalues1[0])] #Usou para pegar o ponto mais proximo - fazer algo semelhante para um segmento
 	Parameters_Plot()
 	#Colocar algo pro caso da lista ser vazia(sem iva possível)
 	if (not times_IVA):
 		print("\n\nIVA could not be calculated. No points were marked.\n")
 
-	else:
+	else: #Vai para os pontos mais proximos aos marcados no dataframe
 		print("\n\nTime Values(s): ",avg_SR_LV_IVC.index[avg_SR_LV_IVC.index.get_loc(times_IVA[0], method = 'nearest')], avg_SR_LV_IVC.index[avg_SR_LV_IVC.index.get_loc(times_IVA[1], method = 'nearest')],"\nSR Values (1/s): ", avg_SR_LV_IVC.iloc[avg_SR_LV_IVC.index.get_loc(times_IVA[0], method = 'nearest')], avg_SR_LV_IVC.iloc[avg_SR_LV_IVC.index.get_loc(times_IVA[1], method = 'nearest')])
 		T_initvar = avg_SR_LV_IVC.index[avg_SR_LV_IVC.index.get_loc(times_IVA[0], method = 'nearest')]
 		T_endvar =  avg_SR_LV_IVC.index[avg_SR_LV_IVC.index.get_loc(times_IVA[1], method = 'nearest')]	#Fiz assim por uma questão de saúde mental
@@ -920,7 +944,7 @@ print("\033c", end='') #Caso queira limpar o terminal
 
 #Início da abertura dos .txt
 
-idPatient = input('Patient ID: ')
+#idPatient = input('Patient ID: ')
 """
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
@@ -928,7 +952,7 @@ print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+".
 op = input("Option: ")
 """
 
-#idPatient = 'Aristoteles'
+idPatient = 'Aristoteles'
 op = '5'
 
 if op != test_op:
