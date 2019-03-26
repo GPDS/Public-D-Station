@@ -39,7 +39,8 @@ from os.path import isfile, join
 height_line = 1.025 #Tamanho que a linha das fases ultrapassa o gráfico
 test_op = '6'		#Defines that the option in which the simulated strain curves are used
 SizeFont = 18		#Defines the font size in the plots
-SizePhaseFont = 12
+SizePhaseFont = 12  #Defines the font size of the phases' legends
+SizeLabelFont = 16  #Defines the font size of the labels in the plots' axis
 
 #Declaração de variaveis
 xcoord = []			#List where the selected xvalues in the first plot are stored
@@ -231,6 +232,8 @@ def Parameters_Plot():
 
 	else:
 		plt.ylabel('\nSegmental Strain Rate - LV\n(1/s)', fontsize=SizeFont)
+		ax0.tick_params(axis="y", labelsize=SizeLabelFont)
+
 		if(calculated_IVA == 0):
 			cid = fig.canvas.mpl_connect('button_press_event', onclick)
 
@@ -280,6 +283,9 @@ def Parameters_Plot():
 	else:
 		ax1 = plt.subplot2grid((16,1),(8,0), rowspan = 8, colspan = 1)
 		plt.xlabel('Time (ms)', fontsize=SizeFont)
+		ax1.tick_params(axis="x", labelsize=SizeLabelFont)
+		ax1.tick_params(axis="y", labelsize=SizeLabelFont)
+
 
 	plt.xlim(0, END_Time1)
 	if op != test_op and op != '5':
