@@ -38,9 +38,9 @@ from os.path import isfile, join
 #Constantes a serem definidas
 height_line = 1.025 #Tamanho que a linha das fases ultrapassa o gráfico
 test_op = '6'		#Defines that the option in which the simulated strain curves are used
-SizeFont = 18		#Defines the font size in the plots
-SizePhaseFont = 12  #Defines the font size of the phases' legends
-SizeLabelFont = 16  #Defines the font size of the labels in the plots' axis
+SizeFont = 11		#Defines the font size in the plots
+SizePhaseFont = 11  #Defines the font size of the phases' legends
+SizeLabelFont = 11  #Defines the font size of the labels in the plots' axis
 
 #Declaração de variaveis
 xcoord = []			#List where the selected xvalues in the first plot are stored
