@@ -885,7 +885,8 @@ def IVA_calc():
 	IVA_aux = pd.concat([IVA_aux.iloc[:,0:-2], strain_rate_lv2ch.iloc[:,0:-2], strain_rate_lv3ch.iloc[:,0:-2]], axis=1, sort = False) #Junta todas as curvas de SR
 	IVA_aux = IVA_aux.interpolate(method ='quadratic')
 
-	for segment_number in range(IVA_aux.shape[1]): #Cada segmento sera plotado para marcacao
+	#for segment_number in range(IVA_aux.shape[1]): #Cada segmento sera plotado para marcacao
+	for segment_number in range(7):#range(IVA_aux.shape[1]): #Cada segmento sera plotado para marcacao
 		calculated_IVA = 0
 		segment = IVA_aux.iloc[:,segment_number]
 		a = float('NaN')
@@ -956,7 +957,7 @@ print("\033c", end='') #Caso queira limpar o terminal
 
 #Início da abertura dos .txt
 
-#idPatient = input('Patient ID: ')
+idPatient = input('Patient ID: ')
 """
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
@@ -964,7 +965,7 @@ print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+".
 op = input("Option: ")
 """
 
-idPatient = 'Aristoteles'
+#idPatient = 'Aristoteles'
 op = '5'
 
 if op != test_op:
