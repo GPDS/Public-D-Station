@@ -3,6 +3,8 @@
 """
 O que fazer:
 
+Substituir a planilha
+
 Ordenar os events e fazer a nova separacao
 Verificar ordem dos eventos e fazer a separação de fases
 Picos sistolicos
@@ -25,36 +27,50 @@ Ideia: Ir retirando funcoes aos poucos e reimplementando para evitar a dependenc
 e aos poucos reorganizar o codigo para divulga-lo
 """
 
-import pandas as pd              #Package usado no trabalho com os arquivos .txt
+#Importing packages...
+import pandas as pd              # Package used to work with the raw data files
 import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import re                        #Package padrão - Para extrair números da string
-import openpyxl                  #Package para trabalhar com os arquivos .xlsx - Para trabalhar com grandes quantidades deve-se ver a documentação
-from os import listdir
-from os.path import isfile, join
+import matplotlib as mpl		 # Used in the plots
+import matplotlib.pyplot as plt	 # Also used in the plots
+import re                        # Used to obtain the LM, RM and ES Times in the raw data files
+import openpyxl                  # Package to work with .xlsx - See documentation when working with a big amount of data
+from os import listdir			 # Used to obtain the files in their directories
+from os.path import isfile, join # Also used to do file operations
+
+#
+#Packages that i (https://github.com/rafaelds9) created
+import front
+from dstationplotlib import *
+#
 
 
-#Constantes a serem definidas
-height_line = 1.025 #Tamanho que a linha das fases ultrapassa o gráfico
-test_op = '6'		#Defines that the option in which the simulated strain curves are used
-SizeFont = 11		#Defines the font size in the plots
-SizePhaseFont = 11  #Defines the font size of the phases' legends
-SizeLabelFont = 11  #Defines the font size of the labels in the plots' axis
+#Defining constants
+height_line = 1.025 # Constant to define the height of the lines that separate the phases
+test_op = '6'		# Defines the number of the option that will use the simulated strain curves
+SizeFont = 11		# Defines the font size in the plots
+SizePhaseFont = 11  # Defines the font size of the phases' legends
+SizeLabelFont = 11  # Defines the font size of the labels in the plots' axis
+#
 
-#Declaração de variaveis
-xcoord = []			#List where the selected xvalues in the first plot are stored
 
+#Initializing variables
+it = 4   #Defines the first row in the xl file that has values
+prmt = '0' #Defines the prmt value in the first run to 0 - Change with caution
+#
+
+
+#Declaring variables and arrays
+#Lists used to store relevant time values for the phase calculations
 Dif_LM_OnsetQRS1 = []
-MVOvalues1 = []
-MVOvalues2 = []
-MVCvalues1 = []
+MVOvalues1 = []			# Mitral Valve opening time in the first cycle
+MVOvalues2 = []			#	'''						 second '''
+MVCvalues1 = []			#	'''		   closing        '''
 MVCvalues2 = []
-AVOvalues1 = []
+AVOvalues1 = []			# Aortic '''
 AVOvalues2 = []
 AVCvalues1 = []
 AVCvalues2 = []
-EMCvalues1 = []
+EMCvalues1 = []			#Time values of the beginning of each phase
 EMCvalues2 = []
 IVCvalues1 = []
 IVCvalues2 = []
@@ -65,108 +81,6 @@ Evalues = []
 Diastasisvalues = []
 Avalues = []
 
-#Inicialiazação de Variáveis:
-it = 4   #Iterador para a marcação na planilha (Depende da linha inicial nela, nesse caso os valores estão a partir da linha 4)
-prmt = '0'
-
-#Função para ler apenas as P colunas do dataframe - INÍCIO
-def front(self, n):
-	return self.iloc[:, :n]
-
-pd.DataFrame.front = front
-#Função para ler apenas as P colunas do dataframe - FIM
-
-#Função para marcação dos pontos no ECG - INÍCIO
-def onclick(event):
-	#print ("\nValue: Time = %f milliseconds"%(event.xdata*1000))
-	if prmt != "8":
-		xcoord.append(event.xdata*1000)
-	else:
-		times_IVA.append(event.xdata)
-#Função para marcação dos pontos no ECG - FM
-
-#Plotagem com as cores correspondentes ao arquivo - INÍCIO
-def colorPlot(txt,tcolunas):
-	colours=list(txt)
-	for it in range(0,tcolunas-2):
-		if(colours[it] == '      RED    '):
-			plt.plot(txt.iloc[:,it], 'r')
-		elif(colours[it] == '     BLUE    '):
-			plt.plot(txt.iloc[:,it], 'b')
-		elif(colours[it] == '  MAGENTA    '):
-			plt.plot(txt.iloc[:,it], 'm')
-		elif(colours[it] == '    GREEN    '):
-			plt.plot(txt.iloc[:,it], 'g')
-		elif(colours[it] == '     CYAN    '):
-			plt.plot(txt.iloc[:,it], 'c')
-		elif(colours[it] == '   YELLOW    '):
-			plt.plot(txt.iloc[:,it], 'y')
-		else:
-			plt.plot(txt.iloc[:,it], 'k')
-	#plt.plot(txt.iloc[:,tcolunas-2], 'k.')                  #Correspondentes ao segmento Global
-#Plotagem com as cores correspondentes ao arquivo - FIM
-
-#Funcao para plotagem das curvas de deformacao e marcação no ECG -  INÍCIO
-def PlotClick(LM_Time, ES_Time, RM_Time, END_Time0):
-	#Processo de plotagem -  INÍCIO
-	fig = plt.figure(figsize=(12, 8))               #Definição do tamanho da figura
-	#Definição do subplot das curvas (gráfico de cima)
-	ax0 = plt.subplot2grid((12,1),(0,0), rowspan = 4, colspan = 1)
-	plt.xlim(0, END_Time0)
-	ax0.axvline(LM_Time, color='y')
-	ax0.axvline(ES_Time, color='g')
-	ax0.axvline(RM_Time, color='y')
-	tick_locs = np.arange(0.0,END_Time0,0.2)
-	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	colorPlot(txt1,tcolunas1)
-	#colorPlot(txt2_mod,tcolunas2)
-	#colorPlot(txt3_mod,tcolunas3)
-	plt.ylabel('Strain - LV\n(%)', fontsize=SizeFont)
-	plt.grid()
-	plt.setp(ax0.get_xticklabels(), visible=False)
-
-	#Definição do subplot das curvas de strain LA (gráfico do meio)
-	ax1 = plt.subplot2grid((12,1),(4,0), rowspan = 4, colspan = 1)
-	plt.xlim(0, END_Time0)
-	ax1.axvline(LM_Time, color='y')
-	ax1.axvline(ES_Time, color='g')
-	ax1.axvline(RM_Time, color='y')
-	tick_locs = np.arange(0.0,END_Time0,0.2)
-	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	if op != test_op:
-		colorPlot(strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)
-	else:
-		colorPlot(txt1.diff(),tcolunas1)
-		#colorPlot(txt2_mod.diff(),tcolunas2)
-		#colorPlot(txt3_mod.diff(),tcolunas3)
-	plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
-	plt.grid()
-	plt.setp(ax1.get_xticklabels(), visible=False)
-
-	#Definição do subplot do gráfico do ECG (gráfico de baixo)
-	ax2 = plt.subplot2grid((12, 1), (8, 0), rowspan = 4, colspan = 1)
-	plt.xlim(0, END_Time0)
-	ax2.axvline(LM_Time, color='y')
-	ax2.axvline(ES_Time, color='g')
-	ax2.axvline(RM_Time, color='y')
-	tick_locs = np.arange(0.0,END_Time0,0.2)
-	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	plt.plot(txt1.loc[:,'ECG : '])
-	plt.xlabel('Time (ms)', fontsize=SizeFont)
-	plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
-	plt.grid()
-	#Fim das definições dos subplots
-	#Marcacao dos pontos no gráfico - INÍCIO
-	cid = fig.canvas.mpl_connect('button_press_event', onclick)
-	#Marcacao dos pontos no gráfico - FIM
-	#plt.tight_layout()
-	plt.show()
-	fig.canvas.mpl_disconnect(cid)
-	#Processo de plotagem - FIM
-#Funcao para plotagem das curvas de deformacao e marcação no ECG -  FIM
 
 #Plotagem dos gráficos de saída final - INÍCIO
 def Parameters_Plot():
@@ -957,16 +871,16 @@ print("\033c", end='') #Caso queira limpar o terminal
 
 #Início da abertura dos .txt
 
-idPatient = input('Patient ID: ')
-"""
+#idPatient = input('Patient ID: ')
+
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
-"""
 
-#idPatient = 'Aristoteles'
-op = '5'
+
+idPatient = 'Aristoteles'
+#op = '5'
 
 if op != test_op:
 	exams_path = ('Patients/'+idPatient)
@@ -1138,7 +1052,7 @@ for cell in sheet['A']:
 if op != test_op:
 	#Gravação dos valores marcados na planilha do excel - INÍCIO
 	print("\n\nMarcacao do Onset QRS 1, onset P, onset QRS 2")
-	PlotClick(LM_Time[0], ES_Time[0], RM_Time[0], END_Time0)
+	xcoord = PlotClick(txt1, tcolunas1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, op, test_op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
 	sheet['G'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms - ONSET QRS 1
 	#sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - Ponto de Diástase
 	sheet['I'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - ONSET P
@@ -1229,8 +1143,8 @@ while True:
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
 	#print("\t3. Diastolic Recovery")
 	print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
-	#prmt = input("Parameter: ")
-	prmt="8"
+	prmt = input("Parameter: ")
+	#prmt="8"
 
 	if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
 		GLS_calc()
