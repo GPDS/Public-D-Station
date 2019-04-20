@@ -25,6 +25,8 @@ Colocar em 18 colunas
 
 Ideia: Ir retirando funcoes aos poucos e reimplementando para evitar a dependencia entre elas
 e aos poucos reorganizar o codigo para divulga-lo
+
+Criar um vetor com todas as opcoes, nao so test_op
 """
 
 #Importing packages...
