@@ -4,7 +4,6 @@
 O que fazer:
 
 Substituir a planilha
-
 Ordenar os events e fazer a nova separacao
 Verificar ordem dos eventos e fazer a separação de fases
 Picos sistolicos
@@ -14,17 +13,12 @@ Falar o segmento por nome
 Taxa de amostragem (pegar do txt) -> Relacionar com HR
 Retirar essas variáveis globais e modularizar o código - fica melhor ate para editar funcoes e o main ao mesmo tempo
 
-
 Para o IVA:
 
 Plotar 1 segmento por vez e marcar (iterar por eles, por paciente)
 Marcar os pontos em cada um deles
 Armazenar valores marcados na memória
 Colocar em 18 colunas
-
-
-Ideia: Ir retirando funcoes aos poucos e reimplementando para evitar a dependencia entre elas
-e aos poucos reorganizar o codigo para divulga-lo
 
 Criar um vetor com todas as opcoes, nao so test_op
 """
@@ -43,6 +37,7 @@ from os.path import isfile, join # Also used to do file operations
 #Packages that i (https://github.com/rafaelds9) created
 import front
 from dstationplotlib import *
+from dstationcalc import *
 #
 
 
@@ -84,508 +79,11 @@ Diastasisvalues = []
 Avalues = []
 
 
-#Plotagem dos gráficos de saída final - INÍCIO
-def Parameters_Plot():
-	global times_IVA
-	times_IVA = []
-
-	fig = plt.figure(figsize=(16, 8))               #Definição do tamanho da figura
-	#Definição do subplot das curvas (gráfico do meio)
-	if prmt != "8" or calculated_IVA:
-		ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
-	else:
-		ax0 = plt.subplot2grid((16,1),(0,0), rowspan = 8, colspan = 1)
-	plt.xlim(0, END_Time1)
-	if prmt != "8":
-		colorPlot(txt1,tcolunas1)
-		colorPlot(txt2_mod,tcolunas2)
-		colorPlot(txt3_mod,tcolunas3)
-	else: #Parte relativa ao IVA, colocar de forma que plote uma curva de cada vez
-		plt.plot(segment, 'r')
-		plt.plot(segment_IVC, 'k')
-	#Marcações dos pontos usados para os parâmetros
-	if prmt == "1":
-
-		colours=list(txt1_s)
-		for colour_it in range(0,tcolunas1-2):
-			plt.plot(txt1_s[colours[colour_it]].idxmin(), txt1_s[colours[colour_it]].min(), 'kx')
-		"""
-		colours=list(txt2_s)
-		for colour_it in range(0,tcolunas2-2):
-			plt.plot(txt2_s[colours[colour_it]].idxmin(), txt2_s[colours[colour_it]].min(), 'k*')
-
-		colours=list(txt3_s)
-		for colour_it in range(0,tcolunas3-2):
-			plt.plot(txt3_s[colours[colour_it]].idxmin(), txt3_s[colours[colour_it]].min(), 'k+')
-		"""
-	if prmt == "2":
-		colours=list(txt1_sliced_onsets)
-		for colour_it in range(0,tcolunas1-2):
-			plt.plot(txt1_sliced_onsets[colours[colour_it]].idxmin(), txt1_sliced_onsets[colours[colour_it]].min(), 'kx')
-
-		colours=list(txt2_sliced_onsets)
-		for colour_it in range(0,tcolunas2-2):
-			plt.plot(txt2_sliced_onsets[colours[colour_it]].idxmin(), txt2_sliced_onsets[colours[colour_it]].min(), 'kx')
-
-		colours=list(txt3_sliced_onsets)
-		for colour_it in range(0,tcolunas3-2):
-			plt.plot(txt3_sliced_onsets[colours[colour_it]].idxmin(), txt3_sliced_onsets[colours[colour_it]].min(), 'kx')
-
-	if prmt == "3":
-		ax0.axvline(ThirdDiastoleTime, color='k')
-
-	#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
-	ymin, ymax = plt.ylim()
-	txt_height_1 = ymax+0.15*(ymax-ymin)
-	txt_height_2 = ymax+0.05*(ymax-ymin)
-	x_inc=0.002
-	plt.grid()
-	tick_locs = np.arange(0.0,END_Time1,0.2)
-	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	if prmt != "8":
-		plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
-
-	else:
-		plt.ylabel('\nSegmental Strain Rate - LV\n(1/s)', fontsize=SizeFont)
-		ax0.tick_params(axis="y", labelsize=SizeLabelFont)
-
-		if(calculated_IVA == 0):
-			cid = fig.canvas.mpl_connect('button_press_event', onclick)
-
-	plt.setp(ax0.get_xticklabels(), visible=False)
-	#
-
-	plt.text(MVOvalues1[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(MVCvalues1[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(AVOvalues1[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(AVCvalues1[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	if op != test_op:
-		plt.text(EMCvalues1[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(IVCvalues1[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(EjectionTimevalues1[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(IVRvalues[0]+x_inc, txt_height_2, "IVR" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(Evalues[0]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	if op != test_op:
-		#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
-		plt.text(Avalues[0]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-
-	#ifs para definir o que aparecerá na figura com base no final dela
-	if MVOvalues2[0]<END_Time1:
-		plt.text(MVOvalues2[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if MVCvalues2[0]<END_Time1:
-		plt.text(MVCvalues2[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVOvalues2[0]<END_Time1:
-		plt.text(AVOvalues2[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVCvalues2[0]<END_Time1:
-		plt.text(AVCvalues2[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op and EMCvalues2 < END_Time1:
-		plt.text(EMCvalues2[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	if IVCvalues2[0]<END_Time1:
-		plt.text(IVCvalues2[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EjectionTimevalues2[0]<END_Time1:
-		plt.text(EjectionTimevalues2[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	#Definição do subplot das curvas (gráfico do meio)
-	if prmt != "8" or calculated_IVA:
-		ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
-	else:
-		ax1 = plt.subplot2grid((16,1),(8,0), rowspan = 8, colspan = 1)
-		plt.xlabel('Time (ms)', fontsize=SizeFont)
-		ax1.tick_params(axis="x", labelsize=SizeLabelFont)
-		ax1.tick_params(axis="y", labelsize=SizeLabelFont)
-
-
-	plt.xlim(0, END_Time1)
-	if op != test_op and op != '5':
-		colorPlot(txt_mid,tcolunas_mid)
-	elif op == '5' or op == test_op:
-		colorPlot(strain_rate_lv4ch,tcolunas1)
-		colorPlot(strain_rate_lv2ch,tcolunas2)
-		colorPlot(strain_rate_lv3ch,tcolunas3)
-	plt.grid()
-	tick_locs = np.arange(0.0,END_Time1,0.2)
-	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-
-	if op == "1" or op == "5" or op == test_op:
-		plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
-	if op == "2":
-		plt.ylabel('Strain - LA\n(%)', fontsize=SizeFont)
-	if op == "3":
-		plt.ylabel('Strain Rate - LA\n(1/s)', fontsize=SizeFont)
-	if op == "4":
-		plt.ylabel('Strain - RV\n(%)', fontsize=SizeFont)
-
-	if prmt != "8" or calculated_IVA:
-		plt.setp(ax1.get_xticklabels(), visible=False)
-
-	#Definição do subplot do gráfico do ECG (gráfico de baixo)
-	if prmt != "8" or calculated_IVA:
-		ax2 = plt.subplot2grid((16, 1), (13, 0), rowspan = 4, colspan = 1)
-	#else:
-		#ax2 = plt.subplot2grid((16, 1), (15, 0), rowspan = 2, colspan = 1)
-		plt.plot(txt1.loc[:,'ECG : '])
-		plt.xlim(0, END_Time1)
-		tick_locs = np.arange(0.0,END_Time1,0.2)
-		tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-		plt.xticks(tick_locs, tick_lbls)
-		plt.xlabel('Time (ms)', fontsize=SizeFont)
-		plt.ylabel('ECG\nVoltage\n(mV)', fontsize=SizeFont)
-		plt.grid()
-
-	#Plotagem das linhas entre os subplots - INÍCIO
-	ax0.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
-	if op != test_op:
-		ax0.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	ax0.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op:
-		#ax0.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax0.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	ax1.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
-	if op != test_op:
-		ax1.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	ax1.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op:
-		#ax1.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax1.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	#ifs para definir o que aparecerá na figura com base no final dela
-	if MVOvalues2[0]<END_Time1:
-		ax1.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if MVCvalues2[0]<END_Time1:
-		ax1.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVOvalues2[0]<END_Time1:
-		ax1.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVCvalues2[0]<END_Time1:
-		ax1.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op and EMCvalues2 < END_Time1:
-		ax1.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	if IVCvalues2[0]<END_Time1:
-		ax1.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EjectionTimevalues2[0]<END_Time1:
-		ax1.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	if prmt != "8" or calculated_IVA:
-		ax2.axvline(x=MVOvalues1[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=MVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=AVOvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=AVCvalues1[0], c="g",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-		if op != test_op:
-			ax2.axvline(x=EMCvalues1[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-		ax2.axvline(x=IVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=IVRvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=Evalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if op != test_op:
-			#ax2.axvline(x=Diastasisvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-			ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-		#ifs para definir o que aparecerá na figura com base no final dela
-		if MVOvalues2[0]<END_Time1:
-			ax2.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if MVCvalues2[0]<END_Time1:
-			ax2.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if AVOvalues2[0]<END_Time1:
-			ax2.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if AVCvalues2[0]<END_Time1:
-			ax2.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if op != test_op and EMCvalues2 < END_Time1:
-			ax2.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-		if IVCvalues2[0]<END_Time1:
-			ax2.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if EjectionTimevalues2[0]<END_Time1:
-			ax2.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	#Plotagem das linhas entre os subplots - FIM
-
-	#plt.tight_layout()
-	plt.show()
-	if prmt == "8" and calculated_IVA == 0:
-		fig.canvas.mpl_disconnect(cid)
-
-#Plotagem dos gráficos de saída final - FIM
-
-#INÍCIO DO BULLSEYE DE 17 SEGMENTOS
-"""
-This example demonstrates how to create the 17 segment model for the left
-ventricle recommended by the American Heart Association (AHA).
-"""
-def bullseye_seventeenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
-	"""
-	Bullseye representation for the left ventricle.
-
-	Parameters
-	----------
-	ax : axes
-	data : list of int and float
-		The intensity values for each of the 17 segments
-	segBold: list of int, optional
-		A list with the segments to highlight
-	cmap : ColorMap or None, optional
-		Optional argument to set the desired colormap
-	norm : Normalize or None, optional
-		Optional argument to normalize data into the [0.0, 1.0] range
-
-
-	Notes
-	-----
-	This function create the 17 segment model for the left ventricle according
-	to the American Heart Association (AHA) [1]_
-
-	References
-	----------
-	.. [1] M. D. Cerqueira, N. J. Weissman, V. Dilsizian, A. K. Jacobs,
-		S. Kaul, W. K. Laskey, D. J. Pennell, J. A. Rumberger, T. Ryan,
-		and M. S. Verani, "Standardized myocardial segmentation and
-		nomenclature for tomographic imaging of the heart",
-		Circulation, vol. 105, no. 4, pp. 539-542, 2002.
-	"""
-	if segBold is None:
-		segBold = []
-
-	linewidth = 2
-	data = np.array(data).ravel()
-	print(data)
-
-	if cmap is None:
-		cmap = plt.cm.viridis
-
-	if norm is None:
-		norm = mpl.colors.Normalize(vmin=data.min(), vmax=data.max())
-
-	theta = np.linspace(0, 2*np.pi, 768)
-	r = np.linspace(0.2, 1, 4)
-
-	# Create the bound for the segment 17
-	for i in range(r.shape[0]):
-		ax.plot(theta, np.repeat(r[i], theta.shape), '-k', lw=linewidth)
-
-	# Create the bounds for the segments  1-12
-	for i in range(6):
-		theta_i = i*60*np.pi/180
-		ax.plot([theta_i, theta_i], [r[1], 1], '-k', lw=linewidth)
-
-	# Create the bounds for the segments 13-16
-	for i in range(4):
-		theta_i = i*90*np.pi/180 - 45*np.pi/180
-		ax.plot([theta_i, theta_i], [r[0], r[1]], '-k', lw=linewidth)
-
-	# Fill the segments 1-6
-	r0 = r[2:4]
-	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
-	for i in range(6):
-		# First segment start at 60 degrees
-		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((128, 2))*data[i]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+1 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[2], r[3]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[2], r[3]], '-k', lw=linewidth+1)
-
-	# Fill the segments 7-12
-	r0 = r[1:3]
-	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
-	for i in range(6):
-		# First segment start at 60 degrees
-		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((128, 2))*data[i+6]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+7 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[1], r[2]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[1], r[2]], '-k', lw=linewidth+1)
-
-	# Fill the segments 13-16
-	r0 = r[0:2]
-	r0 = np.repeat(r0[:, np.newaxis], 192, axis=1).T
-	for i in range(4):
-		# First segment start at 45 degrees
-		theta0 = theta[i*192:i*192+192] + 45*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((192, 2))*data[i+12]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+13 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[0], r[1]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[0], r[1]], '-k', lw=linewidth+1)
-
-	# Fill the segments 17
-	if data.size == 17:
-		r0 = np.array([0, r[0]])
-		r0 = np.repeat(r0[:, np.newaxis], theta.size, axis=1).T
-		theta0 = np.repeat(theta[:, np.newaxis], 2, axis=1)
-		z = np.ones((theta.size, 2))*data[16]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if 17 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-
-	ax.set_ylim([0, 1])
-	ax.set_yticklabels([])
-	ax.set_xticklabels([])
-##FIM DO BULLSEYE DE 17 SEGMENTOS
-
-#INÍCIO DO BULLSEYE DE 18 SEGMENTOS
-def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
-	"""
-	Bullseye representation for the left ventricle.
-
-	Parameters
-	----------
-	ax : axes
-	data : list of int and float
-		The intensity values for each of the 17 segments
-	segBold: list of int, optional
-		A list with the segments to highlight
-	cmap : ColorMap or None, optional
-		Optional argument to set the desired colormap
-	norm : Normalize or None, optional
-		Optional argument to normalize data into the [0.0, 1.0] range
-
-
-	Notes
-	-----
-	This function create the 17 segment model for the left ventricle according
-	to the American Heart Association (AHA) [1]
-
-	ALTERAR ACIMA, CITAR A FUNÇÃO NA QUAL ME BASEEI.
-	"""
-	if segBold is None:
-		segBold = []
-
-	linewidth = 2
-	data = np.array(data).ravel()
-
-	if cmap is None:
-		cmap = plt.cm.viridis
-
-	if norm is None:
-		norm = mpl.colors.Normalize(vmin=data.min(), vmax=data.max())
-
-	theta = np.linspace(0, 2*np.pi, 768)
-	r = np.linspace(0, 1, 4)
-
-	# Create the bounds for the segments  1-18
-	for i in range(6):
-		theta_i = i*60*np.pi/180
-		ax.plot([theta_i, theta_i], [r[0], 1], '-k', lw=linewidth)
-
-	# Fill the segments 1-6
-	r0 = r[2:4]
-	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
-	for i in range(6):
-		# First segment start at 60 degrees
-		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((128, 2))*data[i]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+1 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[2], r[3]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[2], r[3]], '-k', lw=linewidth+1)
-		else:
-			ax.plot(theta0, r0, '-k', lw=linewidth)
-
-	# Fill the segments 7-12
-	r0 = r[1:3]
-	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
-	for i in range(6):
-		# First segment start at 60 degrees
-		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((128, 2))*data[i+6]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+7 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[1], r[2]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[1], r[2]], '-k', lw=linewidth+1)
-		else:
-			ax.plot(theta0, r0, '-k', lw=linewidth)
-
-	# Fill the segments 13-18
-	r0 = r[0:2]
-	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
-	for i in range(6):
-		# First segment start at 60 degrees
-		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((128, 2))*data[i+12]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+13 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[0], r[1]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[0], r[1]], '-k', lw=linewidth+1)
-		else:
-			ax.plot(theta0, r0, '-k', lw=linewidth)
-
-	ax.set_ylim([0, 1])
-	ax.set_yticklabels([])
-	ax.set_xticklabels([])
-#FIM DO BULLSEYE DE 18 SEGMENTOS
-
-#Inserção dos dados no bullseye
-def DR_bullseye(data):
-	# Make a figure and axes with dimensions as desired.
-	fig, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
-						   subplot_kw=dict(projection='polar'))
-	fig.canvas.set_window_title('Diastolic Recovery Bulls Eye')
-
-	# Create the axis for the colorbars
-	axl = fig.add_axes([0.75, 0.1, 0.2, 0.05])	#Orientação
-
-	# Set the colormap and norm to correspond to the data for which
-	# the colorbar will be used.
-	cmap = mpl.cm.viridis
-
-	norm = mpl.colors.Normalize(vmin=np.amin(BullseyeAux)-10, vmax=np.amax(BullseyeAux)+10) #Valores para normalização
-
-	# ColorbarBase derives from ScalarMappable and puts a colorbar
-	# in a specified axes, so it has everything needed for a
-	# standalone colorbar.  There are many more kwargs, but the
-	# following gives a basic continuous colorbar with ticks
-	# and labels.
-	cb1 = mpl.colorbar.ColorbarBase(axl, cmap=cmap, norm=norm,
-									orientation='horizontal')
-	cb1.set_label('Diastolic Recovery (%)')
-
-	# Create the 17 segment model
-	bullseye_eighteenSEG_plot(ax, data, cmap=None, norm=None)
-	ax.set_title('Diastolic Recovery Bulls Eye')
-
-	plt.show()
-	#Fim da função do Bullseye
-
 def GLS_calc():             #Função para calculo do GLS
 
 	#Sincronizar os tempos da plotagem dos pontos do GLS
 	#Diferença nos valores médios de uma visualização
 	#Talvez o ES_Time não corresponda ao AVC para aquele arquivo
-	global txt1_s
-	global txt2_s
-	global txt3_s
 
 	if op == test_op:
 		txt1_s = txt1[(txt1.index >= MVCvalues1[0]) & (txt1.index < AVCvalues1[0])] #Valores até o AVC - Durante a sístole
@@ -629,15 +127,13 @@ def GLS_calc():             #Função para calculo do GLS
 		print("\n\n")
 	print("Global Longitudinal Strain: ", gls,"%\n")
 	if prmt != '0':
-		Parameters_Plot()
+		Parameters_Plot(txt1, txt2_mod, txt3_mod, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, txt_mid, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
+		 				AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
+						EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, txt1_s, txt2_s, txt3_s)
 	sheet['V'+str(it)] = round(gls, 2)
 
 
 def MD_calc():             #Função para calculo do MD
-
-	global txt1_sliced_onsets
-	global txt2_sliced_onsets
-	global txt3_sliced_onsets
 
 	if op == test_op:
 		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)] #Obtenção da Mechanical Dispersion
@@ -687,7 +183,9 @@ def MD_calc():             #Função para calculo do MD
 	print("Mechanical Dispersion: ",round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2), "ms") #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
 
 	if prmt != '0':
-		Parameters_Plot()
+		Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
+		 				AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
+						EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, txt1_sliced_onsets, txt2_sliced_onsets, txt3_sliced_onsets)
 
 	sheet['W'+str(it)] = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2) #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
 
@@ -1153,16 +651,21 @@ while True:
 
 	elif prmt == "2":
 		MD_calc()
+
 	#elif prmt == "3":
 	#    DI_calc()
 	#    DR_bullseye(BullseyeAux)
 		#Ver a barra
+
 	elif prmt == "4":
 		print("\nPlot w/o any parameters")
-		Parameters_Plot()
-	elif prmt == "8":
-		IVA_calc()
-		break
+		Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
+		 				AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
+						EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, None, None, None)
+
+	#elif prmt == "8":		#IVA - Not working right now
+		#IVA_calc()
+		#break
 	elif prmt == "0":
 		break
 
