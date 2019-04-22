@@ -3,129 +3,106 @@
 # A package created for the D-Station (https://gpdsifpb.github.io/D-Station/)
 # containing the functions used to calculate its parameters
 
-"""Put these outputs in a bullseye"""
+"""Put these outputs in a bullseye
+	Colocar nomes significativos"""
 
 import pandas as pd
 import numpy as np
 
-def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):             #Função para calculo do GLS
 
-	#Sincronizar os tempos da plotagem dos pontos do GLS
-	#Diferença nos valores médios de uma visualização
-	#Talvez o ES_Time não corresponda ao AVC para aquele arquivo
+#Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
+def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
-	if op == test_op:
-		txt1_s = txt1[(txt1.index >= MVCvalues1[0]) & (txt1.index < AVCvalues1[0])] #Valores até o AVC - Durante a sístole
+
+	if op == test_op:																#If it's a simulated patient
+		txt1_s = txt1[(txt1.index >= MVCvalues1[0]) & (txt1.index < AVCvalues1[0])] #From the MVC till the AVC Since there's no ECG o mark the beginning
 		txt2_s = txt2[(txt2.index >= MVCvalues1[0]) & (txt2.index < AVCvalues1[0])]
 		txt3_s = txt3[(txt3.index >= MVCvalues1[0]) & (txt3.index < AVCvalues1[0])]
-	else:
-		#Valores até o AVC - Durante a sístole
-		txt1_s = txt1[(txt1.index >= LM_Time[0]) & (txt1.index <= ES_Time[0])]
+
+	else:																			#If it's a real patient
+		txt1_s = txt1[(txt1.index >= LM_Time[0]) & (txt1.index <= ES_Time[0])]		#From the LM_Time until the AVC from the raw data files
 		txt2_s = txt2[(txt2.index >= LM_Time[1]) & (txt2.index <= ES_Time[1])]
 		txt3_s = txt3[(txt3.index >= LM_Time[2]) & (txt3.index <= ES_Time[2])]
-	#Terei que arrumar os tempos para as marcações
 
-	#print((tcolunas1-2)+(tcolunas2-2)+(tcolunas3-2)) #quantidade total de segmentos
-	#print(list(txt2_s))                              #lista os nomes dos segmentos
-	#print (colours[:-2])
-	if prmt == '1':
+	if prmt == '1':																	#Shows detailed info about the GLS
 		print("\n\nPeak negative systolic strain:\n")
-	gls = []
+	gls = []																		#List that stores the peak systolic points
 	colours=list(txt2_s)
 	for colour_it in range(0,tcolunas2-2):
 		if prmt == '1':
 			print("2CH:", colours[colour_it],":",round(txt2_s[colours[colour_it]].min(),2),"%","\t","Time:",txt2_s[colours[colour_it]].idxmin(),"s")
-		gls.append(txt2_s[colours[colour_it]].min())
+		gls.append(txt2_s[colours[colour_it]].min())								#Peak systolic points in 2CH are appended to list
+
 	if prmt == '1':
 		print("\n")
 	colours=list(txt1_s)
 	for colour_it in range(0,tcolunas1-2):
 		if prmt == '1':
 			print("4CH:", colours[colour_it],":",round(txt1_s[colours[colour_it]].min(),2),"%","\t","Time:",txt1_s[colours[colour_it]].idxmin(),"s")
-		gls.append(txt1_s[colours[colour_it]].min())
+		gls.append(txt1_s[colours[colour_it]].min())								#Peak systolic points in 4CH are appended to list
+
 	if prmt == '1':
 		print("\n")
 	colours=list(txt3_s)
 	for colour_it in range(0,tcolunas3-2):
 		if prmt == '1':
 			print("APLAX:", colours[colour_it],":",round(txt3_s[colours[colour_it]].min(),2),"%","\t","Time:",txt3_s[colours[colour_it]].idxmin(),"s")
-		gls.append(txt3_s[colours[colour_it]].min())
+		gls.append(txt3_s[colours[colour_it]].min())								#Peak systolic points in APLAX(3CH) are appended to list
 
-	gls=round(np.mean(gls),2)
+	gls=round(np.mean(gls),2)					#GLS is calculated as the mean of all the peak systolic strain values
 
 	if prmt == '1':
 		print("\n\n")
 	print("Global Longitudinal Strain: ", gls,"%\n")
 
-	"""if prmt != '0':
-		Parameters_Plot(txt1, txt2_mod, txt3_mod, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, txt_mid, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
-						AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
-						EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, txt1_s, txt2_s, txt3_s)
-	sheet['V'+str(it)] = round(gls, 2)"""
-
+	#Returns the GLS value and the peak systolic points (txt1_s - 4CH, txt2_s - 2CH and txt3_s - APLAX) to be plotted later
 	return gls, txt1_s, txt2_s, txt3_s
 
 
-def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):             #Função para calculo do MD
+#Calculates the Mechanical Dispersion (std.deviance from all the peak strain time values in a cycle)
+def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
-	if op == test_op:
-		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)] #Obtenção da Mechanical Dispersion
+	if op == test_op:																#If its a simulation
+		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)] #slices the DF to one that has points from LM to RM time
 		txt2_sliced_onsets = txt2[(txt2.index >= LM_Time) & (txt2.index < RM_Time)]
 		txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
 	else:
-		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])]#Obtenção da Mechanical Dispersion
-		txt2_sliced_onsets = txt2_mod[(txt2_mod.index >= (LM_Time[1]+LM_Time[0])) & (txt2_mod.index < (RM_Time[1]-LM_Time[0]))]
-		txt3_sliced_onsets = txt3_mod[(txt3_mod.index >= (LM_Time[2]+LM_Time[0])) & (txt3_mod.index < (RM_Time[2]-LM_Time[0]))]
-	global_minima_times = []
+		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])] #Slices the DM to points between the LM and RM_Time from the raw data file
+		txt2_sliced_onsets = txt2_mod[(txt2_mod.index >= (LM_Time[1]+LM_Time[0])) & (txt2_mod.index < (RM_Time[1]-LM_Time[0]))]	#These points are synced
+		txt3_sliced_onsets = txt3_mod[(txt3_mod.index >= (LM_Time[2]+LM_Time[0])) & (txt3_mod.index < (RM_Time[2]-LM_Time[0]))] #These too
+
+	global_minima_times = [] #List that will store the peak strain points
+
 	if prmt == '2':
 		print("\n\nTimes of peak negative strain:\n")
 
 	colours=list(txt2_sliced_onsets)
 	for colour_it in range(0,tcolunas2-2):
 		if prmt == '2':
-			if op == test_op:
-				print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-			else:
-				print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-		global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())
-	if prmt == '2':
-		print("\n")
+			print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms\n") #Selects the peak strain points - 2CH
+		global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 
 	colours=list(txt1_sliced_onsets)
 	for colour_it in range(0,tcolunas1-2):
 		if prmt == '2':
-			if op == test_op:
-				print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-			else:
-				print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-		global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())
-	if prmt == '2':
-		print("\n")
+			print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms\n") #Selects the peak strain points - 4CH
+		global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 
 	colours=list(txt3_sliced_onsets)
 	for colour_it in range(0,tcolunas3-2):
 		if prmt == '2':
-			if op == test_op:
-				print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-			else:
-				print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms")
-		global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())
+			print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms\n\n") #Selects the peak strain points - APLAX
+		global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 
-	if prmt == '2':
-		print("\n\n")
-	md = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2)
-	print("Mechanical Dispersion: ", md, "ms") #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
-	"""
-	if prmt != '0':
-		Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
-						AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
-						EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, txt1_sliced_onsets, txt2_sliced_onsets, txt3_sliced_onsets)
+	md = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2)	#MD is calculated as the std.dev from the sample(ddof=1) of all the peak strain times
+	print("Mechanical Dispersion: ", md, "ms")
 
-	sheet['W'+str(it)] = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2) #IMPORTANTE: CALCULA A STD DA POPULAÇÃO
-	"""
+	#Returns the MD value and the peak strain points (txt1_sliced_onsets - 4CH, txt2_sliced_onsets - 2CH and txt3_sliced_onsets - APLAX) to be plotted later
 	return md, txt1_sliced_onsets, txt2_sliced_onsets, txt3_sliced_onsets
 
 
+#=====================================================
+#Below here: to be implemented
 def DI_calc():            #Diastolic Index Calculation - To be implemented
 
 	global ThirdDiastoleTime
