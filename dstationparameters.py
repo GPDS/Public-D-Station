@@ -103,6 +103,11 @@ def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM
 
 #=====================================================
 #Below here: to be implemented
+
+def avgPhaseStrain():
+	print("")
+
+
 def DI_calc():            #Diastolic Index Calculation - To be implemented
 
 	global ThirdDiastoleTime
