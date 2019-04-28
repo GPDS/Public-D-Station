@@ -28,7 +28,7 @@ import openpyxl                  # Package to work with .xlsx - See documentatio
 import front
 from dstationplotlib import *
 from dstationparameters import *
-from rawdatastrain import *
+from rawdatafiles import *
 #
 
 

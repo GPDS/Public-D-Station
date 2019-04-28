@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 import pandas as pd              # Package used to work with the raw data files
 import re                        # Used to obtain the LM, RM and ES Times in the raw data files
 from os import listdir			 # Used to obtain the files in their directories
