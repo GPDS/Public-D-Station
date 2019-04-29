@@ -90,7 +90,7 @@ else:
 txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, LM_Time, RM_Time, ES_Time = openfiles(exams_path, op, test_op)
 
 
-txt2_mod=txt2.copy(deep=True)  		#Se deep for false é uma shallow copy, index e data são compartilhados
+txt2_mod=txt2.copy(deep=True)  		#if deep = False it is a shallow copy, index e data are shared
 txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])				#Creates a copy and syncs the indexes times
 txt3_mod=txt3.copy(deep=True)
 txt3_mod.index = txt3_mod.index-(LM_Time[2]-LM_Time[0])
@@ -129,15 +129,14 @@ for cell in sheet['A']:
 
 #Points are marked in the ECG curve
 if op != test_op:
-	#Gravação dos valores marcados na planilha do excel - INÍCIO
 	print("\n\nMarcacao do Onset QRS 1, onset P, onset QRS 2")
 	xcoord = PlotClick(txt1, tcolunas1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, op, test_op,
 	 strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
-	sheet['U'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms - ONSET QRS 1
-	#sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - Ponto de Diástase
-	sheet['V'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - ONSET P
-	sheet['W'+str(it)] = round(xcoord[2],0) #Houve um arredondamento do tempo em ms - #ONSET QRS 2
-	#Gravação dos valores marcados na planilha do excel - FIM
+	sheet['U'+str(it)] = round(xcoord[0],0) # ONSET QRS 1
+	#sheet['Q'+str(it)] = round(xcoord[1],0) # Diastasis point
+	sheet['V'+str(it)] = round(xcoord[1],0) # ONSET P
+	sheet['W'+str(it)] = round(xcoord[2],0) # ONSET QRS 2
+#
 
 
 MVOvalues1.append((int(sheet['Q'+str(it)].value)/1000)+LM_Time[0])#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + LM_Time(em s)
@@ -151,23 +150,23 @@ AVCvalues2.append((int(sheet['T'+str(it)].value)/1000)+RM_Time[0])#Valor do AVC 
 if op != test_op:
 	Dif_LM_OnsetQRS1.append(LM_Time[0] - (int(sheet['U'+str(it)].value)/1000)) #Diferença entre o Onset QRS 1 e o LM_Time
 
-#Recomputação devido à limitações do package para pegar valores da planilha - Não é preciso adicionar LM_Time aos valores marcados no programa
-if op != test_op:
-	EMCvalues1.append((int(sheet['U'+str(it)].value)/1000))                 #Início de EMC1 = Onset QRS 1(em ms)/1000
-	EMCvalues2.append((int(sheet['W'+str(it)].value)/1000))                 #Início de EMC2 = Onset QRS 2(em ms)/1000
-IVCvalues1.append((int(sheet['R'+str(it)].value)/1000+LM_Time[0]))             #Início de IVC1 = MVC(em ms)/1000 + LM_Time
-IVCvalues2.append((int(sheet['R'+str(it)].value)/1000+RM_Time[0]))             #Início de IVC2 = MVC(em ms)/1000 + RM_Time
-EjectionTimevalues1.append((int(sheet['S'+str(it)].value)/1000+LM_Time[0]))    #Início de EjectionTime1 = AVO(em ms)/1000 + LM_Time
-EjectionTimevalues2.append((int(sheet['S'+str(it)].value)/1000+RM_Time[0]))    #Início de EjectionTime2 = AVO(em ms)/1000 + RM_Time
-IVRvalues.append((int(sheet['T'+str(it)].value)/1000+LM_Time[0]))             #Início de IVR = AVC(em ms)/1000 + LM_Time
-Evalues.append((int(sheet['Q'+str(it)].value)/1000+LM_Time[0]))                #Início de E = MVO(em ms)/1000 + LM_Time
-if op != test_op:
-	#Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Início da Diastase = D point/1000
-	Avalues.append((int(sheet['V'+str(it)].value)/1000))                    #Início de A = Onset P(em ms)/1000
 
-#Os valores acima são usados na separação das fases
+#The values below correspond to the times of the beginning of the phases
+if op != test_op:
+	EMCvalues1.append((int(sheet['U'+str(it)].value)/1000))                 #EMC1 = Onset QRS 1(ms)/1000
+	EMCvalues2.append((int(sheet['W'+str(it)].value)/1000))                 #EMC2 = Onset QRS 2(ms)/1000
+IVCvalues1.append((int(sheet['R'+str(it)].value)/1000+LM_Time[0]))          #IVC1 = MVC(ms)/1000 + LM_Time
+IVCvalues2.append((int(sheet['R'+str(it)].value)/1000+RM_Time[0]))          #IVC2 = MVC(ms)/1000 + RM_Time
+EjectionTimevalues1.append((int(sheet['S'+str(it)].value)/1000+LM_Time[0])) #EjectionTime1 = AVO(ms)/1000 + LM_Time
+EjectionTimevalues2.append((int(sheet['S'+str(it)].value)/1000+RM_Time[0])) #EjectionTime2 = AVO(ms)/1000 + RM_Time
+IVRvalues.append((int(sheet['T'+str(it)].value)/1000+LM_Time[0]))           #IVR = AVC(ms)/1000 + LM_Time
+Evalues.append((int(sheet['Q'+str(it)].value)/1000+LM_Time[0]))             #E = MVO(ms)/1000 + LM_Time
+if op != test_op:
+	#Diastasisvalues.append((int(sheet['Q'+str(it)].value)/1000))            #Diastasis = D point/1000
+	Avalues.append((int(sheet['V'+str(it)].value)/1000))                    #A = Onset P(ms)/1000
 
-#Impressão dos valores trabalhados no terminal
+
+#Now everything is printed
 print("\nLM_Time: ",LM_Time[0]*1000, "ms")
 print("RM_Time: ",RM_Time[0]*1000, "ms")
 if op != test_op:
@@ -213,36 +212,37 @@ sheet['AI'+str(it)] = (systolic_time/(RM_Time[0] - systolic_time))
 print("\n")
 
 outGLS = GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-sheet['AJ'+str(it)] = outGLS[0]
+sheet['AJ'+str(it)] = outGLS[0] #Saves the caculated GLS in the sheet
 
 outMD = MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-sheet['AK'+str(it)] = outMD[0]
+sheet['AK'+str(it)] = outMD[0]	#Saves the caculated MD in the sheet
 
 #DI_calc()
 print("\n\n")
 
 calculated_IVA = 0	#Currently not used
 
-while True:
+while True: 		#Loop where the user can select the plots he wishes to see
+
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
 	#print("\t3. Diastolic Recovery")
 	print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
 	prmt = input("Parameter: ")
 	#prmt="8"
 
-	if prmt == "1":                                                             #Obtenção do Global Longitudinal Strain
+	if prmt == "1":               #Calculates the GLS
 		outGLS = GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 		Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 		 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1], outGLS[2], outGLS[3])
-		sheet['AJ'+str(it)] = outGLS[0]
+		sheet['AJ'+str(it)] = outGLS[0]		#Saves the caculated GLS in the sheet
 
-	elif prmt == "2":
+	elif prmt == "2":			  #Calculates the MD
 		outMD = MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 		Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 						op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outMD[1], outMD[2], outMD[3])
-		sheet['AK'+str(it)] = outMD[0]
+		sheet['AK'+str(it)] = outMD[0]	#Saves the caculated MD in the sheet
 
 
 	#elif prmt == "3": #DI - Not working right now/to be implemented later
@@ -268,4 +268,4 @@ while True:
 		continue
 	print("\n")
 
-wb.save("Patients_DB.xlsx")		#mudar para a nova - criar uma etapa só para trabalhar com a planilha
+wb.save("Patients_DB.xlsx")		#Parameters are saved in the xl file
