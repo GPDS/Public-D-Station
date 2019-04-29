@@ -10,7 +10,6 @@ Verificar sincronia das curvas agora - com os txts
 Adicionar a variação do Strain e SR em cada fase
 Falar o segmento por nome
 Taxa de amostragem (pegar do txt) -> Relacionar com HR
-Retirar essas variáveis globais e modularizar o código
 
 Criar um vetor com todas as opcoes, nao so test_op
 
@@ -19,11 +18,9 @@ Futuramente: Razão E/e’Sr
 
 #Importing packages...
 import pandas as pd              # Package used to work with the raw data files
-import numpy as np
 import openpyxl                  # Package to work with .xlsx - See documentation when working with a big amount of data
-
-
 #
+
 #Packages that i (https://github.com/rafaelds9) created
 import front
 from dstationplotlib import *
@@ -68,7 +65,7 @@ IVRvalues = []
 Evalues = []
 Diastasisvalues = []
 Avalues = []
-
+#
 
 
 #MAIN
@@ -81,10 +78,10 @@ print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
 
-idPatient = 'Aristoteles'	# Used to debug
-#op = '5'					# Used to debug
+idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
+#op = '5'					# Used to debug - comment the op line above
 
-if op != test_op:
+if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
 	exams_path = ('Patients/'+idPatient)
 else:
 	exams_path = ('Simulations/'+idPatient)
@@ -94,37 +91,39 @@ txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, LM_Time, RM_Time, ES_Time = openfi
 
 
 txt2_mod=txt2.copy(deep=True)  		#Se deep for false é uma shallow copy, index e data são compartilhados
-txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])
+txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])				#Creates a copy and syncs the indexes times
 txt3_mod=txt3.copy(deep=True)
 txt3_mod.index = txt3_mod.index-(LM_Time[2]-LM_Time[0])
 
-if op == "5" or op == test_op:
+if op == "5" or op == test_op:							#Obtains the SR from the strain curves if it's necessary
 	txt_mid=txt1.diff()
 	strain_rate_lv4ch = txt_mid.truediv(txt1.index.to_series().diff(), axis = 0)/100
 strain_rate_lv2ch = txt2_mod.diff().truediv(txt2_mod.index.to_series().diff(), axis = 0)/100
 strain_rate_lv3ch = txt3_mod.diff().truediv(txt3_mod.index.to_series().diff(), axis = 0)/100
 
-tcolunas1=int(((txt1.size/len(txt1.index))))
+tcolunas1=int(((txt1.size/len(txt1.index))))													#Checks the ammount of columns in the dataframe
 tcolunas2=int(((txt2.size/len(txt2.index))))
 tcolunas3=int(((txt3.size/len(txt3.index))))
 tcolunas_mid=int(((txt_mid.size/len(txt_mid.index))))
 tcolunas_strain_rate_lv4ch = int(((strain_rate_lv4ch.size/len(strain_rate_lv4ch.index))))
 
 #Sort para detectar o menor index -  #para que um gráfico não fique sobrando
-END_Time0 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1], strain_rate_lv4ch.index[len(strain_rate_lv4ch.index)-1]])[3]
+END_Time0 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],
+strain_rate_lv4ch.index[len(strain_rate_lv4ch.index)-1]])[3]
 
 #Para o gráfico dos parâmetros - Início
 #achar o menor entre os strains e comparar com o do meio
-END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1], txt_mid.index[len(txt_mid.index)-1]])[3]
+END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],
+txt_mid.index[len(txt_mid.index)-1]])[3]
 #Para o gráfico dos parâmetros - Fim
 
 
 # Sheet is open
-wb = openpyxl.load_workbook('Patients_DB.xlsx')
+wb = openpyxl.load_workbook('Patients_DB.xlsx')					#opens the xl file where the patient data is
 sheet = wb['Sheet1']
 #Determinar a linha correspondente ao paciente:
 for cell in sheet['A']:
-	if(cell.value is not None): #We need to check that the cell is not empty.
+	if(cell.value is not None): #check if that the cell is not empty.
 		if idPatient == cell.value: #Check if the value of the cell contains the idPatient
 			it = format(cell.row)
 
@@ -132,13 +131,13 @@ for cell in sheet['A']:
 if op != test_op:
 	#Gravação dos valores marcados na planilha do excel - INÍCIO
 	print("\n\nMarcacao do Onset QRS 1, onset P, onset QRS 2")
-	xcoord = PlotClick(txt1, tcolunas1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, op, test_op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
+	xcoord = PlotClick(txt1, tcolunas1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, op, test_op,
+	 strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
 	sheet['U'+str(it)] = round(xcoord[0],0) #Houve um arredondamento do tempo em ms - ONSET QRS 1
 	#sheet['Q'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - Ponto de Diástase
 	sheet['V'+str(it)] = round(xcoord[1],0) #Houve um arredondamento do tempo em ms - ONSET P
 	sheet['W'+str(it)] = round(xcoord[2],0) #Houve um arredondamento do tempo em ms - #ONSET QRS 2
 	#Gravação dos valores marcados na planilha do excel - FIM
-
 
 
 MVOvalues1.append((int(sheet['Q'+str(it)].value)/1000)+LM_Time[0])#Valor do MVO à esquerda: Valor de MVO da planilha(em ms)/1000 + LM_Time(em s)

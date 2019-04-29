@@ -6,8 +6,8 @@
 """Put these outputs in a bullseye
 	Colocar nomes significativos"""
 
-import pandas as pd
-import numpy as np
+import pandas as pd			# Package used to work with the raw data files
+import numpy as np			# Used in the mean and standard deviance calculation
 
 
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
@@ -52,8 +52,8 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, 
 	gls=round(np.mean(gls),2)					#GLS is calculated as the mean of all the peak systolic strain values
 
 	if prmt == '1':
-		print("\n\n")
-	print("Global Longitudinal Strain: ", gls,"%\n")
+		print("\n")
+	print("\nGlobal Longitudinal Strain: ", gls,"%")
 
 	#Returns the GLS value and the peak systolic points (txt1_s - 4CH, txt2_s - 2CH and txt3_s - APLAX) to be plotted later
 	return gls, txt1_s, txt2_s, txt3_s
@@ -76,24 +76,32 @@ def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM
 	if prmt == '2':
 		print("\n\nTimes of peak negative strain:\n")
 
+	if prmt == '2':
+		print("\n")
 	colours=list(txt2_sliced_onsets)
 	for colour_it in range(0,tcolunas2-2):
 		if prmt == '2':
-			print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms\n") #Selects the peak strain points - 2CH
+			print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - 2CH
 		global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 
+	if prmt == '2':
+		print("\n")
 	colours=list(txt1_sliced_onsets)
 	for colour_it in range(0,tcolunas1-2):
 		if prmt == '2':
-			print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms\n") #Selects the peak strain points - 4CH
+			print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - 4CH
 		global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 
+	if prmt == '2':
+		print("\n")
 	colours=list(txt3_sliced_onsets)
 	for colour_it in range(0,tcolunas3-2):
 		if prmt == '2':
-			print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms\n\n") #Selects the peak strain points - APLAX
+			print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - APLAX
 		global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 
+	if prmt == '2':
+		print("\n")
 	md = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2)	#MD is calculated as the std.dev from the sample(ddof=1) of all the peak strain times
 	print("Mechanical Dispersion: ", md, "ms")
 
