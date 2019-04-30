@@ -136,4 +136,16 @@ def openfiles(exams_path, op, test_op):     #Script to open the raw data files e
     	txt_mid.drop('Unnamed: 1', axis=1, inplace=True)
     #strain_rate_lv4ch.drop('Unnamed: 1', axis=1, inplace=True)
 
-    return txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, LM_Time, RM_Time, ES_Time
+    #
+    txt2_mod=txt2.copy(deep=True)  		#if deep = False it is a shallow copy, index e data are shared
+    txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])				#Creates a copy and syncs the indexes times
+    txt3_mod=txt3.copy(deep=True)
+    txt3_mod.index = txt3_mod.index-(LM_Time[2]-LM_Time[0])
+
+    if op == "5" or op == test_op:							#Obtains the SR from the strain curves if it's necessary
+    	txt_mid=txt1.diff()
+    	strain_rate_lv4ch = txt_mid.truediv(txt1.index.to_series().diff(), axis = 0)/100
+    strain_rate_lv2ch = txt2_mod.diff().truediv(txt2_mod.index.to_series().diff(), axis = 0)/100
+    strain_rate_lv3ch = txt3_mod.diff().truediv(txt3_mod.index.to_series().diff(), axis = 0)/100
+
+    return txt1, txt2, txt3, txt_mid, txt2_mod, txt3_mod, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, LM_Time, RM_Time, ES_Time

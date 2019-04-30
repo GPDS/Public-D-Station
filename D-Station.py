@@ -71,19 +71,9 @@ else:
 	exams_path = ('Simulations/'+idPatient)
 
 
-txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, LM_Time, RM_Time, ES_Time = openfiles(exams_path, op, test_op)
+txt1, txt2, txt3, txt_mid, txt2_mod, txt3_mod, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, LM_Time, RM_Time, ES_Time = openfiles(exams_path, op, test_op)
 
 
-txt2_mod=txt2.copy(deep=True)  		#if deep = False it is a shallow copy, index e data are shared
-txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])				#Creates a copy and syncs the indexes times
-txt3_mod=txt3.copy(deep=True)
-txt3_mod.index = txt3_mod.index-(LM_Time[2]-LM_Time[0])
-
-if op == "5" or op == test_op:							#Obtains the SR from the strain curves if it's necessary
-	txt_mid=txt1.diff()
-	strain_rate_lv4ch = txt_mid.truediv(txt1.index.to_series().diff(), axis = 0)/100
-strain_rate_lv2ch = txt2_mod.diff().truediv(txt2_mod.index.to_series().diff(), axis = 0)/100
-strain_rate_lv3ch = txt3_mod.diff().truediv(txt3_mod.index.to_series().diff(), axis = 0)/100
 
 tcolunas1=int(((txt1.size/len(txt1.index))))													#Checks the ammount of columns in the dataframe
 tcolunas2=int(((txt2.size/len(txt2.index))))
@@ -213,7 +203,7 @@ calculated_IVA = 0	#Currently not used
 while True: 		#Loop where the user can select the plots he wishes to see
 
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
-	print("\t3. Average strain variation during each phase")
+	print("\t3. Average Strain variation during each phase")
 	print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
 	prmt = input("Parameter: ")
 	#prmt="8"
