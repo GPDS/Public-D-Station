@@ -1,21 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-O que fazer:
-
-Ordenar os events e fazer a nova separacao
-Verificar ordem dos eventos e fazer a separação de fases
-Picos sistolicos
-Verificar sincronia das curvas agora - com os txts
-Adicionar a variação do Strain e SR em cada fase
-Falar o segmento por nome
-Taxa de amostragem (pegar do txt) -> Relacionar com HR
-
-Criar um vetor com todas as opcoes, nao so test_op
-
-Futuramente: Razão E/e’Sr
-"""
-
 #Importing packages...
 import pandas as pd              # Package used to work with the raw data files
 import openpyxl                  # Package to work with .xlsx - See documentation when working with a big amount of data
@@ -244,6 +228,8 @@ while True: 		#Loop where the user can select the plots he wishes to see
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outMD[1], outMD[2], outMD[3])
 		sheet['AK'+str(it)] = outMD[0]	#Saves the calculated MD in the sheet
 
+	elif prmt == "3":
+		avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2)
 
 	#elif prmt == "3": #DI - Not working right now/to be implemented later
 	#    DI_calc()

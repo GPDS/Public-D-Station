@@ -112,8 +112,40 @@ def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM
 #=====================================================
 #Below here: to be implemented
 
-def avgPhaseStrain():
-	print("")
+#Calculates the global strain variation in each phase
+def avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2):
+
+	if(op != test_op):
+
+		#line below: calculates the average longitudinal strain from all the LV segments
+		averageLongStrain =  (pd.concat([txt1.iloc[:,0:-2], txt2.iloc[:,0:-2], txt3.iloc[:,0:-2]], axis=1, sort = False)).mean(axis=1)
+
+		#Adds the time points where the phase changes and interpolates in case they don't exist in the DF
+		a = float('NaN')
+		averageLongStrain.loc[EMCvalues1[0]] = a
+		averageLongStrain.loc[IVCvalues1[0]] = a
+		averageLongStrain.loc[EjectionTimevalues1[0]] = a
+		averageLongStrain.loc[IVRvalues[0]] = a
+		averageLongStrain.loc[Evalues[0]] = a
+		averageLongStrain.loc[Avalues[0]] = a
+		averageLongStrain.loc[EMCvalues2[0]] = a
+		averageLongStrain.loc[IVCvalues2[0]] = a
+		averageLongStrain.loc[EjectionTimevalues2[0]] = a
+		averageLongStrain = averageLongStrain.sort_index()
+		averageLongStrain = averageLongStrain.interpolate(method = 'quadratic')
+		#
+
+		#Prints the average strain values
+		print("\n\nAverage longitudinal strain variation between:\n")
+		print("\tIVC and EMC1: ", round(averageLongStrain.loc[IVCvalues1[0]]-averageLongStrain.loc[EMCvalues1[0]],2), "%")
+		print("\tEjection Phase 1 and IVC1: ", round(averageLongStrain.loc[EjectionTimevalues1[0]]-averageLongStrain.loc[IVCvalues1[0]],2), "%")
+		print("\tIVR and Ejection Phase 1: ", round(averageLongStrain.loc[IVRvalues[0]]-averageLongStrain.loc[EjectionTimevalues1[0]],2), "%")
+		print("\tE and IVR: ", round(averageLongStrain.loc[Evalues[0]]-averageLongStrain.loc[IVRvalues[0]],2), "%")
+		print("\tA and E: ", round(averageLongStrain.loc[Avalues[0]]-averageLongStrain.loc[Evalues[0]],2), "%")
+		#maybe i should return them in an array to later save in the spreadsheet
+
+	else:
+		print("Phase segmentation was not performed, therefore you cannot calculate the phase strain variation")
 
 
 def DI_calc():            #Diastolic Index Calculation - To be implemented
