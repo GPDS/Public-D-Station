@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
+"Separar as funcoes de plot para cada parâmetro mesmo, ficam menos confusas"
+
 # A package created for the D-Station (https://gpdsifpb.github.io/D-Station/)
 # to plot strain or strain rate curves and calculate its parameters
+
+
 
 import matplotlib as mpl		 # Used in the plots
 import matplotlib.pyplot as plt	 # Also used in the plots
@@ -361,6 +365,171 @@ def Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain
 	plt.show()
 	#if prmt == "8" and calculated_IVA == 0:	#To be used or discarded later
 		#fig.canvas.mpl_disconnect(cid)
+
+
+# Plots the figures containing the results of the operations
+def avgPhaseStrainVarPlot(txt1, txt2, txt3, txt_mid, averageLongStrain, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
+ 					AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
+					EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line):
+
+	fig = plt.figure(figsize=(16, 8))
+	ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
+	plt.xlim(0, END_Time1)
+	plt.plot(averageLongStrain, '.k')
+
+	#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
+	ymin, ymax = plt.ylim()
+	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
+	txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
+	x_inc=0.002
+	plt.grid()
+	tick_locs = np.arange(0.0,END_Time1,0.2)
+	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
+	plt.setp(ax0.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
+
+	#Below: Valve events and phases names are written in the plot
+	plt.text(MVOvalues1[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	plt.text(MVCvalues1[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	plt.text(AVOvalues1[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	plt.text(AVCvalues1[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	plt.text(EMCvalues1[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	plt.text(IVCvalues1[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	plt.text(EjectionTimevalues1[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	plt.text(IVRvalues[0]+x_inc, txt_height_2, "IVR" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	plt.text(Evalues[0]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
+	plt.text(Avalues[0]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+
+	#These if are to determine which name will be the last written on the plot
+	if MVOvalues2[0]<END_Time1:
+		plt.text(MVOvalues2[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		ax0.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if MVCvalues2[0]<END_Time1:
+		plt.text(MVCvalues2[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		ax0.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVOvalues2[0]<END_Time1:
+		plt.text(AVOvalues2[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		ax0.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVCvalues2[0]<END_Time1:
+		plt.text(AVCvalues2[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		ax0.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op and EMCvalues2 < END_Time1:
+		plt.text(EMCvalues2[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		ax0.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+	if IVCvalues2[0]<END_Time1:
+		plt.text(IVCvalues2[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		ax0.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if EjectionTimevalues2[0]<END_Time1:
+		plt.text(EjectionTimevalues2[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		ax0.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+	#Subplot 2 (mid)
+	ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
+
+	plt.xlim(0, END_Time1)
+	colorPlot(txt_mid,tcolunas_mid)
+	plt.grid()
+	tick_locs = np.arange(0.0,END_Time1,0.2)
+	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+
+	if op == "1" or op == "5":
+		plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
+	if op == "2":
+		plt.ylabel('Strain - LA\n(%)', fontsize=SizeFont)
+	if op == "3":
+		plt.ylabel('Strain Rate - LA\n(1/s)', fontsize=SizeFont)
+	if op == "4":
+		plt.ylabel('Strain - RV\n(%)', fontsize=SizeFont)
+
+	plt.setp(ax1.get_xticklabels(), visible=False)
+
+
+	ax2 = plt.subplot2grid((16, 1), (13, 0), rowspan = 4, colspan = 1)
+	plt.plot(txt1.loc[:,'ECG : '])
+	plt.xlim(0, END_Time1)
+	tick_locs = np.arange(0.0,END_Time1,0.2)
+	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	plt.xlabel('Time (ms)', fontsize=SizeFont)
+	plt.ylabel('ECG\nVoltage\n(mV)', fontsize=SizeFont)
+	plt.grid()
+
+	#Lines between subplots - May be deleted later
+	ax0.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
+	if op != test_op:
+		ax0.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+	ax0.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax0.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op:
+		#ax0.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax0.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+	ax1.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
+	ax1.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+	ax1.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	#ax1.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax1.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+	#ifs to find which event will be last shown in the plot
+	if MVOvalues2[0]<END_Time1:
+		ax1.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if MVCvalues2[0]<END_Time1:
+		ax1.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVOvalues2[0]<END_Time1:
+		ax1.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVCvalues2[0]<END_Time1:
+		ax1.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op and EMCvalues2 < END_Time1:
+		ax1.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+	if IVCvalues2[0]<END_Time1:
+		ax1.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if EjectionTimevalues2[0]<END_Time1:
+		ax1.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+	ax2.axvline(x=MVOvalues1[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=MVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=AVOvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=AVCvalues1[0], c="g",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+	ax2.axvline(x=EMCvalues1[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+	ax2.axvline(x=IVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=IVRvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=Evalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	#ax2.axvline(x=Diastasisvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+		#ifs to find which event will be last shown in the plot
+	if MVOvalues2[0]<END_Time1:
+		ax2.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if MVCvalues2[0]<END_Time1:
+		ax2.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVOvalues2[0]<END_Time1:
+		ax2.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVCvalues2[0]<END_Time1:
+		ax2.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op and EMCvalues2 < END_Time1:
+		ax2.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+	if IVCvalues2[0]<END_Time1:
+		ax2.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if EjectionTimevalues2[0]<END_Time1:
+		ax2.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+	#plt.tight_layout()
+	plt.show()
 
 
 # Plots 17 segment bullseye

@@ -229,8 +229,13 @@ while True: 		#Loop where the user can select the plots he wishes to see
 		sheet['AK'+str(it)] = outMD[0]	#Saves the calculated MD in the sheet
 
 	elif prmt == "3":
-		avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2)
-
+		if(op != test_op):
+			averageLongStrain = avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2)
+			avgPhaseStrainVarPlot(txt1, txt2, txt3, txt_mid, averageLongStrain, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid,
+			prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1,
+			EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line)
+		else:
+			print("Phase segmentation was not performed, therefore you cannot calculate the phase strain variation")
 	#elif prmt == "3": #DI - Not working right now/to be implemented later
 	#    DI_calc()
 	#    DR_bullseye(BullseyeAux)
