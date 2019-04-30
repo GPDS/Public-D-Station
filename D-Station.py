@@ -12,7 +12,6 @@ from dstationparameters import *
 from rawdatafiles import *
 #
 
-
 #Defining constants
 height_line = 1.025 # Constant to define the height of the lines that separate the phases
 test_op = '6'		# Defines the number of the option that will use the simulated strain curves
@@ -21,12 +20,10 @@ SizePhaseFont = 11  # Defines the font size of the phases' legends
 SizeLabelFont = 11  # Defines the font size of the labels in the plots' axis
 #
 
-
 #Initializing variables
 it = 3   #Defines the first row in the xl file that has values
 prmt = '0' #Defines the prmt value in the first run to 0 - Change with caution
 #
-
 
 #Declaring variables and arrays
 #Lists used to store relevant time values for the phase calculations
@@ -54,7 +51,6 @@ Avalues = []
 
 #MAIN
 print("\033c", end='') # Clears the terminal
-
 
 #idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
