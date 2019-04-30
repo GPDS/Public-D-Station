@@ -193,13 +193,17 @@ print("Diastolic Time: ", (RM_Time[0] - systolic_time)*1000)
 sheet['AH'+str(it)] = ((RM_Time[0] - systolic_time)*1000)
 print("Ratio: Systolic Time/Diastolic Time: ",(systolic_time/(RM_Time[0] - systolic_time)))
 sheet['AI'+str(it)] = (systolic_time/(RM_Time[0] - systolic_time))
-print("\n")
 
 outGLS = GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 sheet['AJ'+str(it)] = outGLS[0] #Saves the caculated GLS in the sheet
 
 outMD = MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 sheet['AK'+str(it)] = outMD[0]	#Saves the caculated MD in the sheet
+
+if(op != test_op):
+	averageLongStrain = avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2)
+else:
+	print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation")
 
 #DI_calc()
 print("\n\n")
@@ -209,7 +213,7 @@ calculated_IVA = 0	#Currently not used
 while True: 		#Loop where the user can select the plots he wishes to see
 
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
-	#print("\t3. Diastolic Recovery")
+	print("\t3. Average strain variation during each phase")
 	print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
 	prmt = input("Parameter: ")
 	#prmt="8"
@@ -220,6 +224,7 @@ while True: 		#Loop where the user can select the plots he wishes to see
 		 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1], outGLS[2], outGLS[3])
 		sheet['AJ'+str(it)] = outGLS[0]		#Saves the calculated GLS in the sheet
+		"Deixando so o plot aqui nao vai precisar recalcular, vai ficar mais limpo"
 
 	elif prmt == "2":			  #Calculates the MD
 		outMD = MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
@@ -230,12 +235,12 @@ while True: 		#Loop where the user can select the plots he wishes to see
 
 	elif prmt == "3":
 		if(op != test_op):
-			averageLongStrain = avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2)
-			avgPhaseStrainVarPlot(txt1, txt2, txt3, txt_mid, averageLongStrain, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid,
-			prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1,
-			EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line)
+			avgPhaseStrainVarPlot(txt1, txt2, txt3, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, SizeFont, SizePhaseFont, MVOvalues1,
+			MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2,
+			EjectionTimevalues1,EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line)
 		else:
-			print("Phase segmentation was not performed, therefore you cannot calculate the phase strain variation")
+			print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation and also not plot it")
+
 	#elif prmt == "3": #DI - Not working right now/to be implemented later
 	#    DI_calc()
 	#    DR_bullseye(BullseyeAux)

@@ -109,9 +109,6 @@ def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM
 	return md, txt1_sliced_onsets, txt2_sliced_onsets, txt3_sliced_onsets
 
 
-#=====================================================
-#Below here: to be implemented
-
 #Calculates the global strain variation in each phase
 def avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2):
 
@@ -134,7 +131,7 @@ def avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, Eje
 	#
 
 	#Prints the average strain values
-	print("\n\nAverage longitudinal strain variation between:\n")
+	print("\nAverage longitudinal strain variation between:")
 	print("\tElectrical Mechanical Coupling (EMC) 2 and Isovolumic Contraction (IVC) Phase 1: ", round(averageLongStrain.loc[IVCvalues1[0]]-averageLongStrain.loc[EMCvalues1[0]],2), "%")
 	print("\tIsovolumic contraction (IVC) Phase 1 and Ejection Phase (Ejec) 1: ", round(averageLongStrain.loc[EjectionTimevalues1[0]]-averageLongStrain.loc[IVCvalues1[0]],2), "%")
 	print("\tEjection (Ejec) Phase 1 and Isovolumic Relaxation (IVR) Phase: ", round(averageLongStrain.loc[IVRvalues[0]]-averageLongStrain.loc[EjectionTimevalues1[0]],2), "%")
@@ -145,7 +142,8 @@ def avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, Eje
 	#maybe i should return them in an array to later save in the spreadsheet
 	return averageLongStrain
 
-
+#=====================================================
+#Below here: to be implemented
 
 def DI_calc():            #Diastolic Index Calculation - To be implemented
 
