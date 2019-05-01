@@ -23,7 +23,8 @@ SizeLabelFont = 11  # Defines the font size of the labels in the plots' axis
 #Initializing variables
 it = 3   #Defines the first row in the xl file that has values
 prmt = '0' #Defines the prmt value in the first run to 0 - Change with caution
-EcgOk = 0
+EcgOk = 0	#Defines if the ECG has its points correctly or should be marked/rechecked
+MarkPoints = 1	#Currently 1 - to future use
 #
 
 #Declaring variables and arrays
@@ -100,19 +101,27 @@ for cell in sheet['A']:
 
 
 #Check if the ECG points were selected
-if op != test_op:
+if op != test_op and MarkPoints:
 	if sheet['U'+it].value is not None and sheet['V'+it].value is not None and sheet['W'+it].value is not None:
-		print("\nUse the stored Onset QRS1, P Onset and Onset QRS 2 values without verifying?")
+		print("\nVerify the stored Onset QRS1, P Onset and Onset QRS 2 values?")
 		decision = input("[y]es or [n]o? ")
-		if(decision == 'n' or decision == 'N'):
-			#plota
-			decision = input("\nAre the presented points correct?\n[y]es or [n]o? ")
+
+		if(decision == 'y' or decision == 'Y'):
+			OnsetQRS1 = sheet['U'+it].value/1000
+			OnsetP = sheet['V'+it].value/1000
+			OnsetQRS2 = sheet['W'+it].value/1000
+
+			print("\nAre the presented timepoints (in red) correct? Close the figure and answer: ")
+			ecgVerification(txt1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, OnsetQRS1, OnsetP, OnsetQRS2)
+			decision = input("[y]es or [n]o? ")
+
 			if(decision == 'n' or decision == 'N'):
 				EcgOk = 0
 			else:
 				EcgOk = 1
 		else:
 			EcgOk = 1
+
 	if not(sheet['U'+it].value is not None and sheet['V'+it].value is not None and sheet['W'+it].value is not None) or not(EcgOk):
 		print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
 		xcoord = PlotClick(txt1, tcolunas1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, op, test_op,

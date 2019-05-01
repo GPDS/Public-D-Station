@@ -52,6 +52,38 @@ def colorPlot(txt,tcolunas):
 	#plt.plot(txt.iloc[:,tcolunas-2], 'k.')                  # Global segment, uncomment this to show it
 
 
+#Plots the ECG curve so the user may see in the red lines the OnsetQRS1, OnsetP and OnsetQRS2 and verify if the values stored in the spreadsheet are correct
+def ecgVerification(txt1, LM_Time, ES_Time, RM_Time, END_Time0, SizeFont, OnsetQRS1, OnsetP, OnsetQRS2):
+
+	ax0 = plt.subplot2grid((12,1),(0,0), rowspan = 12, colspan = 1)
+	plt.xlim(0, END_Time0)
+	ax0.axvline(LM_Time, color='y')
+	ax0.axvline(ES_Time, color='g')
+	ax0.axvline(RM_Time, color='y')
+
+	ax0.axvline(OnsetQRS1,color = 'r')
+	ax0.axvline(OnsetP,color = 'r')
+	ax0.axvline(OnsetQRS2,color = 'r')
+
+	tick_locs = np.arange(0.0,END_Time0,0.2)
+	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	plt.plot(txt1.loc[:,'ECG : '])
+
+	"""
+	ymin, ymax = plt.ylim()
+	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
+
+	plt.text(OnsetQRS1+0.002, txt_height_1, "OnsetQRS1" , rotation=0, verticalalignment='center')
+	plt.text(OnsetP+0.002, 0.1, txt_height_1, "OnsetP" , rotation=0, verticalalignment='center')
+	plt.text(OnsetQRS2+0.002, 0.1, txt_height_1, "OnsetQRS2" , rotation=0, verticalalignment='center')
+	"""
+
+	plt.xlabel('Time (ms)', fontsize=SizeFont)
+	plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
+	plt.grid()
+	plt.show()
+
 # Funcao to plot the Strain and ECG curves to select 3 points of interest on the latter
 def PlotClick(txt1, tcolunas1, LM_Time, ES_Time, RM_Time, END_Time0, SizeFont, op, test_op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt):
 	fig = plt.figure(figsize=(12, 8))
