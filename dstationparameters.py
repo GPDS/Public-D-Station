@@ -49,7 +49,7 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, 
 			print("APLAX:", colours[colour_it],":",round(txt3_s[colours[colour_it]].min(),2),"%","\t","Time:",txt3_s[colours[colour_it]].idxmin(),"s")
 		gls.append(txt3_s[colours[colour_it]].min())								#Peak systolic points in APLAX(3CH) are appended to list
 
-	gls=round(np.mean(gls),2)					#GLS is calculated as the mean of all the peak systolic strain values
+	gls=round(np.mean(gls),1)					#GLS is calculated as the mean of all the peak systolic strain values
 
 	if prmt == '1':
 		print("\n")
@@ -102,7 +102,7 @@ def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM
 
 	if prmt == '2':
 		print("\n")
-	md = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 2)	#MD is calculated as the std.dev from the sample(ddof=1) of all the peak strain times
+	md = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 1)	#MD is calculated as the std.dev from the sample(ddof=1) of all the peak strain times
 	print("Mechanical Dispersion: ", md, "ms")
 
 	#Returns the MD value and the peak strain points (txt1_sliced_onsets - 4CH, txt2_sliced_onsets - 2CH and txt3_sliced_onsets - APLAX) to be plotted later

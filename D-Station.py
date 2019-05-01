@@ -61,7 +61,7 @@ print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+".
 op = input("Option: ")
 
 #idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
-#op = '1'					# Used to debug - comment the op line above
+#op = '5'					# Used to debug - comment the op line above
 
 if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
 	exams_path = ('Patients/'+idPatient)
@@ -224,7 +224,7 @@ while True: 		#Loop where the user can select the plots he wishes to see
 	print("\t3. Average Strain variation during each phase")
 	print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
 	prmt = input("Parameter: ")
-	#prmt="8"
+	#prmt = '0' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
 		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
