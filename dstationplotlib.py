@@ -70,6 +70,8 @@ def ecgVerification(txt1, LM_Time, ES_Time, RM_Time, END_Time0, SizeFont, OnsetQ
 	plt.xticks(tick_locs, tick_lbls)
 	plt.plot(txt1.loc[:,'ECG : '])
 
+	print("\nStored Values:\n\tOnset QRS 1: ", OnsetQRS1*1000,"ms\n\tOnset P: ", OnsetP*1000, "ms\n\tOnset QRS 2: ", OnsetQRS2*1000,"ms")
+
 	"""
 	ymin, ymax = plt.ylim()
 	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
@@ -149,33 +151,19 @@ def PlotClick(txt1, tcolunas1, LM_Time, ES_Time, RM_Time, END_Time0, SizeFont, o
 	return xcoord
 
 
-# Plots the figures containing the results of the operations
-def Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
- 					AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
-					EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, txt1_par, txt2_par, txt3_par):
-
-	#global times_IVA  # To be added later - remove global
-	#times_IVA = []    #	''
+#Plots the points of interest in the GLS, MD and DI calculation
+def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op,
+END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1,
+IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, txt1_par, txt2_par, txt3_par):
 
 	fig = plt.figure(figsize=(16, 8))
 
 	#Top plot
-	if prmt != "8" or calculated_IVA:				# It will always go to to this condition - IVA will be added later
-		ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
-
-	else:
-		ax0 = plt.subplot2grid((16,1),(0,0), rowspan = 8, colspan = 1)
-
+	ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
 	plt.xlim(0, END_Time1)
-
-	if prmt != "8":					# It will always go to to this condition - IVA will be added later
-		colorPlot(txt1,tcolunas1)
-		colorPlot(txt2_mod,tcolunas2)
-		colorPlot(txt3_mod,tcolunas3)
-
-	else: # This condition won't be true
-		plt.plot(segment, 'r')
-		plt.plot(segment_IVC, 'k')
+	colorPlot(txt1,tcolunas1)
+	colorPlot(txt2_mod,tcolunas2)
+	colorPlot(txt3_mod,tcolunas3)
 
 	# Below: The points used in the parameters calculations are shown
 	if prmt == "1":		#Points used for GLS
@@ -209,8 +197,8 @@ def Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain
 		for colour_it in range(0,tcolunas3-2):
 			plt.plot(txt3_par[colours[colour_it]].idxmin(), txt3_par[colours[colour_it]].min(), 'kx')
 
-	if prmt == "3": 		#Points used for DI - Diastolic Index
-		ax0.axvline(ThirdDiastoleTime, color='k')
+	#if prmt == "3": 		#Points used for DI - Diastolic Index
+		#ax0.axvline(ThirdDiastoleTime, color='k')
 
 	#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
 	ymin, ymax = plt.ylim()
@@ -221,14 +209,9 @@ def Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain
 	tick_locs = np.arange(0.0,END_Time1,0.2)
 	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
 	plt.xticks(tick_locs, tick_lbls)
-	if prmt != "8":
-		plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
 
-	else:		# It won't go to this case
-		plt.ylabel('\nSegmental Strain Rate - LV\n(1/s)', fontsize=SizeFont)
-		ax0.tick_params(axis="y", labelsize=SizeLabelFont)
-		if(calculated_IVA == 0):
-			cid = fig.canvas.mpl_connect('button_press_event', onclick)
+	plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
+
 
 	plt.setp(ax0.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
 
@@ -271,13 +254,7 @@ def Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain
 		ax0.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
 	#Subplot 2 (mid)
-	if prmt != "8" or calculated_IVA:
-		ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
-	else:
-		ax1 = plt.subplot2grid((16,1),(8,0), rowspan = 8, colspan = 1)
-		plt.xlabel('Time (ms)', fontsize=SizeFont)
-		ax1.tick_params(axis="x", labelsize=SizeLabelFont)
-		ax1.tick_params(axis="y", labelsize=SizeLabelFont)
+	ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
 
 	plt.xlim(0, END_Time1)
 	if op != test_op and op != '5':
@@ -300,22 +277,18 @@ def Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain
 	if op == "4":
 		plt.ylabel('Strain - RV\n(%)', fontsize=SizeFont)
 
-	if prmt != "8" or calculated_IVA:
-		plt.setp(ax1.get_xticklabels(), visible=False)
+	plt.setp(ax1.get_xticklabels(), visible=False)
 
 	#ECG plot (bottom)
-	if prmt != "8" or calculated_IVA:
-		ax2 = plt.subplot2grid((16, 1), (13, 0), rowspan = 4, colspan = 1)
-	#else:
-		#ax2 = plt.subplot2grid((16, 1), (15, 0), rowspan = 2, colspan = 1)
-		plt.plot(txt1.loc[:,'ECG : '])
-		plt.xlim(0, END_Time1)
-		tick_locs = np.arange(0.0,END_Time1,0.2)
-		tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-		plt.xticks(tick_locs, tick_lbls)
-		plt.xlabel('Time (ms)', fontsize=SizeFont)
-		plt.ylabel('ECG\nVoltage\n(mV)', fontsize=SizeFont)
-		plt.grid()
+	ax2 = plt.subplot2grid((16, 1), (13, 0), rowspan = 4, colspan = 1)
+	plt.plot(txt1.loc[:,'ECG : '])
+	plt.xlim(0, END_Time1)
+	tick_locs = np.arange(0.0,END_Time1,0.2)
+	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
+	plt.xticks(tick_locs, tick_lbls)
+	plt.xlabel('Time (ms)', fontsize=SizeFont)
+	plt.ylabel('ECG\nVoltage\n(mV)', fontsize=SizeFont)
+	plt.grid()
 
 	#Lines between subplots - May be deleted later
 	ax0.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
@@ -362,41 +335,38 @@ def Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain
 	if EjectionTimevalues2[0]<END_Time1:
 		ax1.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-	if prmt != "8" or calculated_IVA:
-		ax2.axvline(x=MVOvalues1[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=MVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=AVOvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=AVCvalues1[0], c="g",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-		if op != test_op:
-			ax2.axvline(x=EMCvalues1[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-		ax2.axvline(x=IVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=IVRvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=Evalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if op != test_op:
-			#ax2.axvline(x=Diastasisvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-			ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=MVOvalues1[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=MVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=AVOvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=AVCvalues1[0], c="g",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+	if op != test_op:
+		ax2.axvline(x=EMCvalues1[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
+	ax2.axvline(x=IVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=IVRvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	ax2.axvline(x=Evalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op:
+		#ax2.axvline(x=Diastasisvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-		#ifs to find which event will be last shown in the plot
-		if MVOvalues2[0]<END_Time1:
-			ax2.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if MVCvalues2[0]<END_Time1:
-			ax2.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if AVOvalues2[0]<END_Time1:
-			ax2.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if AVCvalues2[0]<END_Time1:
-			ax2.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if op != test_op and EMCvalues2 < END_Time1:
-			ax2.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-		if IVCvalues2[0]<END_Time1:
-			ax2.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		if EjectionTimevalues2[0]<END_Time1:
-			ax2.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	#ifs to find which event will be last shown in the plot
+	if MVOvalues2[0]<END_Time1:
+		ax2.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if MVCvalues2[0]<END_Time1:
+		ax2.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVOvalues2[0]<END_Time1:
+		ax2.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if AVCvalues2[0]<END_Time1:
+		ax2.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if op != test_op and EMCvalues2 < END_Time1:
+		ax2.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
+	if IVCvalues2[0]<END_Time1:
+		ax2.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	if EjectionTimevalues2[0]<END_Time1:
+		ax2.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
 	#plt.tight_layout()
 	plt.show()
-	#if prmt == "8" and calculated_IVA == 0:	#To be used or discarded later
-		#fig.canvas.mpl_disconnect(cid)
 
 
 # Plots the figures containing the results of the operations

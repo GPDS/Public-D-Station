@@ -54,14 +54,14 @@ Avalues = []
 #MAIN
 print("\033c", end='') # Clears the terminal
 
-#idPatient = input('Patient ID: ')
+idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
-#op = input("Option: ")
+op = input("Option: ")
 
-idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
-op = '1'					# Used to debug - comment the op line above
+#idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
+#op = '1'					# Used to debug - comment the op line above
 
 if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
 	exams_path = ('Patients/'+idPatient)
@@ -113,7 +113,7 @@ if op != test_op and MarkPoints:
 
 			print("\nAre the presented timepoints (in red) correct? Close the figure and answer: ")
 			ecgVerification(txt1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, OnsetQRS1, OnsetP, OnsetQRS2)
-			decision = input("[y]es or [n]o? ")
+			decision = input("Are they correct? [y]es or [n]o? ")
 
 			if(decision == 'n' or decision == 'N'):
 				EcgOk = 0
@@ -227,21 +227,16 @@ while True: 		#Loop where the user can select the plots he wishes to see
 	#prmt="8"
 
 	if prmt == "1":               #Calculates the GLS
-		outGLS = GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
+		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 		 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1],
 						outGLS[2], outGLS[3])
-		sheet['AJ'+str(it)] = outGLS[0]		#Saves the calculated GLS in the sheet
-		"Deixando so o plot aqui nao vai precisar recalcular, vai ficar mais limpo"
 
 	elif prmt == "2":			  #Calculates the MD
-		outMD = MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
+		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 						op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outMD[1],
 						outMD[2],outMD[3])
-		sheet['AK'+str(it)] = outMD[0]	#Saves the calculated MD in the sheet
 
 	elif prmt == "3":
 		if(op != test_op):
@@ -258,7 +253,7 @@ while True: 		#Loop where the user can select the plots he wishes to see
 
 	elif prmt == "4":
 		print("\nPlot w/o any parameters")
-		Parameters_Plot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op,
+		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op,
 		test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
 		AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
 		EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, None, None, None)
