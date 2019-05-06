@@ -54,14 +54,14 @@ Avalues = []
 #MAIN
 print("\033c", end='') # Clears the terminal
 
-idPatient = input('Patient ID: ')
+#idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
-op = input("Option: ")
+#op = input("Option: ")
 
-#idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
-#op = '5'					# Used to debug - comment the op line above
+idPatient = 'Diogenes'	# Used to debug - commnent the idPatient line above
+op = '5'					# Used to debug - comment the op line above
 
 if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
 	exams_path = ('Patients/'+idPatient)
@@ -218,21 +218,23 @@ else:
 
 calculated_IVA = 0	#Currently not used
 
-while True: 		#Loop where the user can select the plots he wishes to see
+while True: 		#Loop where the user can select the parmeters and plots he wishes to see
 
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
 	print("\t3. Average Strain variation during each phase")
-	print("\t4. Show plot w/o any parameters\n\t0. Terminate program")
+	print("\t4. Show plot w/o any parameters\n\t5. Show additional parameters values\n\t0. Terminate program")
 	prmt = input("Parameter: ")
 	#prmt = '0' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
+		GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 		 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1],
 						outGLS[2], outGLS[3])
 
 	elif prmt == "2":			  #Calculates the MD
+		MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 						op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outMD[1],
@@ -246,7 +248,7 @@ while True: 		#Loop where the user can select the plots he wishes to see
 		else:
 			print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation and also not plot it")
 
-	#elif prmt == "3": #DI - Not working right now/to be implemented later
+	#elif prmt == "3": #DI - Not working right now/to be added later
 	#    DI_calc()
 	#    DR_bullseye(BullseyeAux)
 		#Ver a barra
@@ -257,6 +259,9 @@ while True: 		#Loop where the user can select the plots he wishes to see
 		test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
 		AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
 		EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, None, None, None)
+
+	elif prmt == "5":
+		moreInfo(it)
 
 	#elif prmt == "8":		#IVA - Not working right now/to be implemented later
 		#IVA_calc()

@@ -102,7 +102,7 @@ def openfiles(exams_path, op, test_op):     #Script to open the raw data files e
 
 
     for f in list_txtfiles:
-    	if ('4CH_SL_TRACE' in f) or ('4CH_SL4CH STRAIN_TRACE' in f) or ('4CH_Peak dose_SL_TRACE' in f):
+    	if ('4CH_SL_TRACE' in f) or ('4CH_SL4CH STRAIN_TRACE' in f) or ('4CH_Peak dose_SL_TRACE' in f) or ('4CH_teste' in f):
     		txt_original = open(exams_path+'/'+f, 'r')
     		numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Values are extracted from the line 3 of the txt file - LM_Time, ES_Time e RM_Time
     		txt_original.close()
@@ -111,7 +111,7 @@ def openfiles(exams_path, op, test_op):     #Script to open the raw data files e
     		ES_Time.append(float(numbers[2]))
 
     for f in list_txtfiles:
-    	if ('2CH_SL_TRACE' in f) or ('2CH_SL2CH STRAIN_TRACE' in f) or ('2CH_Low dose_SL_TRACE' in f):
+    	if ('2CH_SL_TRACE' in f) or ('2CH_SL2CH STRAIN_TRACE' in f) or ('2CH_Low dose_SL_TRACE' in f) or ('2CH_teste' in f):
     		txt_original = open(exams_path+'/'+f, 'r')
     		numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Values are extracted from the line 3 of the txt file - LM_Time, ES_Time e RM_Time
     		txt_original.close()
@@ -120,7 +120,7 @@ def openfiles(exams_path, op, test_op):     #Script to open the raw data files e
     		ES_Time.append(float(numbers[2]))
 
     for f in list_txtfiles:
-    	if ('APLAX_SL_TRACE' in f) or ('APLAX_SL3CH STRAIN_TRACE' in f) or ('APLAX_Low dose_SL_TRACE' in f):
+    	if ('APLAX_SL_TRACE' in f) or ('APLAX_SL3CH STRAIN_TRACE' in f) or ('APLAX_Low dose_SL_TRACE' in f) or ('APLAX_teste' in f):
     		txt_original = open(exams_path+'/'+f, 'r')
     		numbers = re.findall("\d+\.\d+", txt_original.readlines()[2]) #Values are extracted from the line 3 of the txt file - LM_Time, ES_Time e RM_Time
     		txt_original.close()

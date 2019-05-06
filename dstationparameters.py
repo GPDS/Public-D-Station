@@ -6,23 +6,18 @@
 """Put these outputs in a bullseye
 	Colocar nomes significativos"""
 
-import pandas as pd			# Package used to work with the raw data files
-import numpy as np			# Used in the mean and standard deviance calculation
-
+import pandas as pd			# Package used to work with the raw data files (Used in GLS_calc, MD_calc, IVA_calc)
+import numpy as np			# Used in the mean and standard deviance calculation (GLS_calc and MD_calc)
+import openpyxl				# Used in the moreInfo function
+import string				# Used in the moreInfo function
 
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
 def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
-
-	if op == test_op:																#If it's a simulated patient
-		txt1_s = txt1[(txt1.index >= MVCvalues1[0]) & (txt1.index < AVCvalues1[0])] #From the MVC till the AVC Since there's no ECG o mark the beginning
-		txt2_s = txt2[(txt2.index >= MVCvalues1[0]) & (txt2.index < AVCvalues1[0])]
-		txt3_s = txt3[(txt3.index >= MVCvalues1[0]) & (txt3.index < AVCvalues1[0])]
-
-	else:																			#If it's a real patient
-		txt1_s = txt1[(txt1.index >= LM_Time[0]) & (txt1.index <= ES_Time[0])]		#From the LM_Time until the AVC from the raw data files
-		txt2_s = txt2[(txt2.index >= LM_Time[1]) & (txt2.index <= ES_Time[1])]
-		txt3_s = txt3[(txt3.index >= LM_Time[2]) & (txt3.index <= ES_Time[2])]
+																			#If it's a real patient
+	txt1_s = txt1[(txt1.index >= LM_Time[0]) & (txt1.index <= ES_Time[0])]		#From the LM_Time until the AVC from the raw data files
+	txt2_s = txt2[(txt2.index >= LM_Time[1]) & (txt2.index <= ES_Time[1])]
+	txt3_s = txt3[(txt3.index >= LM_Time[2]) & (txt3.index <= ES_Time[2])]
 
 	if prmt == '1':																	#Shows detailed info about the GLS
 		print("\n\nPeak negative systolic strain:\n")
@@ -55,6 +50,9 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, 
 		print("\n")
 	print("\nGlobal Longitudinal Strain: ", gls,"%")
 
+	txt2_s.index = txt2_s.index-(LM_Time[1]-LM_Time[0])		#syncs the points used in GLS calculation
+	txt3_s.index = txt3_s.index-(LM_Time[2]-LM_Time[0])		# ''
+
 	#Returns the GLS value and the peak systolic points (txt1_s - 4CH, txt2_s - 2CH and txt3_s - APLAX) to be plotted later
 	return gls, txt1_s, txt2_s, txt3_s
 
@@ -62,14 +60,9 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, 
 #Calculates the Mechanical Dispersion (std.deviance from all the peak strain time values in a cycle)
 def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
-	if op == test_op:																#If its a simulation
-		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time) & (txt1.index < RM_Time)] #slices the DF to one that has points from LM to RM time
-		txt2_sliced_onsets = txt2[(txt2.index >= LM_Time) & (txt2.index < RM_Time)]
-		txt3_sliced_onsets = txt3[(txt3.index >= LM_Time) & (txt3.index < RM_Time)]
-	else:
-		txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])] #Slices the DM to points between the LM and RM_Time from the raw data file
-		txt2_sliced_onsets = txt2_mod[(txt2_mod.index >= (LM_Time[1]+LM_Time[0])) & (txt2_mod.index < (RM_Time[1]-LM_Time[0]))]	#These points are synced
-		txt3_sliced_onsets = txt3_mod[(txt3_mod.index >= (LM_Time[2]+LM_Time[0])) & (txt3_mod.index < (RM_Time[2]-LM_Time[0]))] #These too
+	txt1_sliced_onsets = txt1[(txt1.index >= LM_Time[0]) & (txt1.index < RM_Time[0])] #slices the DF to one that has points from LM to RM time
+	txt2_sliced_onsets = txt2[(txt2.index >= LM_Time[1]) & (txt2.index < RM_Time[1])]
+	txt3_sliced_onsets = txt3[(txt3.index >= LM_Time[2]) & (txt3.index < RM_Time[2])]
 
 	global_minima_times = [] #List that will store the peak strain points
 
@@ -142,6 +135,34 @@ def avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, Eje
 	#maybe i should return them in an array to later save in the spreadsheet
 	return averageLongStrain
 
+
+#Show additional info available in the spreadsheet Patients_DB
+def moreInfo(it):
+
+	columnsList = [] #Columns in which the values that will be shown are availave
+	Init_It = "L"	 #First letter after A in Patients_DB where there is additional info
+	End_It = "I"	 #Last letter after B in Patients_DB where there is additional info
+	num_it = 0		 #To help present which are from the 2CH and which are from 4CH
+
+	wb = openpyxl.load_workbook('Patients_DB.xlsx')					#opens the xl file where the patient data is
+	sheet = wb['Sheet1']
+
+	for letter_It in string.ascii_uppercase:	#Puts the columns values (AA, AB, for example)
+		if letter_It >= Init_It:
+			columnsList.append("A"+letter_It)
+	for letter_It in string.ascii_uppercase:
+		if letter_It <= End_It:
+			columnsList.append("B"+letter_It)
+
+
+	for colIt in columnsList:
+		if num_it == 0:
+			print("\nParameters exported from the proprietary software:\n\n2CH:")
+		if num_it == 12:
+			print("\n4CH:")
+		if(sheet[colIt+str(it)].value != None):		#Tests whether there is a value in that cell
+			print("\t",sheet[colIt+"2"].value, ": ", sheet[colIt+str(it)].value)
+		num_it = num_it + 1
 #=====================================================
 #Below here: to be implemented
 
