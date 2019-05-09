@@ -4,7 +4,7 @@ import pandas as pd              # Package used to work with the raw data files
 import re                        # Used to obtain the LM, RM and ES Times in the raw data files
 from os import listdir			 # Used to obtain the files in their directories
 from os.path import isfile, join # Also used to do file operations
-
+import openpyxl
 
 
 def openfiles(exams_path, op, test_op):     #Script to open the raw data files exported from proprietary software
@@ -136,7 +136,9 @@ def openfiles(exams_path, op, test_op):     #Script to open the raw data files e
     	txt_mid.drop('Unnamed: 1', axis=1, inplace=True)
     #strain_rate_lv4ch.drop('Unnamed: 1', axis=1, inplace=True)
 
-    #
+    #Syncs the ES_Time from the raw data with the AVC in the spreadsheet
+    #AVC-ES_Time e desloca tudo - importa excel pra baixo
+
     txt2_mod=txt2.copy(deep=True)  		#if deep = False it is a shallow copy, index e data are shared
     txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])				#Creates a copy and syncs the indexes times
     txt3_mod=txt3.copy(deep=True)

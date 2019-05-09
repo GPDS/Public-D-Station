@@ -24,25 +24,40 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, 
 	gls = []																		#List that stores the peak systolic points
 	colours=list(txt2_s)
 	for colour_it in range(0,tcolunas2-2):
-		if prmt == '1':
-			print("2CH:", colours[colour_it],":",round(txt2_s[colours[colour_it]].min(),2),"%","\t","Time:",txt2_s[colours[colour_it]].idxmin(),"s")
-		gls.append(txt2_s[colours[colour_it]].min())								#Peak systolic points in 2CH are appended to list
+		if(round(txt2_s[colours[colour_it]].max(),2) < (-0.75*(round(txt2_s[colours[colour_it]].min(),2)))):
+			if prmt == '1':
+				print("[NEG]2CH:", colours[colour_it],":",round(txt2_s[colours[colour_it]].min(),2),"%","\t","Time:",txt2_s[colours[colour_it]].idxmin(),"s")
+			gls.append(txt2_s[colours[colour_it]].min())								#Peak systolic points in 2CH are appended to list
+		else:
+			if prmt == '1':
+				print("[POS]2CH:", colours[colour_it],":",round(txt2_s[colours[colour_it]].max(),2),"%","\t","Time:",txt2_s[colours[colour_it]].idxmax(),"s")
+			gls.append(txt2_s[colours[colour_it]].max())								#Peak systolic points in 2CH are appended to list
 
 	if prmt == '1':
 		print("\n")
 	colours=list(txt1_s)
 	for colour_it in range(0,tcolunas1-2):
-		if prmt == '1':
-			print("4CH:", colours[colour_it],":",round(txt1_s[colours[colour_it]].min(),2),"%","\t","Time:",txt1_s[colours[colour_it]].idxmin(),"s")
-		gls.append(txt1_s[colours[colour_it]].min())								#Peak systolic points in 4CH are appended to list
+		if(round(txt1_s[colours[colour_it]].max(),2) < (-0.75*(round(txt1_s[colours[colour_it]].min(),2)))):
+			if prmt == '1':
+				print("[NEG]4CH:", colours[colour_it],":",round(txt1_s[colours[colour_it]].min(),2),"%","\t","Time:",txt1_s[colours[colour_it]].idxmin(),"s")
+			gls.append(txt1_s[colours[colour_it]].min())								#Peak systolic points in 4CH are appended to list
+		else:
+			if prmt == '1':
+				print("[POS]4CH:", colours[colour_it],":",round(txt1_s[colours[colour_it]].max(),2),"%","\t","Time:",txt1_s[colours[colour_it]].idxmax(),"s")
+			gls.append(txt1_s[colours[colour_it]].max())
 
 	if prmt == '1':
 		print("\n")
 	colours=list(txt3_s)
 	for colour_it in range(0,tcolunas3-2):
-		if prmt == '1':
-			print("APLAX:", colours[colour_it],":",round(txt3_s[colours[colour_it]].min(),2),"%","\t","Time:",txt3_s[colours[colour_it]].idxmin(),"s")
-		gls.append(txt3_s[colours[colour_it]].min())								#Peak systolic points in APLAX(3CH) are appended to list
+		if(round(txt3_s[colours[colour_it]].max(),2) < (-0.75*(round(txt3_s[colours[colour_it]].min(),2)))):
+			if prmt == '1':
+				print("[NEG]APLAX:", colours[colour_it],":",round(txt3_s[colours[colour_it]].min(),2),"%","\t","Time:",txt3_s[colours[colour_it]].idxmin(),"s")
+			gls.append(txt3_s[colours[colour_it]].min())								#Peak systolic points in APLAX are appended to list
+		else:
+			if prmt == '1':
+				print("[POS]APLAX:", colours[colour_it],":",round(txt3_s[colours[colour_it]].max(),2),"%","\t","Time:",txt3_s[colours[colour_it]].idxmax(),"s")
+			gls.append(txt3_s[colours[colour_it]].max())
 
 	gls=round(np.mean(gls),1)					#GLS is calculated as the mean of all the peak systolic strain values
 
@@ -73,25 +88,40 @@ def MD_calc(txt1, txt2, txt3, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM
 		print("\n")
 	colours=list(txt2_sliced_onsets)
 	for colour_it in range(0,tcolunas2-2):
-		if prmt == '2':
-			print("2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - 2CH
-		global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
+		if(round(txt2_sliced_onsets[colours[colour_it]].max(),2) < (-0.75*(round(txt2_sliced_onsets[colours[colour_it]].min(),2)))):
+			if prmt == '2':
+				print("[NEG]2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - 2CH
+			global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
+		else:
+			if prmt == '2':
+				print("[POS]2CH:", colours[colour_it],":",txt2_sliced_onsets[colours[colour_it]].idxmax(),"ms")
+			global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmax())
 
 	if prmt == '2':
 		print("\n")
 	colours=list(txt1_sliced_onsets)
 	for colour_it in range(0,tcolunas1-2):
-		if prmt == '2':
-			print("4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - 4CH
-		global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
+		if(round(txt1_sliced_onsets[colours[colour_it]].max(),2) < (-0.75*(round(txt1_sliced_onsets[colours[colour_it]].min(),2)))):
+			if prmt == '2':
+				print("[NEG]4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - 4CH
+			global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
+		else:
+			if prmt == '2':
+				print("[POS]4CH:", colours[colour_it],":",txt1_sliced_onsets[colours[colour_it]].idxmax(),"ms")
+			global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmax())
 
 	if prmt == '2':
 		print("\n")
 	colours=list(txt3_sliced_onsets)
 	for colour_it in range(0,tcolunas3-2):
-		if prmt == '2':
-			print("APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - APLAX
-		global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
+		if(round(txt3_sliced_onsets[colours[colour_it]].max(),2) < (-0.75*(round(txt3_sliced_onsets[colours[colour_it]].min(),2)))):
+			if prmt == '2':
+				print("[NEG]APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmin(),"ms") #Selects the peak strain points - APLAX
+			global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
+		else:
+			if prmt == '2':
+				print("[POS]APLAX:", colours[colour_it],":",txt3_sliced_onsets[colours[colour_it]].idxmax(),"ms")
+			global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmax())
 
 	if prmt == '2':
 		print("\n")

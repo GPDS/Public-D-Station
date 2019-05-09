@@ -54,13 +54,13 @@ Avalues = []
 #MAIN
 print("\033c", end='') # Clears the terminal
 
-#idPatient = input('Patient ID: ')
+idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 #op = input("Option: ")
 
-idPatient = 'Diogenes'	# Used to debug - commnent the idPatient line above
+#idPatient = 'MariaBento'	# Used to debug - commnent the idPatient line above
 op = '5'					# Used to debug - comment the op line above
 
 if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
