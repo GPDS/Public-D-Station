@@ -7,7 +7,7 @@ from os.path import isfile, join # Also used to do file operations
 import openpyxl
 
 
-def openfiles(exams_path, op, test_op):     #Script to open the raw data files exported from proprietary software
+def openfiles(exams_path, op, test_op, AVCpatient):     #Script to open the raw data files exported from proprietary software
 
     #Lists used to store the values extracted from the raw data files
     LM_Time = []
@@ -136,13 +136,15 @@ def openfiles(exams_path, op, test_op):     #Script to open the raw data files e
     	txt_mid.drop('Unnamed: 1', axis=1, inplace=True)
     #strain_rate_lv4ch.drop('Unnamed: 1', axis=1, inplace=True)
 
-    #Syncs the ES_Time from the raw data with the AVC in the spreadsheet
-    #AVC-ES_Time e desloca tudo - importa excel pra baixo
+#Formats the raw data files
 
-    txt2_mod=txt2.copy(deep=True)  		#if deep = False it is a shallow copy, index e data are shared
-    txt2_mod.index = txt2_mod.index-(LM_Time[1]-LM_Time[0])				#Creates a copy and syncs the indexes times
+    #Syncs the ES_Times from the raw data files with the txt1
+    txt2_mod=txt2.copy(deep=True)
+    txt2_mod.index = txt2_mod.index-(ES_Time[1]-ES_Time[0])
+
     txt3_mod=txt3.copy(deep=True)
-    txt3_mod.index = txt3_mod.index-(LM_Time[2]-LM_Time[0])
+    txt3_mod.index = txt3_mod.index-(ES_Time[2]-ES_Time[0])
+
 
     if op == "5" or op == test_op:							#Obtains the SR from the strain curves if it's necessary
     	txt_mid=txt1.diff()

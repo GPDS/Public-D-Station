@@ -16,9 +16,12 @@ import numpy as np				 # Ditto
 xcoord = []	# List where the time values of the selected points are stored
 
 
+onlyNEG = 0  #control - to use only the negative peaks in peak detection/in the plots
+
+
 # Function to select the points of interest in the ECG curve
 def onclick(event):
-	#print ("\nValue: Time = %f milliseconds"%(event.xdata*1000)) # Shows the time value of the clicked point
+	print ("\nValue: Time = %f milliseconds"%(event.xdata*1000)) # Shows the time value of the clicked point
 	xcoord.append(event.xdata*1000) # Appends the points to an array
 
 
@@ -170,32 +173,47 @@ IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalue
 
 		colours=list(txt1_par)
 		for colour_it in range(0,tcolunas1-2):
-			plt.plot(txt1_par[colours[colour_it]].idxmin(), txt1_par[colours[colour_it]].min(), 'kx')
+			if(round(txt1_par[colours[colour_it]].max(),2) < (-0.75*(round(txt1_par[colours[colour_it]].min(),2)))) or onlyNEG:
+				plt.plot(txt1_par[colours[colour_it]].idxmin(), txt1_par[colours[colour_it]].min(), 'kx')
+			else:
+				plt.plot(txt1_par[colours[colour_it]].idxmax(), txt1_par[colours[colour_it]].max(), 'kx')
 
 		colours=list(txt2_par)
 		for colour_it in range(0,tcolunas2-2):
-			plt.plot(txt2_par[colours[colour_it]].idxmin(), txt2_par[colours[colour_it]].min(), 'k*')
+			if(round(txt2_par[colours[colour_it]].max(),2) < (-0.75*(round(txt2_par[colours[colour_it]].min(),2)))) or onlyNEG:
+				plt.plot(txt2_par[colours[colour_it]].idxmin(), txt2_par[colours[colour_it]].min(), 'kx')
+			else:
+				plt.plot(txt2_par[colours[colour_it]].idxmax(), txt2_par[colours[colour_it]].max(), 'kx')
 
 		colours=list(txt3_par)
 		for colour_it in range(0,tcolunas3-2):
-			plt.plot(txt3_par[colours[colour_it]].idxmin(), txt3_par[colours[colour_it]].min(), 'k+')
+			if(round(txt3_par[colours[colour_it]].max(),2) < (-0.75*(round(txt3_par[colours[colour_it]].min(),2)))) or onlyNEG:
+				plt.plot(txt3_par[colours[colour_it]].idxmin(), txt3_par[colours[colour_it]].min(), 'kx')
+			else:
+				plt.plot(txt3_par[colours[colour_it]].idxmax(), txt3_par[colours[colour_it]].max(), 'kx')
 
 	if prmt == "2":		#Points used for MD
 
 		colours=list(txt1_par)
-
 		for colour_it in range(0,tcolunas1-2):
-			plt.plot(txt1_par[colours[colour_it]].idxmin(), txt1_par[colours[colour_it]].min(), 'kx')
+			if(round(txt1_par[colours[colour_it]].max(),2) < (-0.75*(round(txt1_par[colours[colour_it]].min(),2)))) or onlyNEG:
+				plt.plot(txt1_par[colours[colour_it]].idxmin(), txt1_par[colours[colour_it]].min(), 'kx')
+			else:
+				plt.plot(txt1_par[colours[colour_it]].idxmax(), txt1_par[colours[colour_it]].max(), 'kx')
 
 		colours=list(txt2_par)
-
 		for colour_it in range(0,tcolunas2-2):
-			plt.plot(txt2_par[colours[colour_it]].idxmin(), txt2_par[colours[colour_it]].min(), 'kx')
+			if(round(txt2_par[colours[colour_it]].max(),2) < (-0.75*(round(txt2_par[colours[colour_it]].min(),2)))) or onlyNEG:
+				plt.plot(txt2_par[colours[colour_it]].idxmin(), txt2_par[colours[colour_it]].min(), 'kx')
+			else:
+				plt.plot(txt2_par[colours[colour_it]].idxmax(), txt2_par[colours[colour_it]].max(), 'kx')
 
 		colours=list(txt3_par)
-
 		for colour_it in range(0,tcolunas3-2):
-			plt.plot(txt3_par[colours[colour_it]].idxmin(), txt3_par[colours[colour_it]].min(), 'kx')
+			if(round(txt3_par[colours[colour_it]].max(),2) < (-0.75*(round(txt3_par[colours[colour_it]].min(),2)))) or onlyNEG:
+				plt.plot(txt3_par[colours[colour_it]].idxmin(), txt3_par[colours[colour_it]].min(), 'kx')
+			else:
+				plt.plot(txt3_par[colours[colour_it]].idxmax(), txt3_par[colours[colour_it]].max(), 'kx')
 
 	#if prmt == "3": 		#Points used for DI - Diastolic Index
 		#ax0.axvline(ThirdDiastoleTime, color='k')
