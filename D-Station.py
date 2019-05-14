@@ -6,7 +6,7 @@ import openpyxl                  # Package to work with .xlsx - See documentatio
 #
 
 #Packages that i (https://github.com/rafaelds9) created
-import front
+from auxfcns import *
 from dstationplotlib import *
 from dstationparameters import *
 from rawdatafiles import *
