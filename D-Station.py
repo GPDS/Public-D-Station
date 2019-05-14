@@ -24,7 +24,7 @@ SizeLabelFont = 11  # Defines the font size of the labels in the plots' axis
 it = 3   #Defines the first row in the xl file that has values
 prmt = '0' #Defines the prmt value in the first run to 0 - Change with caution
 EcgOk = 0	#Defines if the ECG has its points correctly or should be marked/rechecked
-MarkPoints = 0	#Currently 1 - to future use
+MarkPoints = 1	#Currently 1 - to future use
 #
 
 #Declaring variables and arrays
@@ -153,6 +153,7 @@ if op != test_op and MarkPoints:
 		sheet['V'+str(it)] = round(xcoord[1],0) # ONSET P
 		sheet['W'+str(it)] = round(xcoord[2],0) # ONSET QRS 2
 
+
 """The times used are the synced with the times of txt one, meaning: The ES_Time of the txt1 = AVC and
 the (ES_Time(of txt1)-AVC) is the difference between the events of the txt1 and the events in the spreadsheet
 We did this because we had different ES_Times in the 3 txt files, so we synced them
@@ -169,7 +170,10 @@ AVOvalues2.append(round((int(sheet['S'+str(it)].value)/1000)+(ES_Time[0]-AVC_she
 AVCvalues2.append(round((int(sheet['T'+str(it)].value)/1000)+(ES_Time[0]-AVC_sheet+RM_Time[0]),2))
 
 if op != test_op:
-	Dif_LM_OnsetQRS1.append(round(LM_Time[0] - (int(sheet['U'+str(it)].value)/1000),1)) #Diferença entre o Onset QRS 1 e o LM_Time
+	#if MarkPoints and decision =='2':
+		#Dif_LM_OnsetQRS1.append(round(LM_Time[0] - (int(round(xcoord[0],0)/1000)),1)) #Diferença entre o Onset QRS 1 e o LM_Time
+	#else:
+		#Dif_LM_OnsetQRS1.append(round(LM_Time[0] - (int(sheet['U'+str(it)]/1000)),1)) #Diferença entre o Onset QRS 1 e o LM_Time
 	#The values below correspond to the times of the beginning of the phases
 	EMCvalues1.append((int(sheet['U'+str(it)].value)/1000))                 #EMC1 = Onset QRS 1(ms)/1000
 	EMCvalues2.append((int(sheet['W'+str(it)].value)/1000))                 #EMC2 = Onset QRS 2(ms)/1000
@@ -187,8 +191,8 @@ Evalues=MVOvalues1             #E = MVO(ms)/1000 + LM_Time
 print("\033c", end='') # Clears the terminal
 print("\nLM_Time: ",LM_Time[0]*1000, "ms")
 print("RM_Time: ",RM_Time[0]*1000, "ms")
-if op != test_op:
-	print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[0]*1000, "ms")
+#if op != test_op:
+	#print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[0]*1000, "ms")
 
 print("\nMVO1: ",MVOvalues1[0]*1000, "ms")
 print("MVC1: ",MVCvalues1[0]*1000, "ms")
@@ -229,10 +233,10 @@ sheet['AH'+str(it)] = ((RM_Time[0] - systolic_time)*1000)
 print("Ratio: Systolic Time/Diastolic Time: ",round((systolic_time/(RM_Time[0] - systolic_time)),4))
 sheet['AI'+str(it)] = (systolic_time/(RM_Time[0] - systolic_time))
 
-outGLS = GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+outGLS = GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 sheet['AJ'+str(it)] = outGLS[0] #Saves the caculated GLS in the sheet
 
-outMD = MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+outMD = MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 sheet['AK'+str(it)] = outMD[0]	#Saves the caculated MD in the sheet
 
 if(op != test_op):
@@ -255,14 +259,14 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 	#prmt = '0' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
-		GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+		GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 		 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1],
 						outGLS[2], outGLS[3])
 
 	elif prmt == "2":			  #Calculates the MD
-		MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+		MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 						op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outMD[1],
