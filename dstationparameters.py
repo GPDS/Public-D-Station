@@ -13,7 +13,7 @@ import string				# Used in the moreInfo function
 
 from auxfcns import *
 
-onlyNEG = 0  #control - to use only the negative peaks in peak detection
+onlyNEG = 1  #control - to use only the negative peaks in peak detection
 
 
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves

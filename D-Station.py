@@ -3,6 +3,7 @@
 #Importing packages...
 import pandas as pd              # Package used to work with the raw data files
 import openpyxl                  # Package to work with .xlsx - See documentation when working with a big amount of data
+import os						 # Package used to determine whether the user is using windows or linux to erase the console
 #
 
 #Packages that i (https://github.com/rafaelds9) created
@@ -16,7 +17,7 @@ from rawdatafiles import *
 height_line = 1.025 # Constant to define the height of the lines that separate the phases
 test_op = '6'		# Defines the number of the option that will use the simulated strain curves
 SizeFont = 11		# Defines the font size in the plots
-SizePhaseFont = 11  # Defines the font size of the phases' legends
+SizePhaseFont = 9  # Defines the font size of the phases' legends
 SizeLabelFont = 11  # Defines the font size of the labels in the plots' axis
 #
 
@@ -52,16 +53,16 @@ Avalues = []
 
 
 #MAIN
-print("\033c", end='') # Clears the terminal
+os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
 
 idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
-#op = input("Option: ")
+op = input("Option: ")
 
 #idPatient = 'MariaBento'	# Used to debug - commnent the idPatient line above
-op = '5'					# Used to debug - comment the op line above
+#op = '5'					# Used to debug - comment the op line above
 
 if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
 	exams_path = ('Patients/'+idPatient)
@@ -118,6 +119,7 @@ if op != test_op and MarkPoints:
 		print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("3. Use the stored values without verifying.")
 		decision = input("Option: ")
+		#decision = '2'
 
 		if(decision == '1'):
 			OnsetQRS1 = sheet['U'+it].value/1000
@@ -188,7 +190,8 @@ Evalues=MVOvalues1             #E = MVO(ms)/1000 + LM_Time
 
 
 #Now everything is printed
-print("\033c", end='') # Clears the terminal
+os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
+print("Patient: ",idPatient )
 print("\nLM_Time: ",LM_Time[0]*1000, "ms")
 print("RM_Time: ",RM_Time[0]*1000, "ms")
 #if op != test_op:

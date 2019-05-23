@@ -16,7 +16,7 @@ import numpy as np				 # Ditto
 xcoord = []	# List where the time values of the selected points are stored
 
 
-onlyNEG = 0  #control - to use only the negative peaks in peak detection/in the plots
+onlyNEG = 1  #control - to use only the negative peaks in peak detection/in the plots
 
 
 # Function to select the points of interest in the ECG curve
@@ -184,7 +184,7 @@ IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalue
 				plt.plot(txt2_par[colours[colour_it]].idxmin(), txt2_par[colours[colour_it]].min(), 'kx')
 			else:
 				plt.plot(txt2_par[colours[colour_it]].idxmax(), txt2_par[colours[colour_it]].max(), 'kx')
-		
+
 		colours=list(txt3_par)
 		for colour_it in range(0,tcolunas3-2):
 			if(round(txt3_par[colours[colour_it]].max(),2) < (-0.75*(round(txt3_par[colours[colour_it]].min(),2)))) or onlyNEG:
