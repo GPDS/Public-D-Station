@@ -42,13 +42,13 @@ def segmentName(segmentColor, chamber):
 			return "Red - Basal Anterolateral"
 
 		elif 'BLUE' in segmentColor:
-			return "Blue - Medium Anterolatel"
+			return "Blue - Medium Anterolateral"
 
 		elif 'MAGENTA' in segmentColor:
 			return "Magenta - Apical Anterolateral"
 
 		elif 'GREEN' in segmentColor:
-			return "Green -Apical Septal"
+			return "Green -Apical Inferoseptal"
 
 		elif 'CYAN' in segmentColor:
 			return "Cyan - Medium Inferoseptal"
@@ -68,10 +68,10 @@ def segmentName(segmentColor, chamber):
 			return "Blue - Medium Anteroseptal"
 
 		elif 'MAGENTA' in segmentColor:
-			return "Magenta - Apical Septal"
+			return "Magenta - Apical Anteroseptal"
 
 		elif 'GREEN' in segmentColor:
-			return "Green - Apical Lateral"
+			return "Green - Apical Inferolateral"
 
 		elif 'CYAN' in segmentColor:
 			return "Cyan - Medium Inferolateral"

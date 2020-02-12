@@ -54,15 +54,15 @@ Avalues = []
 
 #MAIN
 os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
-
+"""
 idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
-
-#idPatient = 'MariaBento'	# Used to debug - commnent the idPatient line above
-#op = '5'					# Used to debug - comment the op line above
+"""
+idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
+op = '1'					# Used to debug - comment the op line above
 
 if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
 	exams_path = ('Patients/'+idPatient)
@@ -115,11 +115,13 @@ for cell in sheet['A']:
 #Check if the ECG points were selected
 if op != test_op and MarkPoints:
 	if sheet['U'+it].value is not None and sheet['V'+it].value is not None and sheet['W'+it].value is not None:
+		"""
 		print("\n1. Verify the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("3. Use the stored values without verifying.")
 		decision = input("Option: ")
-		#decision = '2'
+		"""
+		decision = '3'
 
 		if(decision == '1'):
 			OnsetQRS1 = sheet['U'+it].value/1000
@@ -233,7 +235,7 @@ print("Systolic Time: ", systolic_time*1000)
 sheet['AG'+str(it)] = (systolic_time*1000)
 print("Diastolic Time: ", (RM_Time[0] - systolic_time)*1000)
 sheet['AH'+str(it)] = ((RM_Time[0] - systolic_time)*1000)
-print("Ratio: Systolic Time/Diastolic Time: ",round((systolic_time/(RM_Time[0] - systolic_time)),4))
+print("Systolic Time/Diastolic Time ratio: ",round((systolic_time/(RM_Time[0] - systolic_time)),4))
 sheet['AI'+str(it)] = (systolic_time/(RM_Time[0] - systolic_time))
 
 outGLS = GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
@@ -254,19 +256,25 @@ else:
 calculated_IVA = 0	#Currently not used
 
 while True: 		#Loop where the user can select the parmeters and plots he wishes to see
-
+	"""
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
 	print("\t3. Average Strain variation during each phase")
 	print("\t4. Show plot w/o any parameters\n\t5. Show additional parameters values\n\t0. Terminate program")
 	prmt = input("Parameter: ")
-	#prmt = '0' #Comment the line above and uncomment this to test
+	"""
+	prmt = '1' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
-		GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
-		 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
-						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1],
-						outGLS[2], outGLS[3])
+		_,_,_,_,gls_values = GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+		#POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
+		# 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
+		#				EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1],
+		#				outGLS[2], outGLS[3])
+
+		gls_values[2] = 50
+		print("\n\n\n\n\n",gls_values)
+		DR_bullseye(gls_values)
+		break #Comment this line after debug
 
 	elif prmt == "2":			  #Calculates the MD
 		MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)

@@ -67,6 +67,7 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, 
 				print("\t[POS] APLAX:", segmentName(colours[colour_it],chamber),":",round(txt3_s[colours[colour_it]].max(),2),"%","\t","Time:",round(txt3_s[colours[colour_it]].idxmax(),3),"s")
 			gls.append(txt3_s[colours[colour_it]].max())
 
+	gls_values = gls
 	gls=round(np.mean(gls),1)					#GLS is calculated as the mean of all the peak systolic strain values
 
 	if prmt == '1':
@@ -74,7 +75,7 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, 
 	print("\nGlobal Longitudinal Strain: ", gls,"%")
 
 	#Returns the GLS value and the peak systolic points (txt1_s - 4CH, txt2_s - 2CH and txt3_s - APLAX) to be plotted later
-	return gls, txt1_s, txt2_s, txt3_s
+	return gls, txt1_s, txt2_s, txt3_s,gls_values
 
 
 #Calculates the Mechanical Dispersion (std.deviance from all the peak strain time values in a cycle)

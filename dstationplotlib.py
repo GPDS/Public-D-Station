@@ -734,16 +734,16 @@ def DR_bullseye(data):
 	# Make a figure and axes with dimensions as desired.
 	fig, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
 						   subplot_kw=dict(projection='polar'))
-	fig.canvas.set_window_title('Diastolic Recovery Bulls Eye')
-
+	fig.canvas.set_window_title('Parameter Bulls Eye') #it wi	ll depend of a parameter
+	BullseyeAux = [data[0], data[17], data[11], data[5], data[11], data[6], data[1], data[16], data[10], data[4], data[13], data[7], data[2], data[15], data[9], data[3], data[14], data[8]]
 	# Create the axis for the colorbars
 	axl = fig.add_axes([0.75, 0.1, 0.2, 0.05])	#Orientação
 
 	# Set the colormap and norm to correspond to the data for which
 	# the colorbar will be used.
-	cmap = mpl.cm.viridis
+	cmap = mpl.cm.RdYlBu
 
-	norm = mpl.colors.Normalize(vmin=np.amin(BullseyeAux)-10, vmax=np.amax(BullseyeAux)+10) #Valores para normalização
+	norm = mpl.colors.Normalize(vmin=-25, vmax=10) #Valores para normalização
 
 	# ColorbarBase derives from ScalarMappable and puts a colorbar
 	# in a specified axes, so it has everything needed for a
@@ -752,10 +752,10 @@ def DR_bullseye(data):
 	# and labels.
 	cb1 = mpl.colorbar.ColorbarBase(axl, cmap=cmap, norm=norm,
 									orientation='horizontal')
-	cb1.set_label('Diastolic Recovery (%)')
+	cb1.set_label('Parameter') #Depending of the parameter
 
-	# Create the 17 segment model
-	bullseye_eighteenSEG_plot(ax, data, cmap=None, norm=None)
-	ax.set_title('Diastolic Recovery Bulls Eye')
+	# Create the 18 segment model
+	bullseye_eighteenSEG_plot(ax, data, cmap=cmap, norm=norm)
+	ax.set_title('Parameter Bulls Eye') #Depending of the parameter
 
 	plt.show()
