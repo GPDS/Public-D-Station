@@ -262,7 +262,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 	print("\t4. Show plot w/o any parameters\n\t5. Show additional parameters values\n\t0. Terminate program")
 	prmt = input("Parameter: ")
 	"""
-	prmt = '1' #Comment the line above and uncomment this to test
+	prmt = '2' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
 		_,_,_,_,gls_values = GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
@@ -270,18 +270,19 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 		# 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 		#				EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1],
 		#				outGLS[2], outGLS[3])
-
-		gls_values[2] = 50
-		print("\n\n\n\n\n",gls_values)
-		DR_bullseye(gls_values)
+		DR_bullseye(gls_values, prmt)
 		break #Comment this line after debug
 
 	elif prmt == "2":			  #Calculates the MD
-		MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+		_,_,_,_,md_values = MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 						op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outMD[1],
 						outMD[2],outMD[3])
+		print(md_values)
+		DR_bullseye(md_values, prmt)
+		break
+
 
 	elif prmt == "3":
 		if(op != test_op):

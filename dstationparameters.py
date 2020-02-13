@@ -134,11 +134,13 @@ def MD_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, E
 
 	if prmt == '2':
 		print("\n")
+
+	md_values = global_minima_times
 	md = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 1)	#MD is calculated as the std.dev from the sample(ddof=1) of all the peak strain times
 	print("Mechanical Dispersion: ", md, "ms")
 
 	#Returns the MD value and the peak strain points (txt1_sliced_onsets - 4CH, txt2_sliced_onsets - 2CH and txt3_sliced_onsets - APLAX) to be plotted later
-	return md, txt1_sliced_onsets, txt2_sliced_onsets, txt3_sliced_onsets
+	return md, txt1_sliced_onsets, txt2_sliced_onsets, txt3_sliced_onsets, global_minima_times
 
 
 #Calculates the global strain variation in each phase
