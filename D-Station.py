@@ -262,7 +262,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 	print("\t4. Show plot w/o any parameters\n\t5. Show additional parameters values\n\t0. Terminate program")
 	prmt = input("Parameter: ")
 	"""
-	prmt = '2' #Comment the line above and uncomment this to test
+	prmt = '1' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
 		_,_,_,_,gls_values = GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
@@ -281,7 +281,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 						outMD[2],outMD[3])
 		print(md_values)
 		DR_bullseye(md_values, prmt)
-		break
+		#break #Comment this line after debug
 
 
 	elif prmt == "3":

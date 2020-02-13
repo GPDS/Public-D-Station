@@ -675,7 +675,7 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 	for i in range(6):
 		theta_i = i*60*np.pi/180
 		ax.plot([theta_i, theta_i], [r[0], 1], '-k', lw=linewidth)
-
+		
 	# Fill the segments 1-6
 	r0 = r[2:4]
 	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
@@ -685,6 +685,8 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
 		z = np.ones((128, 2))*data[i]
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+		ax.annotate(np.round(data[0]), xy=[1,1], xycoords= 'polar')	#I have to edit those lines to find the correct values
+																	# and then insert the correct values
 		if i+1 in segBold:
 			ax.plot(theta0, r0, '-k', lw=linewidth+2)
 			ax.plot(theta0[0], [r[2], r[3]], '-k', lw=linewidth+1)
