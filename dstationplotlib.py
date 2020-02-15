@@ -680,10 +680,12 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 	cAngleFactor = [0.1, 0.1, 0, -0.1, -0.1, 0] #In Basal and Med segs
 	cAngleFactorApical = [0.3, 0.3, -0.1, -0.35, -0.25, 0] #For the apical segs
 	cRadiusFactor = [1.2, 1.4, 1.5, 1.4, 1, 0.9]	#Only in the apical segs
+
+	angStep = np.arange(1/2,15/6,2/6)
+
 	# Fill the segments 1-6
 	r0 = r[2:4]
 	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
-	angStep = np.arange(1/2,15/6,2/6)
 	for i in range(6):
 		# First segment start at 60 degrees
 		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
@@ -691,7 +693,8 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		z = np.ones((128, 2))*data[i]
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
 
-		ax.annotate(np.round(data[i]), #Colocar o %
+		#Correto
+		ax.annotate(data[i], #Colocar o %
             xy=(angStep[i]*np.pi+cAngleFactor[i], 5/6) #theta, radius
             ) #Agora ir iterando pelos dados, raios e ângulos
 		#Raios: 1/6, 3/6, 5/6
@@ -714,7 +717,7 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		z = np.ones((128, 2))*data[i+6]
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
 
-		ax.annotate(np.round(data[5+i]), #Colocar o %
+		ax.annotate(data[6+i], #Colocar o %
             xy=(angStep[i]*np.pi+cAngleFactor[i], 3/6) #theta, radius
             )
 
@@ -734,11 +737,11 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
 		z = np.ones((128, 2))*data[i+12]
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-
-		ax.annotate(np.round(data[11+i]), #Colocar o %
+		
+		ax.annotate(data[12+i], #Colocar o %
             xy=(angStep[i]*np.pi+cAngleFactorApical[i], 1/6*cRadiusFactor[i]) #theta, radius
             )
-
+		
 		if i+13 in segBold:
 			ax.plot(theta0, r0, '-k', lw=linewidth+2)
 			ax.plot(theta0[0], [r[0], r[1]], '-k', lw=linewidth+1)
@@ -757,7 +760,7 @@ def DR_bullseye(data, prmt):
 	fig, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
 						   subplot_kw=dict(projection='polar'))
 	fig.canvas.set_window_title('Parameter Bulls Eye') #it wi	ll depend of a parameter
-	BullseyeAux = [data[0], data[17], data[11], data[5], data[11], data[6], data[1], data[16], data[10], data[4], 
+	BullseyeAux = [data[0], data[17], data[11], data[5], data[12], data[6], data[1], data[16], data[10], data[4], 
 	data[13], data[7], data[2], data[15], data[9], data[3], data[14], data[8]] #Check if the values are correct
 	# Create the axis for the colorbars
 	axl = fig.add_axes([0.75, 0.1, 0.2, 0.05])	#Orientação
@@ -768,10 +771,16 @@ def DR_bullseye(data, prmt):
 	if prmt == '1':
 		cmap = mpl.cm.RdYlBu
 		norm = mpl.colors.Normalize(vmin=-25, vmax=10) #Valores para normalização
-	
+		
+		#Preparing the data for bull's eye plot
+		BullseyeAux = np.round(BullseyeAux)
+
 	elif prmt == '2':
 		cmap = mpl.cm.RdBu
 		norm = mpl.colors.Normalize(vmin=0.5, vmax=0.7) #Valores para normalização
+
+		#Preparing the data for bull's eye plot
+		BullseyeAux = np.round(BullseyeAux,3)
 
 	# ColorbarBase derives from ScalarMappable and puts a colorbar
 	# in a specified axes, so it has everything needed for a
