@@ -675,18 +675,28 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 	for i in range(6):
 		theta_i = i*60*np.pi/180
 		ax.plot([theta_i, theta_i], [r[0], 1], '-k', lw=linewidth)
-		
+
+	#Correcting factor for the values annotations
+	cAngleFactor = [0.1, 0.1, 0, -0.1, -0.1, 0] #In all 18seg
+	cRadiusFactor = 1.2	#Only in the apical segs
 	# Fill the segments 1-6
 	r0 = r[2:4]
 	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
+	angStep = np.arange(1/2,15/6,2/6)
 	for i in range(6):
 		# First segment start at 60 degrees
 		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
 		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
 		z = np.ones((128, 2))*data[i]
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		ax.annotate(np.round(data[0]), xy=[1,1], xycoords= 'polar')	#I have to edit those lines to find the correct values
+		#ax.annotate(np.round(data[0]), xy=[1,1], xycoords= 'polar')	#I have to edit those lines to find the correct values
 																	# and then insert the correct values
+		ax.annotate(np.round(data[i]), #Colocar o %
+            xy=(angStep[i]*np.pi+cAngleFactor[i], 5/6) #theta, radius
+            ) #Agora ir iterando pelos dados, raios e ângulos
+		#Raios: 1/6, 3/6, 5/6
+		#Ângulos: 3pi/6, 5pi/6,7pi/6,9pi/6, 11pi/6, 13pi/6
+
 		if i+1 in segBold:
 			ax.plot(theta0, r0, '-k', lw=linewidth+2)
 			ax.plot(theta0[0], [r[2], r[3]], '-k', lw=linewidth+1)
@@ -703,6 +713,11 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
 		z = np.ones((128, 2))*data[i+6]
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+
+		ax.annotate(np.round(data[5+i]), #Colocar o %
+            xy=(angStep[i]*np.pi+cAngleFactor[i], 3/6) #theta, radius
+            )
+
 		if i+7 in segBold:
 			ax.plot(theta0, r0, '-k', lw=linewidth+2)
 			ax.plot(theta0[0], [r[1], r[2]], '-k', lw=linewidth+1)
@@ -719,6 +734,11 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
 		z = np.ones((128, 2))*data[i+12]
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+
+		ax.annotate(np.round(data[11+i]), #Colocar o %
+            xy=(angStep[i]*np.pi+cAngleFactor[i], 1/6*cRadiusFactor) #theta, radius
+            )
+
 		if i+13 in segBold:
 			ax.plot(theta0, r0, '-k', lw=linewidth+2)
 			ax.plot(theta0[0], [r[0], r[1]], '-k', lw=linewidth+1)
