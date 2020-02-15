@@ -677,8 +677,9 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		ax.plot([theta_i, theta_i], [r[0], 1], '-k', lw=linewidth)
 
 	#Correcting factor for the values annotations
-	cAngleFactor = [0.1, 0.1, 0, -0.1, -0.1, 0] #In all 18seg
-	cRadiusFactor = 1.2	#Only in the apical segs
+	cAngleFactor = [0.1, 0.1, 0, -0.1, -0.1, 0] #In Basal and Med segs
+	cAngleFactorApical = [0.3, 0.3, -0.1, -0.35, -0.25, 0] #For the apical segs
+	cRadiusFactor = [1.2, 1.4, 1.5, 1.4, 1, 0.9]	#Only in the apical segs
 	# Fill the segments 1-6
 	r0 = r[2:4]
 	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
@@ -689,8 +690,7 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
 		z = np.ones((128, 2))*data[i]
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		#ax.annotate(np.round(data[0]), xy=[1,1], xycoords= 'polar')	#I have to edit those lines to find the correct values
-																	# and then insert the correct values
+
 		ax.annotate(np.round(data[i]), #Colocar o %
             xy=(angStep[i]*np.pi+cAngleFactor[i], 5/6) #theta, radius
             ) #Agora ir iterando pelos dados, raios e ângulos
@@ -736,7 +736,7 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
 
 		ax.annotate(np.round(data[11+i]), #Colocar o %
-            xy=(angStep[i]*np.pi+cAngleFactor[i], 1/6*cRadiusFactor) #theta, radius
+            xy=(angStep[i]*np.pi+cAngleFactorApical[i], 1/6*cRadiusFactor[i]) #theta, radius
             )
 
 		if i+13 in segBold:
@@ -780,10 +780,13 @@ def DR_bullseye(data, prmt):
 	# and labels.
 	cb1 = mpl.colorbar.ColorbarBase(axl, cmap=cmap, norm=norm,
 									orientation='horizontal')
-	cb1.set_label('Parameter') #Depending of the parameter
-
+	
 	# Create the 18 segment model
 	bullseye_eighteenSEG_plot(ax, BullseyeAux, cmap=cmap, norm=norm)
-	ax.set_title('Parameter Bulls Eye') #Depending of the parameter
-
+	if prmt == '1':
+		ax.set_title('GLS Bull\'s Eye (%)') 
+		cb1.set_label('GLS') #see a few lines above for cb1
+	elif prmt == '2':
+		ax.set_title('MD Bull\'s Eye (ms)') 
+		cb1.set_label('MD') #see a few lines above for cb1
 	plt.show()
