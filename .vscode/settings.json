@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "/home/rafael/Projetos/GPDS/D-Station/.venv/bin/python3.7",
+    "python.pythonPath": ".venv/bin/python",
     "git.ignoreLimitWarning": true
 }
