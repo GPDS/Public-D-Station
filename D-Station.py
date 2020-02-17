@@ -232,8 +232,15 @@ sheet['AE'+str(it)] = round(IVCvalues2[0]*1000)
 print("Ejection Time2: ",EjectionTimevalues2[0]*1000, "ms")
 sheet['AF'+str(it)] = round(EjectionTimevalues2[0]*1000)
 
+#LA Phases
+if op == "2":
+	print("\nLeft Atrium Phases:")
+	print("\tReservoir Phase: ", IVCvalues1[0]*1000, "ms")
+	print("\tConduit Phase: ", MVOvalues1[0]*1000, "ms")
+	print("\tAtrial Contraction: ", Avalues[0]*1000, "ms")
+
 systolic_time = (AVCvalues1[0]-MVCvalues1[0])
-print("Systolic Time: ", systolic_time*1000)
+print("\nSystolic Time: ", systolic_time*1000)
 sheet['AG'+str(it)] = (systolic_time*1000)
 print("Diastolic Time: ", (RM_Time[0] - systolic_time)*1000)
 sheet['AH'+str(it)] = ((RM_Time[0] - systolic_time)*1000)
@@ -251,6 +258,8 @@ if(op != test_op):
 	Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2)
 else:
 	print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation")
+
+
 
 #DI_calc()
 #print("\n\n")
