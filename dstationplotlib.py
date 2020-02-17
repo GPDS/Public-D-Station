@@ -384,7 +384,8 @@ IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalue
 		ax2.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
 	#plt.tight_layout()
-	plt.show()
+	if prmt != '1' and prmt !='2':
+		plt.show()
 
 
 # Plots the figures containing the results of the operations
@@ -757,13 +758,13 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 # Inserts the data in the bullseye - Add GLS and MD here
 def DR_bullseye(data, prmt):
 	# Make a figure and axes with dimensions as desired.
-	fig, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
+	fig2, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
 						   subplot_kw=dict(projection='polar'))
-	fig.canvas.set_window_title('Parameter Bulls Eye') #it wi	ll depend of a parameter
+	fig2.canvas.set_window_title('Parameter Bulls Eye') #it wi	ll depend of a parameter
 	BullseyeAux = [data[0], data[17], data[11], data[5], data[12], data[6], data[1], data[16], data[10], data[4], 
 	data[13], data[7], data[2], data[15], data[9], data[3], data[14], data[8]] #Check if the values are correct
 	# Create the axis for the colorbars
-	axl = fig.add_axes([0.75, 0.1, 0.2, 0.05])	#Orientação
+	axl = fig2.add_axes([0.75, 0.1, 0.2, 0.05])	#Orientação
 
 	# Set the colormap and norm to correspond to the data for which
 	# the colorbar will be used.
