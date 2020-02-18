@@ -297,17 +297,21 @@ IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalue
 
 	plt.setp(ax1.get_xticklabels(), visible=False)
 
-	if op == "2":
+	ymin, ymax = plt.ylim()
+	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
+	txt_height_2 = ymax+0.05*(ymin-ymax) #Phase names text height
+
+	if op == "2" or op == "3":
 		#Below: Valve events and phases names are written in the plot
-		plt.text(IVCvalues1[0]+x_inc, txt_height_2+33, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		plt.text(Evalues[0]+x_inc, txt_height_2+33, "Conduit" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		plt.text(IVCvalues1[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		plt.text(Evalues[0]+x_inc, txt_height_2, "Conduit" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 		if op != test_op:
 			#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
-			plt.text(Avalues[0]+x_inc, txt_height_2+33, "Contraction" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+			plt.text(Avalues[0]+x_inc, txt_height_2, "Contraction" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 
 		#These if are to determine which name will be the last written on the plot
 		if IVCvalues2[0]<END_Time1:
-			plt.text(IVCvalues2[0]+x_inc, txt_height_2+33, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+			plt.text(IVCvalues2[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 			ax1.axvline(x=IVCvalues2[0], c="r",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
 
@@ -499,17 +503,21 @@ def avgPhaseStrainVarPlot(txt1, txt2, txt3, averageLongStrain, tcolunas1, tcolun
 	#ax1.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 	ax1.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-	if op == "2":
+	ymin, ymax = plt.ylim()
+	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
+	txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
+
+	if op == "2" or op == "3":
 		#Below: Valve events and phases names are written in the plot
-		plt.text(IVCvalues1[0]+x_inc, txt_height_2+33, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		plt.text(Evalues[0]+x_inc, txt_height_2+33, "Conduit" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		plt.text(IVCvalues1[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		plt.text(Evalues[0]+x_inc, txt_height_2, "Conduit" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 		if op != test_op:
 			#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
-			plt.text(Avalues[0]+x_inc, txt_height_2+33, "Contraction" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+			plt.text(Avalues[0]+x_inc, txt_height_2, "Contraction" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 
 		#These if are to determine which name will be the last written on the plot
 		if IVCvalues2[0]<END_Time1:
-			plt.text(IVCvalues2[0]+x_inc, txt_height_2+33, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+			plt.text(IVCvalues2[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 			ax1.axvline(x=IVCvalues2[0], c="r",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
 
