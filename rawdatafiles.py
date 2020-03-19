@@ -7,6 +7,14 @@ from os.path import isfile, join # Also used to do file operations
 import openpyxl
 
 
+def openRawDataFiles(): # Abrir todos os arquivos disponíveis para um paciente aqui
+	print("A")
+
+
+
+
+
+
 def openfiles(exams_path, op, test_op, AVCpatient):     #Script to open the raw data files exported from proprietary software
 
 	#Lists used to store the values extracted from the raw data files

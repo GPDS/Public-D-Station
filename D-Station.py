@@ -15,7 +15,7 @@ from rawdatafiles import *
 
 #Defining constants
 height_line = 1.025 # Constant to define the height of the lines that separate the phases
-test_op = '6'		# Defines the number of the option that will use the simulated strain curves
+test_op = '15'		# Defines the number of the option that will use the simulated strain curves
 SizeFont = 11		# Defines the font size in the plots
 SizePhaseFont = 9  # Defines the font size of the phases' legends
 SizeLabelFont = 11  # Defines the font size of the labels in the plots' axis
@@ -55,15 +55,17 @@ Avalues = []
 #MAIN
 os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
 
+"""
 idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
 """
+
 idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
-op = '2'					# Used to debug - comment the op line above
-"""
+op = '1'					# Used to debug - comment the op line above
+
 if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
 	exams_path = ('Patients/'+idPatient)
 else:
@@ -116,14 +118,14 @@ for cell in sheet['A']:
 if op != test_op and MarkPoints:
 	if sheet['U'+it].value is not None and sheet['V'+it].value is not None and sheet['W'+it].value is not None:
 		
-		
+		"""
 		print("\n1. Verify the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("3. Use the stored values without verifying.")
 		decision = input("Option: ")
+		"""
 		
-		
-		#decision = '3'
+		decision = '3'
 
 		if(decision == '1'):
 			OnsetQRS1 = sheet['U'+it].value/1000
