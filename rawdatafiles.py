@@ -5,34 +5,16 @@ import re                        # Used to obtain the LM, RM and ES Times in the
 from os import listdir			 # Used to obtain the files in their directories
 from os.path import isfile, join # Also used to do file operations
 import openpyxl
+from auxfcns import *			 # Contains openRawData used in openRawDataFiles
 
 
-def openRawData(exams_path, heartChamber, strainType, visualization):
-
-
-	#Ainda não está certo, não entra no except caso o arquivo não apareça
-
-	
-	try:
-		#Lists the txt files in the directory pointed by exams_path
-		list_txtfiles = [f for f in listdir(exams_path+'/'+heartChamber) if isfile(join(exams_path+'/'+heartChamber, f))] 
-		for f in list_txtfiles:
-			if(visualization in f and strainType in f):
-				print(f)
-				input('')
-				txt=pd.read_csv(exams_path+'/'+heartChamber+'/'+f, sep='\t', engine='python', skiprows=3, index_col=0)
-				return txt
-
-	except FileNotFoundError:
-		print(heartChamber, " ", visualization," file not found in the ", exams_path,"/", heartChamber,"/\' directory.", sep='')
 
 
 
 def openRawDataFiles(idPatient, op, test_op): # Abrir todos os arquivos disponíveis para um paciente aqui
-	#Getting all the files in the new folder	
-	#Colocar mensagens de erro caso não consiga abrir
 	
-	if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
+	
+	if op != test_op:					 #Checks if the file is on the patient's or simulation' directory
 		exams_path = ('Patients/'+idPatient)
 	else:
 		exams_path = ('Simulations/'+idPatient)
@@ -42,11 +24,11 @@ def openRawDataFiles(idPatient, op, test_op): # Abrir todos os arquivos disponí
 	txt2 = openRawData(exams_path, 'LV', 'SL', '2CH')
 	txt3 = openRawData(exams_path, 'LV', 'SL', 'APLAX')
 
+	#RV
 
 
 	input('RODOU\n\n\n\n')
 	#Fazer um para cada câmara 
-	#Podia fazer uma função para isso (camara como string)
 
 
 

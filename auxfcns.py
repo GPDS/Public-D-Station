@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
-
+from os import listdir			 # Used to obtain the files in their directories
+from os.path import isfile, join # Also used to do file operations
 
 #Function to read only the first N columns of a dataframe
 def front(self, n):
@@ -84,3 +85,22 @@ def segmentName(segmentColor, chamber):
 
 	else:
 		return "\nERROR - Vision could not be identified\n"
+
+
+
+def openRawData(exams_path, heartChamber, strainType, visualization):
+
+	
+	exam = '_not_found_'
+	try:
+		#Lists the txt files in the directory pointed by exams_path
+		list_txtfiles = [f for f in listdir(exams_path+'/'+heartChamber) if isfile(join(exams_path+'/'+heartChamber, f))] 
+		for f in list_txtfiles:
+			if(visualization in f and strainType in f):
+				exam = f
+			
+		txt=pd.read_csv(exams_path+'/'+heartChamber+'/'+exam, sep='\t', engine='python', skiprows=3, index_col=0)
+		return txt
+
+	except FileNotFoundError:
+		print(heartChamber, " ", visualization," file not found in the ", exams_path,"/", heartChamber,"/\' directory.", sep='')
