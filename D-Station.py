@@ -63,7 +63,7 @@ print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+".
 op = input("Option: ")
 """
 
-idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
+idPatient = 'AristotelesTest'	# Used to debug - commnent the idPatient line above
 op = '1'					# Used to debug - comment the op line above
 
 if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
@@ -71,6 +71,7 @@ if op != test_op:							#Checks if the file will be on the simulation directory 
 else:
 	exams_path = ('Simulations/'+idPatient)
 
+openRawDataFiles(idPatient, op, test_op)
 
 # Sheet is open
 wb = openpyxl.load_workbook('Patients_DB.xlsx')					#opens the xl file where the patient data is
