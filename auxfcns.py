@@ -3,6 +3,8 @@
 import pandas as pd
 from os import listdir			 # Used to obtain the files in their directories
 from os.path import isfile, join # Also used to do file operations
+import sys
+
 
 #Function to read only the first N columns of a dataframe
 def front(self, n):
@@ -104,3 +106,5 @@ def openRawData(exams_path, heartChamber, strainType, visualization):
 
 	except FileNotFoundError:
 		print(heartChamber, " ", visualization," file not found in the ", exams_path,"/", heartChamber,"/\' directory.", sep='')
+		print("\n\nEnding process.\n")
+		sys.exit(1)

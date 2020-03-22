@@ -2,34 +2,63 @@
 
 import pandas as pd              # Package used to work with the raw data files
 import re                        # Used to obtain the LM, RM and ES Times in the raw data files
-from os import listdir			 # Used to obtain the files in their directories
-from os.path import isfile, join # Also used to do file operations
+#from os import listdir			 # Used to obtain the files in their directories
+#from os.path import isfile, join # Also used to do file operations
 import openpyxl
 from auxfcns import *			 # Contains openRawData used in openRawDataFiles
 
 
 
-
-
 def openRawDataFiles(idPatient, op, test_op): # Abrir todos os arquivos disponíveis para um paciente aqui
-	
-	
-	if op != test_op:					 #Checks if the file is on the patient's or simulation' directory
+	#I should describe this function here
+
+	#Checks if the file is on the patient's or simulation' directory
+	if op != test_op:					 
 		exams_path = ('Patients/'+idPatient)
 	else:
 		exams_path = ('Simulations/'+idPatient)
 
-	#LV
+
+	#Left Ventricle - Longitudinal Strain
 	txt1 = openRawData(exams_path, 'LV', 'SL', '4CH')
 	txt2 = openRawData(exams_path, 'LV', 'SL', '2CH')
 	txt3 = openRawData(exams_path, 'LV', 'SL', 'APLAX')
+	
+	if op == "1":
+		#Left Ventricle - Longitudinal Strain Rate
+		txtMid1 = openRawData(exams_path, 'LV', 'SrL', '4CH')
 
-	#RV
+	elif op == "2":
+		# Left Atrium - Longitudinal Strain
+		txtMid1 = openRawData(exams_path, 'LV', 'SrL', '4CH')
+	
+	elif op == "3":
+		# Left Atrium - Longitudinal Strain Rate
+		txtMid1 = openRawData(exams_path, 'LA', 'SrL', '4CH')
+
+	elif op == "4":
+		# Right Ventricle - Longitudinal Strain
+		txtMid1 = openRawData(exams_path, 'RV', 'SL', '4CH')
+
+	else: # Left Ventricle - Longitudinal Strain Rate (obtained by the strain curves) 
+		  #(forCircAdapt simulations or default case)
+		if op != "5" and op != test_op:
+			print("Invalid Option. Using default option (5)\n\n") 
+
+		txtMid1 = txt1.diff()
+
+		print("\nImportant: Obtaining Strain Rate curves by the differences between strain points\n")
 
 
-	input('RODOU\n\n\n\n')
-	#Fazer um para cada câmara 
+	# Useless column is removed from the txt files
+	txt1.drop('Unnamed: 1', axis=1, inplace=True)
+	txt2.drop('Unnamed: 1', axis=1, inplace=True)
+	txt3.drop('Unnamed: 1', axis=1, inplace=True)
+	txtMid1.drop('Unnamed: 1', axis=1, inplace=True)
 
+	#Para pegar os tempos posso aproveitar a função criada
+
+	input('\n\nRODOU\n\n\n\n') 
 
 
 
