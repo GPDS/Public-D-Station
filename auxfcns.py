@@ -4,7 +4,8 @@ import pandas as pd
 from os import listdir			 # Used to obtain the files in their directories
 from os.path import isfile, join # Also used to do file operations
 import sys
-
+import re
+import numpy as np
 
 #Function to read only the first N columns of a dataframe
 def front(self, n):
@@ -92,17 +93,26 @@ def segmentName(segmentColor, chamber):
 
 def openRawData(exams_path, heartChamber, strainType, visualization):
 
-	
-	exam = '_not_found_'
+
+	exam = '_not_found_' # Default state
 	try:
 		#Lists the txt files in the directory pointed by exams_path
 		list_txtfiles = [f for f in listdir(exams_path+'/'+heartChamber) if isfile(join(exams_path+'/'+heartChamber, f))] 
 		for f in list_txtfiles:
 			if(visualization in f and strainType in f):
 				exam = f
-			
+
+		#Opens the txt as pandas dataframe	
 		txt=pd.read_csv(exams_path+'/'+heartChamber+'/'+exam, sep='\t', engine='python', skiprows=3, index_col=0)
-		return txt
+
+		#Opens the txt as file to obtain the times (LM,RM,ES)
+		txt_file = open(exams_path+'/'+heartChamber+'/'+exam, 'r')
+		times = np.asarray(re.findall("\d+\.\d+", txt_file.readlines()[2])) #Times are obtained
+		txt_file.close()
+
+		return txt, times
+
+	# I may put something in case the times are not available
 
 	except FileNotFoundError:
 		print(heartChamber, " ", visualization," file not found in the ", exams_path,"/", heartChamber,"/\' directory.", sep='')
