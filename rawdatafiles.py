@@ -8,8 +8,14 @@ from auxfcns import *			 # Contains openRawData used in openRawDataFiles
 
 
 
-def openRawDataFiles(idPatient, op, test_op): # Abrir todos os arquivos disponíveis para um paciente aqui
+def openRawDataFiles(idPatient, op, test_op):
 	#I should describe this function here
+
+	#Creating a np array to later export all time arrays
+	headerTimes = np.zeros((5,3))
+
+	txtMid2 = 0	#Default state  
+	txtMid3 = 0	#Default state  
 
 	#Checks if the file is on the patient's or simulation' directory
 	if op != test_op:					 
@@ -19,53 +25,53 @@ def openRawDataFiles(idPatient, op, test_op): # Abrir todos os arquivos disponí
 
 
 	#Left Ventricle - Longitudinal Strain
-	txt1, _ = openRawData(exams_path, 'LV', 'SL', '4CH')
-	txt2, _ = openRawData(exams_path, 'LV', 'SL', '2CH')
-	txt3, _ = openRawData(exams_path, 'LV', 'SL', 'APLAX')
+	txt1, headerTimes[0] = openRawData(exams_path, 'LV', 'SL', '4CH')
 	
+	txt2, headerTimes[1] = openRawData(exams_path, 'LV', 'SL', '2CH')
+	txt2 = syncStrain(txt2, headerTimes[0][2], headerTimes[1][2])
+
+	txt3, headerTimes[2] = openRawData(exams_path, 'LV', 'SL', 'APLAX')
+	txt3 = syncStrain(txt3, headerTimes[0][2], headerTimes[2][2])
+
+
 	if op == "1":
 		#Left Ventricle - Longitudinal Strain Rate
-		txtMid1, _ = openRawData(exams_path, 'LV', 'SrL', '4CH')
+		txtMid1, headerTimes[3] = openRawData(exams_path, 'LV', 'SrL', '4CH')
+		txtMid1 = syncStrain(txtMid1, headerTimes[0][2], headerTimes[3][2])
 
 	elif op == "2":
 		# Left Atrium - Longitudinal Strain
-		txtMid1, _ = openRawData(exams_path, 'LV', 'SrL', '4CH')
-	
+		txtMid1, headerTimes[3] = openRawData(exams_path, 'LV', 'SrL', '4CH')
+		txtMid1 = syncStrain(txtMid1, headerTimes[0][2], headerTimes[3][2])
+
+		txtMid2, headerTimes[4] = openRawData(exams_path, 'LA', 'SL', '2CH')
+		txtMid2 = syncStrain(txtMid2, headerTimes[0][2], headerTimes[4][2])
+
 	elif op == "3":
 		# Left Atrium - Longitudinal Strain Rate
-		txtMid1, _ = openRawData(exams_path, 'LA', 'SrL', '4CH')
+		txtMid1, headerTimes[3] = openRawData(exams_path, 'LA', 'SrL', '4CH')
+		txtMid1 = syncStrain(txtMid1, headerTimes[0][2], headerTimes[3][2])
 
 	elif op == "4":
 		# Right Ventricle - Longitudinal Strain
-		txtMid1, _ = openRawData(exams_path, 'RV', 'SL', '4CH')
+		txtMid1, headerTimes[3] = openRawData(exams_path, 'RV', 'SL', '4CH')
+		txtMid1 = syncStrain(txtMid1, headerTimes[0][2], headerTimes[3][2])
 
 	else: # Left Ventricle - Longitudinal Strain Rate (obtained by the strain curves) 
 		  #(forCircAdapt simulations or default case)
 		if op != "5" and op != test_op:
 			print("Invalid Option. Using default option (5)\n\n") 
 
-		txtMid1 = txt1.diff()
-		txtMid2 = txt2.diff()
-		txtMid3 = txt3.diff()
-
-		txtMid2.drop('Unnamed: 1', axis=1, inplace=True) # Useless column is removed from the txt files
-		txtMid3.drop('Unnamed: 1', axis=1, inplace=True) # The others ones are removed later
+		txtMid1 = txt1.truediv(txt1.index.to_series().diff(), axis = 0)/100
+		txtMid2 = txt2.diff().truediv(txt2.index.to_series().diff(), axis = 0)/100
+		txtMid3 = txt3.diff().truediv(txt3.index.to_series().diff(), axis = 0)/100
 
 		print("\nImportant: Obtaining Strain Rate curves by the differences between strain points\n")
 
 
-	# Useless column is removed from the txt files
-	txt1.drop('Unnamed: 1', axis=1, inplace=True)
-	txt2.drop('Unnamed: 1', axis=1, inplace=True)
-	txt3.drop('Unnamed: 1', axis=1, inplace=True)
-	txtMid1.drop('Unnamed: 1', axis=1, inplace=True)
+	return txt1, txt2, txt3, txtMid1, txtMid2, txtMid3, headerTimes 
+
 	
-
-	#Falta sincronizar os txts e pegar os 3 SR no caso do else
-
-	input('\n\nRODOU\n\n\n\n') 
-
-
 
 def openfiles(exams_path, op, test_op, AVCpatient):     #Script to open the raw data files exported from proprietary software
 

@@ -66,12 +66,9 @@ op = input("Option: ")
 idPatient = 'AristotelesTest'	# Used to debug - commnent the idPatient line above
 op = '1'					# Used to debug - comment the op line above
 
-if op != test_op:							#Checks if the file will be on the simulation directory or in the patients one
-	exams_path = ('Patients/'+idPatient)
-else:
-	exams_path = ('Simulations/'+idPatient)
 
-openRawDataFiles(idPatient, op, test_op)
+txt1, txt2, txt3, txt_mid, txtMid2, txtMid3, headerTimes = openRawDataFiles(idPatient, op, test_op)
+
 
 # Sheet is open
 wb = openpyxl.load_workbook('Patients_DB.xlsx')					#opens the xl file where the patient data is
@@ -84,7 +81,7 @@ for cell in sheet['A']:
 			it = format(cell.row)
 AVCpatient = (int(sheet['T'+str(it)].value)/1000) #AVC value
 
-txt1, txt2, txt3, txt_mid, txt2_mod, txt3_mod, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, LM_Time, RM_Time, ES_Time = openfiles(exams_path, op, test_op, AVCpatient)
+#txt1, txt2, txt3, txt_mid, txt2_mod, txt3_mod, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, LM_Time, RM_Time, ES_Time = openfiles(exams_path, op, test_op, AVCpatient)
 
 
 tcolunas1=int(((txt1.size/len(txt1.index))))													#Checks the ammount of columns in the dataframe

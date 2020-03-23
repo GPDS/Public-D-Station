@@ -104,10 +104,15 @@ def openRawData(exams_path, heartChamber, strainType, visualization):
 
 		#Opens the txt as pandas dataframe	
 		txt=pd.read_csv(exams_path+'/'+heartChamber+'/'+exam, sep='\t', engine='python', skiprows=3, index_col=0)
+	
+		# Useless column is removed from the txt files
+		txt.drop('Unnamed: 1', axis=1, inplace=True)
+
 
 		#Opens the txt as file to obtain the times (LM,RM,ES)
 		txt_file = open(exams_path+'/'+heartChamber+'/'+exam, 'r')
-		times = np.asarray(re.findall("\d+\.\d+", txt_file.readlines()[2])) #Times are obtained
+		times = np.array(re.findall("\d+\.\d+", txt_file.readlines()[2])) #Times are obtained
+		times = times.astype('float64')
 		txt_file.close()
 
 		return txt, times
@@ -118,3 +123,13 @@ def openRawData(exams_path, heartChamber, strainType, visualization):
 		print(heartChamber, " ", visualization," file not found in the ", exams_path,"/", heartChamber,"/\' directory.", sep='')
 		print("\n\nEnding process.\n")
 		sys.exit(1)
+
+
+
+def syncStrain(txt, refESTime, oldESTime):
+
+	txt=txt.copy(deep=True) #Aparentemente não é necessario
+	txt.index = txt.index-(oldESTime-refESTime)
+
+	return txt
+
