@@ -17,7 +17,7 @@ onlyNEG = 1  #control - to use only the negative peaks in peak detection
 
 
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
-def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
+def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
 																			#If it's a real patient - add for simulations
 	txt1_s = txt1[(txt1.index >= EMCvalues1[0]) & (txt1.index <= AVCvalues1[0])]		#From the LM_Time until the AVC from the raw data files
@@ -79,7 +79,7 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, 
 
 
 #Calculates the Mechanical Dispersion (std.deviance from all the peak strain time values in a cycle)
-def MD_calc(txt1, txt2, txt3, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
+def MD_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
 	txt1_sliced_onsets = txt1[(txt1.index >= EMCvalues1[0]) & (txt1.index < EMCvalues2[0])] #slices the DF to one that has points from LM to RM time
 	txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[0]) & (txt2.index < EMCvalues2[0])]

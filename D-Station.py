@@ -63,11 +63,11 @@ print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+".
 op = input("Option: ")
 """
 
-idPatient = 'AristotelesTest'	# Used to debug - commnent the idPatient line above
-op = '1'					# Used to debug - comment the op line above
+idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
+op = '5'					# Used to debug - comment the op line above
 
 
-txt1, txt2, txt3, txt_mid, txtMid2, txtMid3, headerTimes = openRawDataFiles(idPatient, op, test_op)
+txt1, txt2, txt3, txt_mid, txtMid2, txtMid3, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, headerTimes = openRawDataFiles(idPatient, op, test_op)
 
 
 # Sheet is open
@@ -80,8 +80,6 @@ for cell in sheet['A']:
 		if idPatient == cell.value: #Check if the value of the cell contains the idPatient
 			it = format(cell.row)
 AVCpatient = (int(sheet['T'+str(it)].value)/1000) #AVC value
-
-#txt1, txt2, txt3, txt_mid, txt2_mod, txt3_mod, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, LM_Time, RM_Time, ES_Time = openfiles(exams_path, op, test_op, AVCpatient)
 
 
 tcolunas1=int(((txt1.size/len(txt1.index))))													#Checks the ammount of columns in the dataframe
@@ -131,7 +129,7 @@ if op != test_op and MarkPoints:
 			OnsetQRS2 = sheet['W'+it].value/1000
 
 			print("\nAre the presented timepoints (in red) correct? Close the figure and answer: ")
-			ecgVerification(txt1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, OnsetQRS1, OnsetP, OnsetQRS2)
+			ecgVerification(txt1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, SizeFont, OnsetQRS1, OnsetP, OnsetQRS2)
 			decision = input("Are they correct? [Y]es or [N]o? ")
 
 			if(decision == 'n' or decision == 'N'):
@@ -140,7 +138,7 @@ if op != test_op and MarkPoints:
 				EcgOk = 1
 		if(decision == '2'):
 				print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
-				xcoord = PlotClick(txt1, tcolunas1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, op, test_op,
+				xcoord = PlotClick(txt1, tcolunas1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, SizeFont, op, test_op,
 				strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
 				sheet['U'+str(it)] = round(xcoord[0],0) # ONSET QRS 1
 				#sheet['Q'+str(it)] = round(xcoord[1],0) # Diastasis point
@@ -152,7 +150,7 @@ if op != test_op and MarkPoints:
 
 	if not(sheet['U'+it].value is not None and sheet['V'+it].value is not None and sheet['W'+it].value is not None) or not(EcgOk):
 		print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
-		xcoord = PlotClick(txt1, tcolunas1, LM_Time[0], ES_Time[0], RM_Time[0], END_Time0, SizeFont, op, test_op,
+		xcoord = PlotClick(txt1, tcolunas1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, SizeFont, op, test_op,
 		strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
 		sheet['U'+str(it)] = round(xcoord[0],0) # ONSET QRS 1
 		#sheet['Q'+str(it)] = round(xcoord[1],0) # Diastasis point
@@ -166,20 +164,20 @@ We did this because we had different ES_Times in the 3 txt files, so we synced t
 """
 AVC_sheet = int(sheet['T'+str(it)].value)/1000
 
-MVOvalues1.append(round((int(sheet['Q'+str(it)].value)/1000)+(ES_Time[0]-AVC_sheet),2))
-MVCvalues1.append(round((int(sheet['R'+str(it)].value)/1000)+(ES_Time[0]-AVC_sheet),2))
-AVOvalues1.append(round((int(sheet['S'+str(it)].value)/1000)+(ES_Time[0]-AVC_sheet),2))
-AVCvalues1.append(ES_Time[0])
-MVOvalues2.append(round((int(sheet['Q'+str(it)].value)/1000)+(ES_Time[0]-AVC_sheet+RM_Time[0]),2))
-MVCvalues2.append(round((int(sheet['R'+str(it)].value)/1000)+(ES_Time[0]-AVC_sheet+RM_Time[0]),2))
-AVOvalues2.append(round((int(sheet['S'+str(it)].value)/1000)+(ES_Time[0]-AVC_sheet+RM_Time[0]),2))
-AVCvalues2.append(round((int(sheet['T'+str(it)].value)/1000)+(ES_Time[0]-AVC_sheet+RM_Time[0]),2))
+MVOvalues1.append(round((int(sheet['Q'+str(it)].value)/1000)+(headerTimes[0][2]-AVC_sheet),2))
+MVCvalues1.append(round((int(sheet['R'+str(it)].value)/1000)+(headerTimes[0][2]-AVC_sheet),2))
+AVOvalues1.append(round((int(sheet['S'+str(it)].value)/1000)+(headerTimes[0][2]-AVC_sheet),2))
+AVCvalues1.append(headerTimes[0][2])
+MVOvalues2.append(round((int(sheet['Q'+str(it)].value)/1000)+(headerTimes[0][2]-AVC_sheet+headerTimes[0][1]),2))
+MVCvalues2.append(round((int(sheet['R'+str(it)].value)/1000)+(headerTimes[0][2]-AVC_sheet+headerTimes[0][1]),2))
+AVOvalues2.append(round((int(sheet['S'+str(it)].value)/1000)+(headerTimes[0][2]-AVC_sheet+headerTimes[0][1]),2))
+AVCvalues2.append(round((int(sheet['T'+str(it)].value)/1000)+(headerTimes[0][2]-AVC_sheet+headerTimes[0][1]),2))
 
 if op != test_op:
 	#if MarkPoints and decision =='2':
-		#Dif_LM_OnsetQRS1.append(round(LM_Time[0] - (int(round(xcoord[0],0)/1000)),1)) #Diferença entre o Onset QRS 1 e o LM_Time
+		#Dif_LM_OnsetQRS1.append(round(headerTimes[0][0] - (int(round(xcoord[0],0)/1000)),1)) #Diferença entre o Onset QRS 1 e o LM_Time
 	#else:
-		#Dif_LM_OnsetQRS1.append(round(LM_Time[0] - (int(sheet['U'+str(it)]/1000)),1)) #Diferença entre o Onset QRS 1 e o LM_Time
+		#Dif_LM_OnsetQRS1.append(round(headerTimes[0][0] - (int(sheet['U'+str(it)]/1000)),1)) #Diferença entre o Onset QRS 1 e o LM_Time
 	#The values below correspond to the times of the beginning of the phases
 	EMCvalues1.append((int(sheet['U'+str(it)].value)/1000))                 #EMC1 = Onset QRS 1(ms)/1000
 	EMCvalues2.append((int(sheet['W'+str(it)].value)/1000))                 #EMC2 = Onset QRS 2(ms)/1000
@@ -196,8 +194,8 @@ Evalues=MVOvalues1             #E = MVO(ms)/1000 + LM_Time
 #Now everything is printed
 os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
 print("Patient: ",idPatient )
-print("\nLM_Time: ",LM_Time[0]*1000, "ms")
-print("RM_Time: ",RM_Time[0]*1000, "ms")
+print("\nLM_Time: ",headerTimes[0][0]*1000, "ms")
+print("RM_Time: ",headerTimes[0][1]*1000, "ms")
 #if op != test_op:
 	#print("Difference between LM_Time and Onset QRS1:", Dif_LM_OnsetQRS1[0]*1000, "ms")
 
@@ -242,19 +240,19 @@ if op == "2":
 systolic_time = (AVCvalues1[0]-MVCvalues1[0])
 print("\nSystolic Time: ", systolic_time*1000)
 sheet['AG'+str(it)] = (systolic_time*1000)
-print("Diastolic Time: ", (RM_Time[0] - systolic_time)*1000)
-sheet['AH'+str(it)] = ((RM_Time[0] - systolic_time)*1000)
-print("Systolic Time/Diastolic Time ratio: ",round((systolic_time/(RM_Time[0] - systolic_time)),4))
-sheet['AI'+str(it)] = (systolic_time/(RM_Time[0] - systolic_time))
+print("Diastolic Time: ", (headerTimes[0][1] - systolic_time)*1000)
+sheet['AH'+str(it)] = ((headerTimes[0][1] - systolic_time)*1000)
+print("Systolic Time/Diastolic Time ratio: ",round((systolic_time/(headerTimes[0][1] - systolic_time)),4))
+sheet['AI'+str(it)] = (systolic_time/(headerTimes[0][1] - systolic_time))
 
-outGLS = GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+outGLS = GLS_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 sheet['AJ'+str(it)] = outGLS[0] #Saves the caculated GLS in the sheet
 
-outMD = MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+outMD = MD_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 sheet['AK'+str(it)] = outMD[0]	#Saves the caculated MD in the sheet
 
 if(op != test_op):
-	averageLongStrain = avgPhaseStrainVar(txt1, txt2_mod, txt3_mod, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues,
+	averageLongStrain = avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues,
 	Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2)
 else:
 	print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation")
@@ -276,8 +274,8 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 	#prmt = '4' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
-		_,_,_,_,gls_values = GLS_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, ES_Time, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
+		_,_,_,_,gls_values = GLS_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+		POIPlot(txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 		 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1],
 						outGLS[2], outGLS[3])
@@ -286,8 +284,8 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 		#break #Comment this line after debug
 
 	elif prmt == "2":			  #Calculates the MD
-		_,_,_,_,md_values = MD_calc(txt1, txt2_mod, txt3_mod, op, test_op, prmt, LM_Time, RM_Time, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
+		_,_,_,_,md_values = MD_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+		POIPlot(txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
 						op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
 						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outMD[1],
 						outMD[2],outMD[3])
@@ -298,7 +296,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 
 	elif prmt == "3":
 		if(op != test_op):
-			avgPhaseStrainVarPlot(txt1, txt2_mod, txt3_mod, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, SizeFont, SizePhaseFont, MVOvalues1,
+			avgPhaseStrainVarPlot(txt1, txt2, txt3, op, test_op, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, SizeFont, SizePhaseFont, MVOvalues1,
 			MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2,
 			EjectionTimevalues1,EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line)
 		else:
@@ -311,7 +309,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 
 	elif prmt == "4":
 		print("\nPlot w/o any parameters")
-		POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op,
+		POIPlot(txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op,
 		test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
 		AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
 		EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, None, None, None)

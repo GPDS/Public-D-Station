@@ -69,10 +69,16 @@ def openRawDataFiles(idPatient, op, test_op):
 		print("\nImportant: Obtaining Strain Rate curves by the differences between strain points\n")
 
 
-	return txt1, txt2, txt3, txtMid1, txtMid2, txtMid3, headerTimes 
+	#Estimates SR to use in the first plot (POI selection)
+	txtSRLV4CH = txt1.truediv(txt1.index.to_series().diff(), axis = 0)/100 
+	txtSRLV2CH = txt2.truediv(txt1.index.to_series().diff(), axis = 0)/100 
+	txtSRLVAPLAX = txt3.truediv(txt1.index.to_series().diff(), axis = 0)/100
+
+
+	return txt1, txt2, txt3, txtMid1, txtMid2, txtMid3, txtSRLV4CH, txtSRLV2CH, txtSRLVAPLAX, headerTimes 
 
 	
-
+"""
 def openfiles(exams_path, op, test_op, AVCpatient):     #Script to open the raw data files exported from proprietary software
 
 	#Lists used to store the values extracted from the raw data files
@@ -218,3 +224,5 @@ def openfiles(exams_path, op, test_op, AVCpatient):     #Script to open the raw 
 	strain_rate_lv3ch = txt3_mod.diff().truediv(txt3_mod.index.to_series().diff(), axis = 0)/100
 
 	return txt1, txt2, txt3, txt_mid, txt2_mod, txt3_mod, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, LM_Time, RM_Time, ES_Time
+
+"""
