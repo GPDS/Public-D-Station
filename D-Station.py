@@ -63,8 +63,8 @@ print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+".
 op = input("Option: ")
 """
 
-idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
-op = '5'					# Used to debug - comment the op line above
+idPatient = 'NataliaOno'	# Used to debug - commnent the idPatient line above
+op = '2'					# Used to debug - comment the op line above
 
 
 txt1, txt2, txt3, txt_mid, txtMid2, txtMid3, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, headerTimes = openRawDataFiles(idPatient, op, test_op)

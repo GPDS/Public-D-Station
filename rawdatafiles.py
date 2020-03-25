@@ -26,7 +26,7 @@ def openRawDataFiles(idPatient, op, test_op):
 
 	#Left Ventricle - Longitudinal Strain
 	txt1, headerTimes[0] = openRawData(exams_path, 'LV', 'SL', '4CH')
-	
+
 	txt2, headerTimes[1] = openRawData(exams_path, 'LV', 'SL', '2CH')
 	txt2 = syncStrain(txt2, headerTimes[0][2], headerTimes[1][2])
 
@@ -41,7 +41,7 @@ def openRawDataFiles(idPatient, op, test_op):
 
 	elif op == "2":
 		# Left Atrium - Longitudinal Strain
-		txtMid1, headerTimes[3] = openRawData(exams_path, 'LV', 'SrL', '4CH')
+		txtMid1, headerTimes[3] = openRawData(exams_path, 'LV', 'SL', '4CH')
 		txtMid1 = syncStrain(txtMid1, headerTimes[0][2], headerTimes[3][2])
 
 		txtMid2, headerTimes[4] = openRawData(exams_path, 'LA', 'SL', '2CH')
