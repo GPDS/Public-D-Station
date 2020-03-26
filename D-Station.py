@@ -63,7 +63,7 @@ print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+".
 op = input("Option: ")
 """
 
-idPatient = 'NataliaOno'	# Used to debug - commnent the idPatient line above
+idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
 op = '2'					# Used to debug - comment the op line above
 
 
