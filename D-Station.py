@@ -2,7 +2,6 @@
 
 #Importing packages...
 import pandas as pd              # Package used to work with the raw data files
-import openpyxl                  # Package to work with .xlsx - See documentation when working with a big amount of data
 import os						 # Package used to determine whether the user is using windows or linux to erase the console
 #
 
@@ -13,13 +12,16 @@ from dstationparameters import *
 from rawdatafiles import *
 #
 
-#Defining constants
-height_line = 1.025 # Constant to define the height of the lines that separate the phases
-test_op = '15'		# Defines the number of the option that will use the simulated strain curves
-SizeFont = 11		# Defines the font size in the plots
-SizePhaseFont = 9  # Defines the font size of the phases' legends
-SizeLabelFont = 11  # Defines the font size of the labels in the plots' axis
+#Importing configuration
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')	
+# Reading variables from config file
+test_op = str(config['default']['test_op'])
 #
+
+
 
 #Initializing variables
 it = 3   #Defines the first row in the xl file that has values
@@ -55,62 +57,67 @@ Avalues = []
 #MAIN
 os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
 
-
+"""
 idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
-
 """
+
 idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
-op = '2'					# Used to debug - comment the op line above
-"""
-
-txt1, txt2, txt3, txt_mid, txtMid2, txtMid3, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, headerTimes = openRawDataFiles(idPatient, op, test_op)
+op = '1'					# Used to debug - comment the op line above
 
 
-# Sheet is open
-wb = openpyxl.load_workbook('Patients_DB.xlsx')					#opens the xl file where the patient data is
-sheet = wb['Sheet1']
+txt1, txt2, txt3, txtMid, txtMid2, txtMid3, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, headerTimes = openRawDataFiles(idPatient, op)
 
-#Determines the current patient row
-for cell in sheet['A']:
-	if(cell.value is not None): #check if that the cell is not empty.
-		if idPatient == cell.value: #Check if the value of the cell contains the idPatient
-			it = format(cell.row)
-AVCpatient = (int(sheet['T'+str(it)].value)/1000) #AVC value
-
-
-tcolunas1=int(((txt1.size/len(txt1.index))))													#Checks the ammount of columns in the dataframe
+# =====================================================
+#Posso colocar as linhas abaixo dentro das funções
+#
+tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
 tcolunas2=int(((txt2.size/len(txt2.index))))
 tcolunas3=int(((txt3.size/len(txt3.index))))
-tcolunas_mid=int(((txt_mid.size/len(txt_mid.index))))
+tcolunasMid=int(((txtMid.size/len(txtMid.index))))
 tcolunas_strain_rate_lv4ch = int(((strain_rate_lv4ch.size/len(strain_rate_lv4ch.index))))
 
-#Sort para detectar o menor index -  #para que um gráfico não fique sobrando
+
+#Sort para detectar o menor index dentre os arquivospara que um gráfico não fique sobrando
 END_Time0 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],
 strain_rate_lv4ch.index[len(strain_rate_lv4ch.index)-1]])[3]
 
 #Para o gráfico dos parâmetros - Início
 #achar o menor entre os strains e comparar com o do meio
 END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],
-txt_mid.index[len(txt_mid.index)-1]])[3]
+txtMid.index[len(txtMid.index)-1]])[3]
 #Para o gráfico dos parâmetros - Fim
 
+# =====================================================
+
+
+# Sheet is open
+sheet, it, wb = openSheet('Patients_DB.xlsx', idPatient)
+
+AVCpatient = (int(sheet['T'+str(it)].value)/1000) #AVC value
+
+
+"""
+
+CREATE A CONFIG FILE ASAP SO I CAN REDUCE THE NUMBER OF PARAMETERS IN THE FUNCTIONS
+
+"""
 
 #Check if the ECG points were selected
 if op != test_op and MarkPoints:
 	if sheet['U'+it].value is not None and sheet['V'+it].value is not None and sheet['W'+it].value is not None:
 		
-		
+		"""
 		print("\n1. Verify the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("3. Use the stored values without verifying.")
 		decision = input("Option: ")
+		"""
 		
-		
-		#decision = '3'
+		decision = '3'
 
 		if(decision == '1'):
 			OnsetQRS1 = sheet['U'+it].value/1000
@@ -118,7 +125,7 @@ if op != test_op and MarkPoints:
 			OnsetQRS2 = sheet['W'+it].value/1000
 
 			print("\nAre the presented timepoints (in red) correct? Close the figure and answer: ")
-			ecgVerification(txt1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, SizeFont, OnsetQRS1, OnsetP, OnsetQRS2)
+			ecgVerification(txt1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, OnsetQRS1, OnsetP, OnsetQRS2)
 			decision = input("Are they correct? [Y]es or [N]o? ")
 
 			if(decision == 'n' or decision == 'N'):
@@ -127,7 +134,7 @@ if op != test_op and MarkPoints:
 				EcgOk = 1
 		if(decision == '2'):
 				print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
-				xcoord = PlotClick(txt1, tcolunas1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, SizeFont, op, test_op,
+				xcoord = PlotClick(txt1, tcolunas1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, op, test_op,
 				strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
 				sheet['U'+str(it)] = round(xcoord[0],0) # ONSET QRS 1
 				#sheet['Q'+str(it)] = round(xcoord[1],0) # Diastasis point
@@ -139,7 +146,7 @@ if op != test_op and MarkPoints:
 
 	if not(sheet['U'+it].value is not None and sheet['V'+it].value is not None and sheet['W'+it].value is not None) or not(EcgOk):
 		print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
-		xcoord = PlotClick(txt1, tcolunas1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, SizeFont, op, test_op,
+		xcoord = PlotClick(txt1, tcolunas1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, op, test_op,
 		strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
 		sheet['U'+str(it)] = round(xcoord[0],0) # ONSET QRS 1
 		#sheet['Q'+str(it)] = round(xcoord[1],0) # Diastasis point
@@ -260,13 +267,13 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 	print("\t4. Show plot w/o any parameters\n\t5. Show additional parameters values\n\t0. Terminate program")
 	prmt = input("Parameter: ")
 	
-	#prmt = '4' #Comment the line above and uncomment this to test
+	#prmt = '0' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
 		_,_,_,_,gls_values = GLS_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		POIPlot(txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
-		 				op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
-						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outGLS[1],
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunasMid, prmt,
+		 				op, test_op, END_Time1, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
+						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, outGLS[1],
 						outGLS[2], outGLS[3])
 		#print(gls_values) #Comment this line after debug			
 		DR_bullseye(gls_values, prmt)
@@ -274,9 +281,9 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 
 	elif prmt == "2":			  #Calculates the MD
 		_,_,_,_,md_values = MD_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		POIPlot(txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt,
-						op, test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
-						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, outMD[1],
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunasMid, prmt,
+						op, test_op, END_Time1, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
+						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, outMD[1],
 						outMD[2],outMD[3])
 		#print(md_values) #Comment this line after debug
 		DR_bullseye(md_values, prmt)
@@ -285,7 +292,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 
 	elif prmt == "3":
 		if(op != test_op):
-			avgPhaseStrainVarPlot(txt1, txt2, txt3, op, test_op, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, SizeFont, SizePhaseFont, MVOvalues1,
+			avgPhaseStrainVarPlot(txt1, txt2, txt3, op, test_op, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, MVOvalues1,
 			MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2,
 			EjectionTimevalues1,EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line)
 		else:
@@ -298,10 +305,10 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 
 	elif prmt == "4":
 		print("\nPlot w/o any parameters")
-		POIPlot(txt1, txt2, txt3, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op,
-		test_op, END_Time1, SizeFont, SizePhaseFont, MVOvalues1, MVCvalues1,
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunasMid, prmt, op,
+		test_op, END_Time1, MVOvalues1, MVCvalues1,
 		AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
-		EjectionTimevalues2, IVRvalues, Evalues, Avalues, height_line, None, None, None)
+		EjectionTimevalues2, IVRvalues, Evalues, Avalues, None, None, None)
 		#break # for debugging purposes, comment later
 
 	elif prmt == "5":

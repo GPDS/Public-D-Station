@@ -6,6 +6,8 @@ from os.path import isfile, join # Also used to do file operations
 import sys
 import re
 import numpy as np
+import openpyxl                  # Package to work with .xlsx - See documentation when working with a big amount of data
+
 
 #Function to read only the first N columns of a dataframe
 def front(self, n):
@@ -132,4 +134,24 @@ def syncStrain(txt, refESTime, oldESTime):
 	txt.index = txt.index-(oldESTime-refESTime)
 
 	return txt
+
+
+
+def openSheet(sheetName, idPatient):
+
+	#ADD TRY-EXCEPT routines later
+
+	#opens the xl file where the patient data is
+
+	wb = openpyxl.load_workbook(sheetName)					
+	sheet = wb['Sheet1']
+
+	#Determines the current patient row
+	for cell in sheet['A']:
+		if(cell.value is not None): #check if that the cell is not empty.
+			if idPatient == cell.value: #Check if the value of the cell contains the idPatient
+				it = format(cell.row)
+
+	return sheet, it, wb
+
 

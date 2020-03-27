@@ -2,14 +2,20 @@
 
 import pandas as pd              # Package used to work with the raw data files
 import re                        # Used to obtain the LM, RM and ES Times in the raw data files
-#from os import listdir			 # Used to obtain the files in their directories
-#from os.path import isfile, join # Also used to do file operations
 from auxfcns import *			 # Contains openRawData used in openRawDataFiles
 
 
+#Importing configuration
+import configparser
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-def openRawDataFiles(idPatient, op, test_op):
+
+def openRawDataFiles(idPatient, op):
 	#I should describe this function here
+
+	test_op = str(config['default']['test_op'])
+
 
 	#Creating a np array to later export all time arrays
 	headerTimes = np.zeros((5,3))
