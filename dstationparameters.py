@@ -19,7 +19,8 @@ onlyNEG = 1  #control - to use only the negative peaks in peak detection
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
 def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
-																			#If it's a real patient - add for simulations
+	
+	#If it's a real patient - add for simulations
 	txt1_s = txt1[(txt1.index >= EMCvalues1[0]) & (txt1.index <= AVCvalues1[0])]		#From the LM_Time until the AVC from the raw data files
 	txt2_s = txt2[(txt2.index >= EMCvalues1[0]) & (txt2.index <= AVCvalues1[0])]
 	txt3_s = txt3[(txt3.index >= EMCvalues1[0]) & (txt3.index <= AVCvalues1[0])]

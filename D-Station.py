@@ -55,17 +55,17 @@ Avalues = []
 #MAIN
 os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
 
-"""
+
 idPatient = input('Patient ID: ')
 print("Options:\n\t1. Strain LV, Strain Rate LV and ECG\n\t2. Strain LV, Strain LA and ECG")
 print("\t3. Strain LV, Strain Rate LA and ECG\n\t4. Strain LV, Strain RV and ECG")
 print("\t5. Strain LV, Strain Rate LV and ECG (without SR files)\n\t"+test_op+". Test Option")
 op = input("Option: ")
-"""
 
+"""
 idPatient = 'Aristoteles'	# Used to debug - commnent the idPatient line above
 op = '2'					# Used to debug - comment the op line above
-
+"""
 
 txt1, txt2, txt3, txt_mid, txtMid2, txtMid3, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, headerTimes = openRawDataFiles(idPatient, op, test_op)
 
@@ -99,29 +99,18 @@ txt_mid.index[len(txt_mid.index)-1]])[3]
 #Para o gráfico dos parâmetros - Fim
 
 
-# Sheet is open
-wb = openpyxl.load_workbook('Patients_DB.xlsx')					#opens the xl file where the patient data is
-sheet = wb['Sheet1']
-#Finds the patient row in the spreadsheet
-for cell in sheet['A']:
-	if(cell.value is not None): #check if that the cell is not empty.
-		if idPatient == cell.value: #Check if the value of the cell contains the idPatient
-			it = format(cell.row)
-
-
-
 #Check if the ECG points were selected
 if op != test_op and MarkPoints:
 	if sheet['U'+it].value is not None and sheet['V'+it].value is not None and sheet['W'+it].value is not None:
 		
-		"""
+		
 		print("\n1. Verify the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
 		print("3. Use the stored values without verifying.")
 		decision = input("Option: ")
-		"""
 		
-		decision = '3'
+		
+		#decision = '3'
 
 		if(decision == '1'):
 			OnsetQRS1 = sheet['U'+it].value/1000
