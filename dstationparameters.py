@@ -25,6 +25,44 @@ test_op = str(config['default']['test_op'])
 onlyNEG = 1  #control - to use only the negative peaks in peak detection
 
 
+def valveTimesRead(headerTimes, sheet, linePatient):
+
+	valveTimes = np.zeros((2,4))
+
+	AVC_sheet = int(sheet['T'+str(linePatient)].value)/1000
+	auxSheet = np.array(['Q','R','S','T'])
+	for it_row in range(2):
+		for it_col in range(4):
+			if it_row == 0 and it_col == 3:
+				valveTimes[it_row][it_col] = headerTimes[0][2]
+			elif it_row == 0:
+				valveTimes[it_row][it_col] = round((int(sheet[auxSheet[it_col]+str(linePatient)].value)/1000)+(headerTimes[0][2]-AVC_sheet),2)
+			else:
+				valveTimes[it_row][it_col] = round((int(sheet[auxSheet[it_col]+str(linePatient)].value)/1000)+(headerTimes[0][2]-AVC_sheet+headerTimes[0][1]),2)
+	
+	return valveTimes
+
+
+
+def phaseSeg(valveTimes, sheet, linePatient):
+
+	phasesTimes = np.zeros(9) #Creates the array to store these values
+
+	phasesTimes[0]=(int(sheet['U'+str(linePatient)].value)/1000)	#EMC1 = Onset QRS 1(ms)/1000
+	phasesTimes[1]=valveTimes[0][1]         						#IVC1 = MVC(ms)/1000 + LM_Time
+	phasesTimes[2]=valveTimes[0][2] 								#EjectionTime1 = AVO(ms)/1000 + LM_Time
+	phasesTimes[3]=valveTimes[0][3]           						#IVR = AVC(ms)/1000 + LM_Time
+	phasesTimes[4]=valveTimes[0][0]             					#E = MVO(ms)/1000 + LM_Time
+	phasesTimes[5]=(int(sheet['V'+str(linePatient)].value)/1000)    #A = Onset P(ms)/1000
+	phasesTimes[6]=(int(sheet['W'+str(linePatient)].value)/1000)    #EMC2 = Onset QRS 2(ms)/1000
+	phasesTimes[7]=valveTimes[1][1]          						#IVC2 = MVC(ms)/1000 + RM_Time
+	phasesTimes[8]=valveTimes[1][2] 								#EjectionTime2 = AVO(ms)/1000 + RM_Time
+	
+
+	return phasesTimes
+
+
+
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
 def GLS_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
