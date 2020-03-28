@@ -102,7 +102,7 @@ def ecgVerification(txt1, LM_Time, ES_Time, RM_Time, END_Time0, OnsetQRS1, Onset
 	plt.show()
 
 # Funcao to plot the Strain and ECG curves to select 3 points of interest on the latter
-def PlotClick(txt1, tcolunas1, LM_Time, ES_Time, RM_Time, END_Time0, op, test_op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt):
+def PlotClick(txt1, tcolunas1, LM_Time, ES_Time, RM_Time, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt):
 	fig = plt.figure(figsize=(12, 8))
 
 	# Subplot 1 (Top Plot - LV Strain)
@@ -167,7 +167,7 @@ def PlotClick(txt1, tcolunas1, LM_Time, ES_Time, RM_Time, END_Time0, op, test_op
 
 
 #Plots the points of interest in the GLS, MD and DI calculation
-def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op, test_op,
+def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op,
 END_Time1, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1,
 IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, txt1_par, txt2_par, txt3_par):
 
@@ -419,7 +419,7 @@ IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalue
 
 
 # Plots the figures containing the results of the operations
-def avgPhaseStrainVarPlot(txt1, txt2, txt3, op, test_op, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, MVOvalues1, MVCvalues1,
+def avgPhaseStrainVarPlot(txt1, txt2, txt3, op, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, MVOvalues1, MVCvalues1,
  					AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
 					EjectionTimevalues2, IVRvalues, Evalues, Avalues):
 

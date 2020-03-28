@@ -150,8 +150,8 @@ def openSheet(sheetName, idPatient):
 	for cell in sheet['A']:
 		if(cell.value is not None): #check if that the cell is not empty.
 			if idPatient == cell.value: #Check if the value of the cell contains the idPatient
-				it = format(cell.row)
+				patientLine = format(cell.row)
 
-	return sheet, it, wb
+	return sheet, patientLine, wb
 
 

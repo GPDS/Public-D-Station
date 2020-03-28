@@ -13,11 +13,20 @@ import string				# Used in the moreInfo function
 
 from auxfcns import *
 
+#Importing configuration
+import configparser
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+# Reading variables from config file
+test_op = str(config['default']['test_op'])
+
+
 onlyNEG = 1  #control - to use only the negative peaks in peak detection
 
 
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
-def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
+def GLS_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
 	
 	#If it's a real patient - add for simulations
@@ -80,7 +89,7 @@ def GLS_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, AVCvalues1, tcolun
 
 
 #Calculates the Mechanical Dispersion (std.deviance from all the peak strain time values in a cycle)
-def MD_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
+def MD_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
 
 	txt1_sliced_onsets = txt1[(txt1.index >= EMCvalues1[0]) & (txt1.index < EMCvalues2[0])] #slices the DF to one that has points from LM to RM time
 	txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[0]) & (txt2.index < EMCvalues2[0])]
@@ -145,7 +154,7 @@ def MD_calc(txt1, txt2, txt3, op, test_op, prmt, EMCvalues1, EMCvalues2, AVCvalu
 
 
 #Calculates the global strain variation in each phase
-def avgPhaseStrainVar(txt1, txt2, txt3, op, test_op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2):
+def avgPhaseStrainVar(txt1, txt2, txt3, op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2):
 
 	#line below: calculates the average longitudinal strain from all the LV segments
 	averageLongStrain =  (pd.concat([txt1.iloc[:,0:-2], txt2.iloc[:,0:-2], txt3.iloc[:,0:-2]], axis=1, sort = False)).mean(axis=1)
