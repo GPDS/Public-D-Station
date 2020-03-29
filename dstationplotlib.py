@@ -68,24 +68,23 @@ def colorPlot(txt,tcolunas):
 
 
 #Plots the ECG curve so the user may see in the red lines the OnsetQRS1, OnsetP and OnsetQRS2 and verify if the values stored in the spreadsheet are correct
-def ecgVerification(txt1, LM_Time, ES_Time, RM_Time, END_Time0, OnsetQRS1, OnsetP, OnsetQRS2):
+def ecgVerification(txt1, headerTimesTxt1, END_Time0, pointsECG):
 
 	ax0 = plt.subplot2grid((12,1),(0,0), rowspan = 12, colspan = 1)
 	plt.xlim(0, END_Time0)
-	ax0.axvline(LM_Time, color='y')
-	ax0.axvline(ES_Time, color='g')
-	ax0.axvline(RM_Time, color='y')
+	ax0.axvline(headerTimesTxt1[0], color='y')
+	ax0.axvline(headerTimesTxt1[2], color='g')
+	ax0.axvline(headerTimesTxt1[1], color='y')
 
-	ax0.axvline(OnsetQRS1,color = 'r')
-	ax0.axvline(OnsetP,color = 'r')
-	ax0.axvline(OnsetQRS2,color = 'r')
-
+	for it in range(3):
+		ax0.axvline(pointsECG[it],color = 'r')
+	
 	tick_locs = np.arange(0.0,END_Time0,0.2)
 	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
 	plt.xticks(tick_locs, tick_lbls)
 	plt.plot(txt1.loc[:,'ECG : '])
 
-	print("\nStored Values:\n\tOnset QRS 1: ", OnsetQRS1*1000,"ms\n\tOnset P: ", OnsetP*1000, "ms\n\tOnset QRS 2: ", OnsetQRS2*1000,"ms")
+	print("\nStored Values:\n\tOnset QRS 1: ", pointsECG[0]*1000,"ms\n\tOnset P: ", pointsECG[1]*1000, "ms\n\tOnset QRS 2: ", pointsECG[2]*1000,"ms")
 
 	"""
 	ymin, ymax = plt.ylim()
@@ -102,58 +101,36 @@ def ecgVerification(txt1, LM_Time, ES_Time, RM_Time, END_Time0, OnsetQRS1, Onset
 	plt.show()
 
 # Funcao to plot the Strain and ECG curves to select 3 points of interest on the latter
-def PlotClick(txt1, tcolunas1, LM_Time, ES_Time, RM_Time, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt):
+def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch):
+	
 	fig = plt.figure(figsize=(12, 8))
+	
+	for it in range(3):
+		ax = plt.subplot2grid((12,1),(it*4,0), rowspan = 4, colspan = 1)
+		plt.xlim(0, END_Time0)
+		ax.axvline(headerTimesTxt1[0], color='y')
+		ax.axvline(headerTimesTxt1[2], color='g')
+		ax.axvline(headerTimesTxt1[1], color='y')
+		tick_locs = np.arange(0.0,END_Time0,0.2)
+		tick_lbls = np.arange(0, int(END_Time0*1000), 200)
+		plt.xticks(tick_locs, tick_lbls)
 
-	# Subplot 1 (Top Plot - LV Strain)
-	ax0 = plt.subplot2grid((12,1),(0,0), rowspan = 4, colspan = 1)
-	plt.xlim(0, END_Time0)
-	ax0.axvline(LM_Time, color='y')
-	ax0.axvline(ES_Time, color='g')
-	ax0.axvline(RM_Time, color='y')
-	tick_locs = np.arange(0.0,END_Time0,0.2)
-	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	colorPlot(txt1,tcolunas1)			# Right now only the 4CH is plotted in this stage
-	#colorPlot(txt2_mod,tcolunas2)		# To plot the others uncomment this and the line below and add the parameters txt2_mod and txt3_mod in PlotClick
-	#colorPlot(txt3_mod,tcolunas3)
-	plt.ylabel('Strain - LV\n(%)', fontsize=SizeFont)
-	plt.grid()
-	plt.setp(ax0.get_xticklabels(), visible=False)		# The time label isn't shown in this subplot
+		if it == 0: # Subplot 1 (Top Plot - LV Strain)
+			colorPlot(txt1,tcolunas1)			# Right now only the 4CH is plotted in this stage
+			plt.ylabel('Strain - LV\n(%)', fontsize=SizeFont)
+			plt.grid()
+			plt.setp(ax.get_xticklabels(), visible=False)		# The time label isn't shown in this subplot
 
-	# Subplot 2 (Mid Plot - LV Strain Rate)
-	ax1 = plt.subplot2grid((12,1),(4,0), rowspan = 4, colspan = 1)
-	plt.xlim(0, END_Time0)
-	ax1.axvline(LM_Time, color='y')			# Plots the LM_Time line from the raw data file
-	ax1.axvline(ES_Time, color='g')			# 		   ES_Time
-	ax1.axvline(RM_Time, color='y')			# 		   RM_Time
-	tick_locs = np.arange(0.0,END_Time0,0.2)
-	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)		# Uses the ticks and ticklabels created above
-	if op != test_op:
-		colorPlot(strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)		#S train Rate 4ch is shown if it is not a simulation
-	else:
-		colorPlot(txt_mid.truediv(txt1.index.to_series().diff(), axis = 0)/100, tcolunas1)
-		# If it is a simulation then the strain rate 4ch is calculated from the simulated strain curves
-		#colorPlot(txt2_mod.diff(),tcolunas2)
-		#colorPlot(txt3_mod.diff(),tcolunas3)
-	plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
-	plt.grid()
-	plt.setp(ax1.get_xticklabels(), visible=False)		# The time label isn't shown in this subplot
-
-	# Subplot 3 (Bottom plot - ECG)
-	ax2 = plt.subplot2grid((12, 1), (8, 0), rowspan = 4, colspan = 1)
-	plt.xlim(0, END_Time0)
-	ax2.axvline(LM_Time, color='y')
-	ax2.axvline(ES_Time, color='g')
-	ax2.axvline(RM_Time, color='y')
-	tick_locs = np.arange(0.0,END_Time0,0.2)
-	tick_lbls = np.arange(0, int(END_Time0*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	plt.plot(txt1.loc[:,'ECG : '])
-	plt.xlabel('Time (ms)', fontsize=SizeFont)
-	plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
-	plt.grid()
+		elif it == 1: # Subplot 2 (Mid Plot - LV Strain Rate)
+			colorPlot(strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)		#S train Rate 4ch is shown if it is not a simulation
+			plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
+			plt.grid()
+			plt.setp(ax.get_xticklabels(), visible=False)
+		else: # Subplot 3 (Bottom plot - ECG)
+			plt.plot(txt1.loc[:,'ECG : '])
+			plt.xlabel('Time (ms)', fontsize=SizeFont)
+			plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
+			plt.grid()
 
 	cid = fig.canvas.mpl_connect('button_press_event', onclick) # Allowing to store the time values of the clicked points
 
@@ -162,8 +139,10 @@ def PlotClick(txt1, tcolunas1, LM_Time, ES_Time, RM_Time, END_Time0, op, strain_
 	plt.show()
 
 	fig.canvas.mpl_disconnect(cid)	# After the points selection the function to store them will finish
-
-	return xcoord
+	pointsECG = np.asarray(xcoord)
+	
+	return pointsECG
+#
 
 
 #Plots the points of interest in the GLS, MD and DI calculation

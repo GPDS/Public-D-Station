@@ -3,8 +3,6 @@
 # A package created for the D-Station (https://gpdsifpb.github.io/D-Station/)
 # containing the functions used to calculate its parameters
 
-"""Put these outputs in a bullseye
-	Colocar nomes significativos"""
 
 import pandas as pd			# Package used to work with the raw data files (Used in GLS_calc, MD_calc, IVA_calc)
 import numpy as np			# Used in the mean and standard deviance calculation (GLS_calc and MD_calc)
@@ -47,6 +45,8 @@ def valveTimesRead(headerTimes, sheet, linePatient):
 def phaseSeg(valveTimes, sheet, linePatient):
 
 	phasesTimes = np.zeros(9) #Creates the array to store these values
+	LAPhasesTimes = np.zeros(3)
+
 
 	phasesTimes[0]=(int(sheet['U'+str(linePatient)].value)/1000)	#EMC1 = Onset QRS 1(ms)/1000
 	phasesTimes[1]=valveTimes[0][1]         						#IVC1 = MVC(ms)/1000 + LM_Time
@@ -58,8 +58,12 @@ def phaseSeg(valveTimes, sheet, linePatient):
 	phasesTimes[7]=valveTimes[1][1]          						#IVC2 = MVC(ms)/1000 + RM_Time
 	phasesTimes[8]=valveTimes[1][2] 								#EjectionTime2 = AVO(ms)/1000 + RM_Time
 	
+	LAPhasesTimes[0]=phasesTimes[1] 
+	LAPhasesTimes[1]=phasesTimes[4]
+	LAPhasesTimes[2]=phasesTimes[5]
+	
 
-	return phasesTimes
+	return phasesTimes, LAPhasesTimes
 
 
 
@@ -255,6 +259,9 @@ def moreInfo(it):
 		if(sheet[colIt+str(it)].value != None):		#Tests whether there is a value in that cell
 			print("\t",sheet[colIt+"2"].value, ": ", sheet[colIt+str(it)].value)
 		num_it = num_it + 1
+
+
+
 #=====================================================
 #Below here: to be implemented
 

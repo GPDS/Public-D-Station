@@ -8,15 +8,28 @@ import re
 import numpy as np
 import openpyxl                  # Package to work with .xlsx - See documentation when working with a big amount of data
 
+#Package that i (rafaelds9) created
+from dstationplotlib import *
+
+
+#Importing configuration
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')	
+# Reading variables from config file
+test_op = str(config['default']['test_op'])
+#
+
 
 #Function to read only the first N columns of a dataframe
 def front(self, n):
 	return self.iloc[:, :n]
 
 pd.DataFrame.front = front
-
-
 #
+
+
 def segmentName(segmentColor, chamber):
 
 	if chamber == '2CH':
@@ -155,3 +168,58 @@ def openSheet(sheetName, idPatient):
 	return sheet, patientLine, wb
 
 
+def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op):
+	#Checks if the ECG points were selected
+
+
+	MarkPoints = 1 # For future use
+	auxSheetColumns = ['U', 'V', 'W']
+	pointsECG = np.zeros(3) #OnsetQRS1, OnsetP, OnsetQRS2
+
+	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+	tcolunas_strain_rate_lv4ch = int(((strain_rate_lv4ch.size/len(strain_rate_lv4ch.index))))
+
+	#Sort para detectar o menor index dentre os arquivospara que um gráfico não fique sobrando
+	END_Time0 = sorted([txt1.index[len(txt1.index)-1], strain_rate_lv4ch.index[len(strain_rate_lv4ch.index)-1]])[1]
+
+
+	if op != test_op and MarkPoints:
+		if sheet['U'+linePatient].value is not None and sheet['V'+linePatient].value is not None and sheet['W'+linePatient].value is not None:
+			
+			"""
+			print("\n1. Verify the stored Onset QRS1, P Onset and Onset QRS 2 values.")
+			print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
+			print("3. Use the stored values without verifying.")
+			decision = input("Option: ")
+			"""
+			#Colocar um 0 na função pra passar um caso default
+
+			decision = '3'
+
+			if(decision == '1'):
+				for it in range(3):
+					pointsECG[it] = sheet[auxSheetColumns[it]+linePatient].value/1000
+
+				print("\nAre the presented timepoints (in red) correct? Close the figure and answer: ")
+				ecgVerification(txt1, headerTimesTxt1, END_Time0, pointsECG)
+				decision = input("Are they correct? [Y]es or [N]o? ")
+
+				if(decision == 'n' or decision == 'N'):
+					EcgOk = 0
+				else:
+					EcgOk = 1
+
+			if(decision == '2'):
+					print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
+					pointsECG = PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)
+					for it in range(3):
+						sheet[auxSheetColumns[it]+str(linePatient)] = round(pointsECG[it],0) # Writes the ECG points on the sheet
+					EcgOk = 1
+			else:
+				EcgOk = 1
+
+		if not(sheet['U'+linePatient].value is not None and sheet['V'+linePatient].value is not None and sheet['W'+linePatient].value is not None) or not(EcgOk):
+			print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
+			pointsECG = PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)
+			for it in range(3):
+				sheet[auxSheetColumns[it]+str(linePatient)] = round(pointsECG[it],0) # Writes the ECG points on the sheet

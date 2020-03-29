@@ -11,6 +11,7 @@ from auxfcns import *
 from dstationplotlib import *
 from dstationparameters import *
 from rawdatafiles import *
+from printFcns import *
 #
 
 #Importing configuration
@@ -49,6 +50,7 @@ op = '1'					# Used to debug - comment the op line above
 
 txt1, txt2, txt3, txtMid, txtMid2, txtMid3, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, headerTimes = openRawDataFiles(idPatient, op)
 
+
 # =====================================================
 #Posso colocar as linhas abaixo dentro das funções
 #
@@ -56,12 +58,7 @@ tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in
 tcolunas2=int(((txt2.size/len(txt2.index))))
 tcolunas3=int(((txt3.size/len(txt3.index))))
 tcolunasMid=int(((txtMid.size/len(txtMid.index))))
-tcolunas_strain_rate_lv4ch = int(((strain_rate_lv4ch.size/len(strain_rate_lv4ch.index))))
 
-
-#Sort para detectar o menor index dentre os arquivospara que um gráfico não fique sobrando
-END_Time0 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],
-strain_rate_lv4ch.index[len(strain_rate_lv4ch.index)-1]])[3]
 
 #Para o gráfico dos parâmetros - Início
 #achar o menor entre os strains e comparar com o do meio
@@ -69,58 +66,10 @@ END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1]
 txtMid.index[len(txtMid.index)-1]])[3]
 #Para o gráfico dos parâmetros - Fim
 
-# =====================================================
-
-
 # Sheet is open
 sheet, linePatient, wb = openSheet('Patients_DB.xlsx', idPatient)
 
-
-#Check if the ECG points were selected
-if op != test_op and MarkPoints:
-	if sheet['U'+linePatient].value is not None and sheet['V'+linePatient].value is not None and sheet['W'+linePatient].value is not None:
-		
-		"""
-		print("\n1. Verify the stored Onset QRS1, P Onset and Onset QRS 2 values.")
-		print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
-		print("3. Use the stored values without verifying.")
-		decision = input("Option: ")
-		"""
-		
-		decision = '3'
-
-		if(decision == '1'):
-			OnsetQRS1 = sheet['U'+linePatient].value/1000
-			OnsetP = sheet['V'+linePatient].value/1000
-			OnsetQRS2 = sheet['W'+linePatient].value/1000
-
-			print("\nAre the presented timepoints (in red) correct? Close the figure and answer: ")
-			ecgVerification(txt1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, OnsetQRS1, OnsetP, OnsetQRS2)
-			decision = input("Are they correct? [Y]es or [N]o? ")
-
-			if(decision == 'n' or decision == 'N'):
-				EcgOk = 0
-			else:
-				EcgOk = 1
-		if(decision == '2'):
-				print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
-				xcoord = PlotClick(txt1, tcolunas1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, op,
-				strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
-				sheet['U'+str(linePatient)] = round(xcoord[0],0) # ONSET QRS 1
-				sheet['V'+str(linePatient)] = round(xcoord[1],0) # ONSET P
-				sheet['W'+str(linePatient)] = round(xcoord[2],0) # ONSET QRS 2
-				EcgOk = 1
-		else:
-			EcgOk = 1
-
-	if not(sheet['U'+linePatient].value is not None and sheet['V'+linePatient].value is not None and sheet['W'+linePatient].value is not None) or not(EcgOk):
-		print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
-		xcoord = PlotClick(txt1, tcolunas1, headerTimes[0][0], headerTimes[0][2], headerTimes[0][1], END_Time0, op,
-		strain_rate_lv4ch,tcolunas_strain_rate_lv4ch, prmt)
-		sheet['U'+str(linePatient)] = round(xcoord[0],0) # ONSET QRS 1
-		sheet['V'+str(linePatient)] = round(xcoord[1],0) # ONSET P
-		sheet['W'+str(linePatient)] = round(xcoord[2],0) # ONSET QRS 2
-
+verifyECG(txt1, strain_rate_lv4ch, headerTimes[0], sheet, linePatient, op)
 
 """The times used are the synced with the times of txt one, meaning: The ES_Time of the txt1 = AVC and
 the (ES_Time(of txt1)-AVC) is the difference between the events of the txt1 and the events in the spreadsheet
@@ -133,49 +82,34 @@ valveTimes = valveTimesRead(headerTimes,sheet,linePatient)
 #
 
 if op != test_op: #Cálculo do tempo das fases do LV
-	phasesTimes = phaseSeg(valveTimes, sheet, linePatient)
+	phasesTimes, LAphasesTimes = phaseSeg(valveTimes, sheet, linePatient)
+
 
 #Now everything is printed
-#os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
+os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
 print("Patient: ",idPatient )
 print("\nLM_Time: ",headerTimes[0][0]*1000, "ms")
 print("RM_Time: ",headerTimes[0][1]*1000, "ms")
 
 
-auxPrintValves = np.array(['MVO', 'MVC', 'AVO', 'AVC'])
-print("\n")
-for it1 in range(2):
-	for it2 in range(4):
-		print(auxPrintValves[it2]+str(it1+1),": ", valveTimes[it1][it2]*1000, " ms", sep='')
-
+printValveTimes(valveTimes)
 
 if op != test_op:
-	print("\n")
-	auxPrintPhases = np.array(['EMC', 'IVC', 'Ejection Time', 'IVR', 'E', 'A'])
-	for it in range(9):
-		if it < 6:
-			print(auxPrintPhases[it],": ", phasesTimes[it]*1000, " ms", sep='')
-		else:
-			print(auxPrintPhases[it-6]+'2',": ", phasesTimes[it]*1000, " ms", sep='')
+	printPhaseTimes(phasesTimes)
 
+	if op == "2":
+		printLAPhaseTimes(LAphasesTimes)
 
 
 input('')
-#Fazer independente das fases do LV - vai virar função
-#LA Phases
-if op == "2":
-	auxPrintLAPhases = np.array(['Reservoir', 'Conduit', 'Atrial Contraction'])
 
-	print("\nLeft Atrium Phases:")
-	print("\tReservoir Phase: ", IVCvalues1[0]*1000, "ms")
-	print("\tConduit Phase: ", MVOvalues1[0]*1000, "ms")
-	print("\tAtrial Contraction: ", Avalues[0]*1000, "ms")
-
+#I'll fix this later
+"""
 systolic_time = (AVCvalues1[0]-MVCvalues1[0])
 print("\nSystolic Time: ", systolic_time*1000)
 print("Diastolic Time: ", (headerTimes[0][1] - systolic_time)*1000)
 print("Systolic Time/Diastolic Time ratio: ",round((systolic_time/(headerTimes[0][1] - systolic_time)),4))
-
+"""
 
 outGLS = GLS_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 outMD = MD_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
