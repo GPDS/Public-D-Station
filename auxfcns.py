@@ -168,11 +168,12 @@ def openSheet(sheetName, idPatient):
 	return sheet, patientLine, wb
 
 
-def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op):
+def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op, decision):
 	#Checks if the ECG points were selected
 
-
+	EcgOk = 0	#Defines if the ECG has its points correctly or should be marked/rechecked
 	MarkPoints = 1 # For future use
+
 	auxSheetColumns = ['U', 'V', 'W']
 	pointsECG = np.zeros(3) #OnsetQRS1, OnsetP, OnsetQRS2
 
@@ -186,40 +187,44 @@ def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op)
 	if op != test_op and MarkPoints:
 		if sheet['U'+linePatient].value is not None and sheet['V'+linePatient].value is not None and sheet['W'+linePatient].value is not None:
 			
-			"""
-			print("\n1. Verify the stored Onset QRS1, P Onset and Onset QRS 2 values.")
-			print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
-			print("3. Use the stored values without verifying.")
-			decision = input("Option: ")
-			"""
-			#Colocar um 0 na função pra passar um caso default
+			while EcgOk == 0:
 
-			decision = '3'
+				if decision != None:
+					print("\n1. Verify the stored Onset QRS1, P Onset and Onset QRS 2 values.")
+					print("2. Change the stored Onset QRS1, P Onset and Onset QRS 2 values.")
+					print("3. Use the stored values without verifying.")
+					decision = input("Option: ")
+			
 
-			if(decision == '1'):
-				for it in range(3):
-					pointsECG[it] = sheet[auxSheetColumns[it]+linePatient].value/1000
+				if(decision == '1'):
+					for it in range(3):
+						pointsECG[it] = sheet[auxSheetColumns[it]+linePatient].value/1000
 
-				print("\nAre the presented timepoints (in red) correct? Close the figure and answer: ")
-				ecgVerification(txt1, headerTimesTxt1, END_Time0, pointsECG)
-				decision = input("Are they correct? [Y]es or [N]o? ")
+					print("\nAre the presented timepoints (in red) correct? Close the figure and answer: ")
+					ecgVerification(txt1, headerTimesTxt1, END_Time0, pointsECG)
+					decision = input("Are they correct? [Y]es or [N]o? ")
 
-				if(decision == 'n' or decision == 'N'):
-					EcgOk = 0
+					if(decision == 'n' or decision == 'N'):
+						EcgOk = 0
+						decision = 0
+
+					else:
+						EcgOk = 1
+
+				elif(decision == '2'):
+						print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
+						pointsECG = PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)
+						for it in range(3):
+							sheet[auxSheetColumns[it]+str(linePatient)] = round(pointsECG[it],0) # Writes the ECG points on the sheet
+						EcgOk = 1
+
 				else:
 					EcgOk = 1
+				
 
-			if(decision == '2'):
-					print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
-					pointsECG = PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)
-					for it in range(3):
-						sheet[auxSheetColumns[it]+str(linePatient)] = round(pointsECG[it],0) # Writes the ECG points on the sheet
-					EcgOk = 1
-			else:
-				EcgOk = 1
-
-		if not(sheet['U'+linePatient].value is not None and sheet['V'+linePatient].value is not None and sheet['W'+linePatient].value is not None) or not(EcgOk):
+		else:
 			print("\n\nSelect Onset QRS 1, onset P, onset QRS 2 (in this order)")
 			pointsECG = PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)
 			for it in range(3):
 				sheet[auxSheetColumns[it]+str(linePatient)] = round(pointsECG[it],0) # Writes the ECG points on the sheet
+

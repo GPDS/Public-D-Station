@@ -25,11 +25,9 @@ test_op = str(config['default']['test_op'])
 
 
 
-#Initializing variables
+#Initializing variables (default values)
 linePatient = 3   #Defines the first row in the xl file that has values
 prmt = '0' #Defines the prmt value in the first run to 0 - Change with caution
-EcgOk = 0	#Defines if the ECG has its points correctly or should be marked/rechecked
-MarkPoints = 1	#Currently 1 - to future use
 #
 
 
@@ -69,9 +67,9 @@ txtMid.index[len(txtMid.index)-1]])[3]
 # Sheet is open
 sheet, linePatient, wb = openSheet('Patients_DB.xlsx', idPatient)
 
-verifyECG(txt1, strain_rate_lv4ch, headerTimes[0], sheet, linePatient, op)
+verifyECG(txt1, strain_rate_lv4ch, headerTimes[0], sheet, linePatient, op, None)
 
-"""The times used are the synced with the times of txt one, meaning: The ES_Time of the txt1 = AVC and
+"""The times used are synced with the times of txt1, meaning: The ES_Time of the txt1 = AVC and
 the (ES_Time(of txt1)-AVC) is the difference between the events of the txt1 and the events in the spreadsheet
 We did this because we had different ES_Times in the 3 txt files, so we synced them
 """
@@ -110,6 +108,7 @@ print("\nSystolic Time: ", systolic_time*1000)
 print("Diastolic Time: ", (headerTimes[0][1] - systolic_time)*1000)
 print("Systolic Time/Diastolic Time ratio: ",round((systolic_time/(headerTimes[0][1] - systolic_time)),4))
 """
+
 
 outGLS = GLS_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
 outMD = MD_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
