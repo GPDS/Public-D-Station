@@ -49,19 +49,11 @@ op = '1'					# Used to debug - comment the op line above
 txt1, txt2, txt3, txtMid, txtMid2, txtMid3, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, headerTimes = openRawDataFiles(idPatient, op)
 
 
-# =====================================================
-#Posso colocar as linhas abaixo dentro das funções
-#
-tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
-tcolunas2=int(((txt2.size/len(txt2.index))))
-tcolunas3=int(((txt3.size/len(txt3.index))))
-tcolunasMid=int(((txtMid.size/len(txtMid.index))))
 
 
 #Para o gráfico dos parâmetros - Início
 #achar o menor entre os strains e comparar com o do meio
-END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],
-txtMid.index[len(txtMid.index)-1]])[3]
+
 #Para o gráfico dos parâmetros - Fim
 
 # Sheet is open
@@ -85,9 +77,9 @@ if op != test_op: #Cálculo do tempo das fases do LV
 
 #Now everything is printed
 os.system('cls' if os.name == 'nt' else 'clear') # Clears the terminal
-print("Patient: ",idPatient )
-print("\nLM_Time: ",headerTimes[0][0]*1000, "ms")
-print("RM_Time: ",headerTimes[0][1]*1000, "ms")
+print("Patient: ", idPatient )
+print("\nLM_Time: ", headerTimes[0][0]*1000, "ms")
+print("RM_Time: ", headerTimes[0][1]*1000, "ms")
 
 
 printValveTimes(valveTimes)
@@ -99,28 +91,22 @@ if op != test_op:
 		printLAPhaseTimes(LAphasesTimes)
 
 
-input('')
-
-#I'll fix this later
-"""
-systolic_time = (AVCvalues1[0]-MVCvalues1[0])
+systolic_time = (valveTimes[0][3]-valveTimes[0][1])
 print("\nSystolic Time: ", systolic_time*1000)
 print("Diastolic Time: ", (headerTimes[0][1] - systolic_time)*1000)
 print("Systolic Time/Diastolic Time ratio: ",round((systolic_time/(headerTimes[0][1] - systolic_time)),4))
-"""
 
 
-outGLS = GLS_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-outMD = MD_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
+outGLS = GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes)
+outMD = MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes)
 
 
 if(op != test_op):
-	averageLongStrain = avgPhaseStrainVar(txt1, txt2, txt3, op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues,
-	Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2)
+	averageLongStrain = avgPhaseStrainVar(txt1, txt2, txt3, op, phasesTimes)
 else:
 	print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation")
 
-
+input('Fim')
 
 #DI_calc()
 #print("\n\n")
@@ -132,26 +118,12 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
 	print("\t3. Average Strain variation during each phase")
 	print("\t4. Show plot w/o any parameters\n\t5. Show additional parameters values\n\t0. Terminate program")
-	prmt = input("Parameter: ")
-	
-	#prmt = '0' #Comment the line above and uncomment this to test
-
-	if prmt == "1":               #Calculates the GLS
-		_,_,_,_,gls_values = GLS_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunasMid, prmt,
-		 				op, END_Time1, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
-						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, outGLS[1],
-						outGLS[2], outGLS[3])
-		#print(gls_values) #Comment this line after debug			
-		DR_bullseye(gls_values, prmt)
+	prmt = input("PVamos pensar um pouco: um cidadão vai pra uma manifestação, se infecta e porventura acaba na UTI? Será que esse leito não poderia ser ocupado por uma pessoa que se previniu? (gls_values, prmt)
 		#break #Comment this line after debug
 
 	elif prmt == "2":			  #Calculates the MD
-		_,_,_,_,md_values = MD_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3)
-		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunasMid, prmt,
-						op, END_Time1, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2,
-						EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, outMD[1],
-						outMD[2],outMD[3])
+		_,_,_,_,md_values = MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes)
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, outMD[1], outMD[2],outMD[3])
 		#print(md_values) #Comment this line after debug
 		DR_bullseye(md_values, prmt)
 		# break #Comment this line after debug
@@ -159,9 +131,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 
 	elif prmt == "3":
 		if(op != test_op):
-			avgPhaseStrainVarPlot(txt1, txt2, txt3, op, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, MVOvalues1,
-			MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2,
-			EjectionTimevalues1,EjectionTimevalues2, IVRvalues, Evalues, Avalues)
+			avgPhaseStrainVarPlot(txt1, txt2, txt3, op, averageLongStrain, valveTimes, phasesTimes)
 		else:
 			print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation and also not plot linePatient")
 
@@ -172,10 +142,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 
 	elif prmt == "4":
 		print("\nPlot w/o any parameters")
-		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunasMid, prmt, op,
-		END_Time1, MVOvalues1, MVCvalues1,
-		AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
-		EjectionTimevalues2, IVRvalues, Evalues, Avalues, None, None, None)
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, None, None, None)
 		#break # for debugging purposes, comment later
 
 	elif prmt == "5":
@@ -193,7 +160,7 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 		continue
 	print("\n")
 
-
+#Colocar aqui uma função para escrever e salvar todos os valores
 """
 sheet['X'+str(linePatient)] = round(EMCvalues1[0]*1000)
 sheet['Y'+str(linePatient)] = round(IVCvalues1[0]*1000)

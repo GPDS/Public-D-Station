@@ -146,9 +146,14 @@ def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch
 
 
 #Plots the points of interest in the GLS, MD and DI calculation
-def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, tcolunas1, tcolunas2, tcolunas3, tcolunas_mid, prmt, op,
-END_Time1, MVOvalues1, MVCvalues1, AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1,
-IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalues, txt1_par, txt2_par, txt3_par):
+def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, txt1_par, txt2_par, txt3_par):
+
+	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+	tcolunas2=int(((txt2.size/len(txt2.index))))
+	tcolunas3=int(((txt3.size/len(txt3.index))))
+	tcolunasMid=int(((txtMid.size/len(txtMid.index))))
+
+	END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]
 
 	fig = plt.figure(figsize=(16, 8))
 
@@ -398,9 +403,15 @@ IVCvalues2, EjectionTimevalues1, EjectionTimevalues2, IVRvalues, Evalues, Avalue
 
 
 # Plots the figures containing the results of the operations
-def avgPhaseStrainVarPlot(txt1, txt2, txt3, op, averageLongStrain, tcolunas1, tcolunas2, tcolunas3, END_Time1, MVOvalues1, MVCvalues1,
- 					AVOvalues1, AVCvalues1, MVOvalues2, MVCvalues2, AVOvalues2, AVCvalues2, EMCvalues1, EMCvalues2, IVCvalues1, IVCvalues2, EjectionTimevalues1,
-					EjectionTimevalues2, IVRvalues, Evalues, Avalues):
+def avgPhaseStrainVarPlot(txt1, txt2, txt3, op, averageLongStrain, valveTimes, phasesTimes):
+
+	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+	tcolunas2=int(((txt2.size/len(txt2.index))))
+	tcolunas3=int(((txt3.size/len(txt3.index))))
+	tcolunasMid=int(((txtMid.size/len(txtMid.index))))
+
+	END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],
+txtMid.index[len(txtMid.index)-1]])[3]
 
 	fig = plt.figure(figsize=(16, 8))
 	ax0 = plt.subplot2grid((16,1),(0,0), rowspan = 8, colspan = 1)

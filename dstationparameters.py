@@ -68,13 +68,16 @@ def phaseSeg(valveTimes, sheet, linePatient):
 
 
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
-def GLS_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
+def GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 
+	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+	tcolunas2=int(((txt2.size/len(txt2.index))))
+	tcolunas3=int(((txt3.size/len(txt3.index))))
 	
 	#If it's a real patient - add for simulations
-	txt1_s = txt1[(txt1.index >= EMCvalues1[0]) & (txt1.index <= AVCvalues1[0])]		#From the LM_Time until the AVC from the raw data files
-	txt2_s = txt2[(txt2.index >= EMCvalues1[0]) & (txt2.index <= AVCvalues1[0])]
-	txt3_s = txt3[(txt3.index >= EMCvalues1[0]) & (txt3.index <= AVCvalues1[0])]
+	txt1_s = txt1[(txt1.index >= phasesTimes[0]) & (txt1.index <= valveTimes[0][3])]		#From the LM_Time until the AVC from the raw data files
+	txt2_s = txt2[(txt2.index >= phasesTimes[0]) & (txt2.index <= valveTimes[0][3])]
+	txt3_s = txt3[(txt3.index >= phasesTimes[0]) & (txt3.index <= valveTimes[0][3])]
 
 	if prmt == '1':																	#Shows detailed info about the GLS
 		print("\n\nPeak systolic strain:\n")
@@ -127,15 +130,19 @@ def GLS_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, AVCvalues1, tcolunas1, tcol
 	print("\nGlobal Longitudinal Strain: ", gls,"%")
 
 	#Returns the GLS value and the peak systolic points (txt1_s - 4CH, txt2_s - 2CH and txt3_s - APLAX) to be plotted later
-	return gls, txt1_s, txt2_s, txt3_s,gls_values
+	return gls, txt1_s, txt2_s, txt3_s, gls_values
 
 
 #Calculates the Mechanical Dispersion (std.deviance from all the peak strain time values in a cycle)
-def MD_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcolunas1, tcolunas2, tcolunas3):
+def MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 
-	txt1_sliced_onsets = txt1[(txt1.index >= EMCvalues1[0]) & (txt1.index < EMCvalues2[0])] #slices the DF to one that has points from LM to RM time
-	txt2_sliced_onsets = txt2[(txt2.index >= EMCvalues1[0]) & (txt2.index < EMCvalues2[0])]
-	txt3_sliced_onsets = txt3[(txt3.index >= EMCvalues1[0]) & (txt3.index < EMCvalues2[0])]
+	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+	tcolunas2=int(((txt2.size/len(txt2.index))))
+	tcolunas3=int(((txt3.size/len(txt3.index))))
+
+	txt1_sliced_onsets = txt1[(txt1.index >= phasesTimes[0]) & (txt1.index < phasesTimes[6])] #slices the DF to one that has points from LM to RM time
+	txt2_sliced_onsets = txt2[(txt2.index >= phasesTimes[0]) & (txt2.index < phasesTimes[6])]
+	txt3_sliced_onsets = txt3[(txt3.index >= phasesTimes[0]) & (txt3.index < phasesTimes[6])]
 
 	global_minima_times = [] #List that will store the peak strain points
 
@@ -187,7 +194,6 @@ def MD_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcol
 	if prmt == '2':
 		print("\n")
 
-	md_values = global_minima_times
 	md = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 1)	#MD is calculated as the std.dev from the sample(ddof=1) of all the peak strain times
 	print("Mechanical Dispersion: ", md, "ms")
 
@@ -196,7 +202,7 @@ def MD_calc(txt1, txt2, txt3, op, prmt, EMCvalues1, EMCvalues2, AVCvalues1, tcol
 
 
 #Calculates the global strain variation in each phase
-def avgPhaseStrainVar(txt1, txt2, txt3, op, EMCvalues1, IVCvalues1, EjectionTimevalues1, IVRvalues, Evalues, Avalues, EMCvalues2, IVCvalues2, EjectionTimevalues2):
+def avgPhaseStrainVar(txt1, txt2, txt3, op, phasesTimes):
 
 	#line below: calculates the average longitudinal strain from all the LV segments
 	averageLongStrain =  (pd.concat([txt1.iloc[:,0:-2], txt2.iloc[:,0:-2], txt3.iloc[:,0:-2]], axis=1, sort = False)).mean(axis=1)
@@ -206,28 +212,23 @@ def avgPhaseStrainVar(txt1, txt2, txt3, op, EMCvalues1, IVCvalues1, EjectionTime
 
 	#Adds the time points where the phase changes and interpolates in case they don't exist in the DF
 	a = float('NaN')
-	averageLongStrain.loc[EMCvalues1[0]] = a
-	averageLongStrain.loc[IVCvalues1[0]] = a
-	averageLongStrain.loc[EjectionTimevalues1[0]] = a
-	averageLongStrain.loc[IVRvalues[0]] = a
-	averageLongStrain.loc[Evalues[0]] = a
-	averageLongStrain.loc[Avalues[0]] = a
-	averageLongStrain.loc[EMCvalues2[0]] = a
-	averageLongStrain.loc[IVCvalues2[0]] = a
-	averageLongStrain.loc[EjectionTimevalues2[0]] = a
+	for it in phasesTimes:
+		averageLongStrain.loc[it] = a	
+
 	averageLongStrain = averageLongStrain.sort_index()
 	averageLongStrain = averageLongStrain.interpolate(method = 'linear') #Was using quadratic but it stopped working
 	#
 
 	#Prints the average strain values
 	print("\nAverage longitudinal strain variation between:")
-	print("\tElectrical Mechanical Coupling (EMC) 2 and Isovolumic Contraction (IVC) Phase 1: ", round(averageLongStrain.loc[IVCvalues1[0]]-averageLongStrain.loc[EMCvalues1[0]],2), "%")
-	print("\tIsovolumic contraction (IVC) Phase 1 and Ejection Phase (Ejec) 1: ", round(averageLongStrain.loc[EjectionTimevalues1[0]]-averageLongStrain.loc[IVCvalues1[0]],2), "%")
-	print("\tEjection (Ejec) Phase 1 and Isovolumic Relaxation (IVR) Phase: ", round(averageLongStrain.loc[IVRvalues[0]]-averageLongStrain.loc[EjectionTimevalues1[0]],2), "%")
-	print("\tIsovolumic Relaxation (IVR) Phase and Rapid Inflow (E) Phase: ", round(averageLongStrain.loc[Evalues[0]]-averageLongStrain.loc[IVRvalues[0]],2), "%")
-	print("\tRapid Inflow (E) Phase and Atrial (A) Contraction Phase: ", round(averageLongStrain.loc[Avalues[0]]-averageLongStrain.loc[Evalues[0]],2), "%")
-	print("\tAtrial Contraction (A) Phase and Electrical Mechanical (EMC) Coupling 2: ", round(averageLongStrain.loc[EMCvalues2[0]]-averageLongStrain.loc[Avalues[0]],2), "%")
+	auxPrintPhases = np.array(['EMC', 'IVC', 'Ejection Time', 'IVR', 'E', 'A'])
 
+	for it in range(6):
+		if it < 5:
+			print("\t",auxPrintPhases[it], "and ", auxPrintPhases[it+1],": ",round(averageLongStrain.loc[phasesTimes[it+1]]-averageLongStrain.loc[phasesTimes[it]],2), "%")
+		else:
+			print("\t",auxPrintPhases[it-5], "and ", auxPrintPhases[it-5+1],": ",round(averageLongStrain.loc[phasesTimes[it+1]]-averageLongStrain.loc[phasesTimes[it]],2), "%")
+		
 	#maybe i should return them in an array to later save in the spreadsheet
 	return averageLongStrain
 
