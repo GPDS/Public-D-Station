@@ -87,14 +87,14 @@ printValveTimes(valveTimes)
 if op != test_op:
 	printPhaseTimes(phasesTimes)
 
-	if op == "2":
+	if op == "2" or op == "3":
 		printLAPhaseTimes(LAphasesTimes)
 
 
-systolic_time = (valveTimes[0][3]-valveTimes[0][1])
-print("\nSystolic Time: ", systolic_time*1000)
-print("Diastolic Time: ", (headerTimes[0][1] - systolic_time)*1000)
-print("Systolic Time/Diastolic Time ratio: ",round((systolic_time/(headerTimes[0][1] - systolic_time)),4))
+systolicTime = (valveTimes[0][3]-valveTimes[0][1])
+print("\nSystolic Time: ", systolicTime*1000)
+print("Diastolic Time: ", (headerTimes[0][1] - systolicTime)*1000)
+print("Systolic Time/Diastolic Time ratio: ",round((systolicTime/(headerTimes[0][1] - systolicTime)),4))
 
 
 outGLS = GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes)
@@ -106,7 +106,6 @@ if(op != test_op):
 else:
 	print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation")
 
-input('Fim')
 
 #DI_calc()
 #print("\n\n")
@@ -114,11 +113,19 @@ input('Fim')
 calculated_IVA = 0	#Currently not used
 
 while True: 		#Loop where the user can select the parmeters and plots he wishes to see
-	
+	"""
 	print("\n\nParameters:\n\t1. Global Longitudinal Strain\n\t2. Mechanical Dispersion")
 	print("\t3. Average Strain variation during each phase")
 	print("\t4. Show plot w/o any parameters\n\t5. Show additional parameters values\n\t0. Terminate program")
-	prmt = input("PVamos pensar um pouco: um cidadão vai pra uma manifestação, se infecta e porventura acaba na UTI? Será que esse leito não poderia ser ocupado por uma pessoa que se previniu? (gls_values, prmt)
+	prmt = input("Parameter: ")
+	"""
+	prmt = '0' #Comment the line above and uncomment this to test
+
+	if prmt == "1":               #Calculates the GLS
+		_,_,_,_,gls_values = GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes)
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, outGLS[1],outGLS[2], outGLS[3])
+		#print(gls_values) #Comment this line after debug			
+		DR_bullseye(gls_values, prmt)
 		#break #Comment this line after debug
 
 	elif prmt == "2":			  #Calculates the MD
@@ -160,21 +167,6 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 		continue
 	print("\n")
 
-#Colocar aqui uma função para escrever e salvar todos os valores
-"""
-sheet['X'+str(linePatient)] = round(EMCvalues1[0]*1000)
-sheet['Y'+str(linePatient)] = round(IVCvalues1[0]*1000)
-sheet['Z'+str(linePatient)] = round(EjectionTimevalues1[0]*1000)
-sheet['AA'+str(linePatient)] = round(IVRvalues[0]*1000)
-sheet['AB'+str(linePatient)] = round(Evalues[0]*1000)
-sheet['AC'+str(linePatient)] = round(Avalues[0]*1000)
-sheet['AD'+str(linePatient)] = round(EMCvalues2[0]*1000)
-sheet['AE'+str(linePatient)] = round(IVCvalues2[0]*1000)
-sheet['AF'+str(linePatient)] = round(EjectionTimevalues2[0]*1000)
-sheet['AG'+str(linePatient)] = (systolic_time*1000)
-sheet['AH'+str(linePatient)] = ((headerTimes[0][1] - systolic_time)*1000)
-sheet['AI'+str(linePatient)] = (systolic_time/(headerTimes[0][1] - systolic_time))
-sheet['AJ'+str(linePatient)] = outGLS[0] #Saves the caculated GLS in the sheet
-sheet['AK'+str(linePatient)] = outMD[0]	#Saves the caculated MD in the sheet
-"""
-wb.save("Patients_DB.xlsx")		#Parameters are saved in the xl file
+
+saveAndCloseSheet(linePatient, sheet, wb, systolicTime, headerTimes, phasesTimes, outGLS, outMD)
+print("\n\nRodou\n")

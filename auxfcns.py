@@ -168,6 +168,7 @@ def openSheet(sheetName, idPatient):
 	return sheet, patientLine, wb
 
 
+
 def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op, decision):
 	#Checks if the ECG points were selected
 
@@ -227,4 +228,27 @@ def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op,
 			pointsECG = PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)
 			for it in range(3):
 				sheet[auxSheetColumns[it]+str(linePatient)] = round(pointsECG[it],0) # Writes the ECG points on the sheet
+
+
+
+def saveAndCloseSheet(linePatient, sheet, wb, systolicTime, headerTimes, phasesTimes, outGLS, outMD):
+	
+	auxSheetCols = np.array(['X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK'])
+	for it in range(auxSheetCols.size):
+		if it < 9:
+			sheet[auxSheetCols[it] + str(linePatient)] = round(phasesTimes[it]*1000)
+		elif it == 9:
+			sheet[auxSheetCols[it] + str(linePatient)] = (systolicTime*1000)
+		elif it == 10:
+			sheet[auxSheetCols[it] + str(linePatient)] = ((headerTimes[0][1] - systolicTime)*1000)
+		elif it == 11:
+			sheet[auxSheetCols[it] + str(linePatient)] = (systolicTime/(headerTimes[0][1] - systolicTime))
+		elif it == 12 and outGLS != None:
+			sheet[auxSheetCols[it] + str(linePatient)] = outGLS[0]
+		elif it == 13 and outMD != None:
+			sheet[auxSheetCols[it] + str(linePatient)] = outMD[0]
+
+	wb.save("Patients_DB.xlsx")		#Parameters are saved in the xl file
+	
+
 

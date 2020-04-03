@@ -146,7 +146,7 @@ def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch
 
 
 #Plots the points of interest in the GLS, MD and DI calculation
-def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, txt1_par, txt2_par, txt3_par):
+def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, txt1_par, txt2_par, txt3_par):
 
 	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
 	tcolunas2=int(((txt2.size/len(txt2.index))))
@@ -161,11 +161,11 @@ def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv
 	ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
 	plt.xlim(0, END_Time1)
 	colorPlot(txt1,tcolunas1)
-	colorPlot(txt2_mod,tcolunas2)
-	colorPlot(txt3_mod,tcolunas3)
+	colorPlot(txt2,tcolunas2)
+	colorPlot(txt3,tcolunas3)
 
 	# Below: The points used in the parameters calculations are shown
-	if prmt == "1":		#Points used for GLS
+	if prmt == "1" or prmt == "2":		#Points used for GLS or MD
 
 		colours=list(txt1_par)
 		for colour_it in range(0,tcolunas1-2):
@@ -188,28 +188,6 @@ def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv
 			else:
 				plt.plot(txt3_par[colours[colour_it]].idxmax(), txt3_par[colours[colour_it]].max(), 'kx')
 
-	if prmt == "2":		#Points used for MD
-
-		colours=list(txt1_par)
-		for colour_it in range(0,tcolunas1-2):
-			if(round(txt1_par[colours[colour_it]].max(),2) < (-0.75*(round(txt1_par[colours[colour_it]].min(),2)))) or onlyNEG:
-				plt.plot(txt1_par[colours[colour_it]].idxmin(), txt1_par[colours[colour_it]].min(), 'kx')
-			else:
-				plt.plot(txt1_par[colours[colour_it]].idxmax(), txt1_par[colours[colour_it]].max(), 'kx')
-
-		colours=list(txt2_par)
-		for colour_it in range(0,tcolunas2-2):
-			if(round(txt2_par[colours[colour_it]].max(),2) < (-0.75*(round(txt2_par[colours[colour_it]].min(),2)))) or onlyNEG:
-				plt.plot(txt2_par[colours[colour_it]].idxmin(), txt2_par[colours[colour_it]].min(), 'kx')
-			else:
-				plt.plot(txt2_par[colours[colour_it]].idxmax(), txt2_par[colours[colour_it]].max(), 'kx')
-
-		colours=list(txt3_par)
-		for colour_it in range(0,tcolunas3-2):
-			if(round(txt3_par[colours[colour_it]].max(),2) < (-0.75*(round(txt3_par[colours[colour_it]].min(),2)))) or onlyNEG:
-				plt.plot(txt3_par[colours[colour_it]].idxmin(), txt3_par[colours[colour_it]].min(), 'kx')
-			else:
-				plt.plot(txt3_par[colours[colour_it]].idxmax(), txt3_par[colours[colour_it]].max(), 'kx')
 
 	#if prmt == "3": 		#Points used for DI - Diastolic Index
 		#ax0.axvline(ThirdDiastoleTime, color='k')
@@ -228,51 +206,31 @@ def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv
 
 
 	plt.setp(ax0.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
-
-	#Below: Valve events and phases names are written in the plot
-	plt.text(MVOvalues1[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(MVCvalues1[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(AVOvalues1[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(AVCvalues1[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	
+	auxPrintValves = np.array(['MVO', 'MVC', 'AVO', 'AVC'])
+	for it1 in range(2):
+		for it2 in range(4):
+			if valveTimes[it1][it2] < END_Time1:
+				plt.text(valveTimes[it1][it2]+x_inc, txt_height_1, auxPrintValves[it2] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	
 	if op != test_op:
-		plt.text(EMCvalues1[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(IVCvalues1[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(EjectionTimevalues1[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(IVRvalues[0]+x_inc, txt_height_2, "IVR" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(Evalues[0]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	if op != test_op:
-		#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
-		plt.text(Avalues[0]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		auxPrintPhases = np.array(['EMC', 'IVC', 'Ejection Time', 'IVR', 'E', 'A'])
+		for it in range(9):
+			if phasesTimes[it] < END_Time1:
+				if it < 5:
+					plt.text(phasesTimes[it]+x_inc, txt_height_2, auxPrintPhases[it] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+				else:
+					plt.text(phasesTimes[it]+x_inc, txt_height_2, auxPrintPhases[it-5] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 
-	#These if are to determine which name will be the last written on the plot
-	if MVOvalues2[0]<END_Time1:
-		plt.text(MVOvalues2[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if MVCvalues2[0]<END_Time1:
-		plt.text(MVCvalues2[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVOvalues2[0]<END_Time1:
-		plt.text(AVOvalues2[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVCvalues2[0]<END_Time1:
-		plt.text(AVCvalues2[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op and EMCvalues2 < END_Time1:
-		plt.text(EMCvalues2[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	if IVCvalues2[0]<END_Time1:
-		plt.text(IVCvalues2[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EjectionTimevalues2[0]<END_Time1:
-		plt.text(EjectionTimevalues2[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+	input("\n\nTeste")
+	
 
 	#Subplot 2 (mid)
 	ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
 
 	plt.xlim(0, END_Time1)
 	if op != test_op and op != '5':
-		colorPlot(txt_mid,tcolunas_mid)
+		colorPlot(txtMid,tcolunasMid)
 	elif op == '5' or op == test_op:
 		colorPlot(strain_rate_lv4ch,tcolunas1)
 		colorPlot(strain_rate_lv2ch,tcolunas2)
@@ -301,9 +259,7 @@ def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv
 		#Below: Valve events and phases names are written in the plot
 		plt.text(IVCvalues1[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 		plt.text(Evalues[0]+x_inc, txt_height_2, "Conduit" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		if op != test_op:
-			#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
-			plt.text(Avalues[0]+x_inc, txt_height_2, "Contraction" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		plt.text(Avalues[0]+x_inc, txt_height_2, "Contraction" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 
 		#These if are to determine which name will be the last written on the plot
 		if IVCvalues2[0]<END_Time1:
@@ -322,81 +278,6 @@ def POIPlot(txt1, txt2_mod, txt3_mod, txt_mid, strain_rate_lv4ch, strain_rate_lv
 	plt.ylabel('ECG\nVoltage\n(mV)', fontsize=SizeFont)
 	plt.grid()
 
-	#Lines between subplots - May be deleted later
-	ax0.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
-	if op != test_op:
-		ax0.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	ax0.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op:
-		#ax0.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax0.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	ax1.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
-	if op != test_op:
-		ax1.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	ax1.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op:
-		#ax1.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax1.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	#ifs to find which event will be last shown in the plot
-	if MVOvalues2[0]<END_Time1:
-		ax1.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if MVCvalues2[0]<END_Time1:
-		ax1.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVOvalues2[0]<END_Time1:
-		ax1.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVCvalues2[0]<END_Time1:
-		ax1.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op and EMCvalues2 < END_Time1:
-		ax1.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	if IVCvalues2[0]<END_Time1:
-		ax1.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EjectionTimevalues2[0]<END_Time1:
-		ax1.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	ax2.axvline(x=MVOvalues1[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax2.axvline(x=MVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax2.axvline(x=AVOvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax2.axvline(x=AVCvalues1[0], c="g",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-	if op != test_op:
-		ax2.axvline(x=EMCvalues1[0], c="y",ymin=0,ymax=1, linewidth=1.5, zorder=0, clip_on=False)
-	ax2.axvline(x=IVCvalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax2.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax2.axvline(x=IVRvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax2.axvline(x=Evalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op:
-		#ax2.axvline(x=Diastasisvalues[0], c="k",ymin=0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-		ax2.axvline(x=Avalues[0], c="k",ymin=-0,ymax=1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	#ifs to find which event will be last shown in the plot
-	if MVOvalues2[0]<END_Time1:
-		ax2.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if MVCvalues2[0]<END_Time1:
-		ax2.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVOvalues2[0]<END_Time1:
-		ax2.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVCvalues2[0]<END_Time1:
-		ax2.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if op != test_op and EMCvalues2 < END_Time1:
-		ax2.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	if IVCvalues2[0]<END_Time1:
-		ax2.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EjectionTimevalues2[0]<END_Time1:
-		ax2.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
 	#plt.tight_layout()
 	if prmt != '1' and prmt !='2':
 		plt.show()
@@ -410,8 +291,7 @@ def avgPhaseStrainVarPlot(txt1, txt2, txt3, op, averageLongStrain, valveTimes, p
 	tcolunas3=int(((txt3.size/len(txt3.index))))
 	tcolunasMid=int(((txtMid.size/len(txtMid.index))))
 
-	END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],
-txtMid.index[len(txtMid.index)-1]])[3]
+	END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]
 
 	fig = plt.figure(figsize=(16, 8))
 	ax0 = plt.subplot2grid((16,1),(0,0), rowspan = 8, colspan = 1)
@@ -431,6 +311,10 @@ txtMid.index[len(txtMid.index)-1]])[3]
 	plt.setp(ax0.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
 
 	#Below: Valve events and phases names are written in the plot
+	for it in valveTimes[0]:
+		print(it)
+	input('')
+	
 	plt.text(MVOvalues1[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 	plt.text(MVCvalues1[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 	plt.text(AVOvalues1[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
@@ -440,8 +324,9 @@ txtMid.index[len(txtMid.index)-1]])[3]
 	plt.text(EjectionTimevalues1[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 	plt.text(IVRvalues[0]+x_inc, txt_height_2, "IVR" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 	plt.text(Evalues[0]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
 	plt.text(Avalues[0]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+
+
 
 	#These if are to determine which name will be the last written on the plot
 	if MVOvalues2[0]<END_Time1:
@@ -465,6 +350,8 @@ txtMid.index[len(txtMid.index)-1]])[3]
 	if EjectionTimevalues2[0]<END_Time1:
 		plt.text(EjectionTimevalues2[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 		ax0.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+	
 
 	#Subplot 2 (LV Strain Curves)
 	ax1 = plt.subplot2grid((16,1),(8,0), rowspan = 8, colspan = 1)
