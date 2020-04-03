@@ -231,17 +231,17 @@ def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op,
 
 
 
-def saveAndCloseSheet(linePatient, sheet, wb, systolicTime, headerTimes, phasesTimes, outGLS, outMD):
+def saveAndCloseSheet(linePatient, sheet, wb, headerTimes, phasesTimes, systolicTime, outGLS, outMD):
 	
 	auxSheetCols = np.array(['X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK'])
 	for it in range(auxSheetCols.size):
 		if it < 9:
 			sheet[auxSheetCols[it] + str(linePatient)] = round(phasesTimes[it]*1000)
-		elif it == 9:
+		elif it == 9 and systolicTime != None:
 			sheet[auxSheetCols[it] + str(linePatient)] = (systolicTime*1000)
-		elif it == 10:
+		elif it == 10 and systolicTime != None:
 			sheet[auxSheetCols[it] + str(linePatient)] = ((headerTimes[0][1] - systolicTime)*1000)
-		elif it == 11:
+		elif it == 11 and systolicTime != None:
 			sheet[auxSheetCols[it] + str(linePatient)] = (systolicTime/(headerTimes[0][1] - systolicTime))
 		elif it == 12 and outGLS != None:
 			sheet[auxSheetCols[it] + str(linePatient)] = outGLS[0]
