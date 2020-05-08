@@ -119,28 +119,29 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 	print("\t4. Show plot w/o any parameters\n\t5. Show additional parameters values\n\t0. Terminate program")
 	prmt = input("Parameter: ")
 	"""
-	prmt = '0' #Comment the line above and uncomment this to test
+	prmt = '3' #Comment the line above and uncomment this to test
 
 	if prmt == "1":               #Calculates the GLS
 		_,_,_,_,gls_values = GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes)
-		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, outGLS[1],outGLS[2], outGLS[3])
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, LAphasesTimes, outGLS, True)
 		#print(gls_values) #Comment this line after debug			
 		DR_bullseye(gls_values, prmt)
-		#break #Comment this line after debug
+		break #Comment this line after debug
 
 	elif prmt == "2":			  #Calculates the MD
 		_,_,_,_,md_values = MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes)
-		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, outMD[1], outMD[2],outMD[3])
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, LAphasesTimes, outMD, True)
 		#print(md_values) #Comment this line after debug
 		DR_bullseye(md_values, prmt)
-		# break #Comment this line after debug
+		break #Comment this line after debug
 
 
 	elif prmt == "3":
 		if(op != test_op):
-			avgPhaseStrainVarPlot(txt1, txt2, txt3, op, averageLongStrain, valveTimes, phasesTimes)
+			avgPhaseStrainVarPlot(txt1, txt2, txt3, txtMid, op, averageLongStrain, valveTimes, phasesTimes, True)
 		else:
 			print("\nPhase segmentation was not performed, therefore you cannot calculate the phase strain variation and also not plot linePatient")
+		break
 
 	#elif prmt == "3": #DI - Not working right now/to be added later
 	#    DI_calc()
@@ -149,8 +150,8 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 
 	elif prmt == "4":
 		print("\nPlot w/o any parameters")
-		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, None, None, None)
-		#break # for debugging purposes, comment later
+		POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes,  LAphasesTimes, None, True)
+		break # for debugging purposes, comment later
 
 	elif prmt == "5":
 		moreInfo(linePatient)
@@ -168,5 +169,5 @@ while True: 		#Loop where the user can select the parmeters and plots he wishes 
 	print("\n")
 
 
-saveAndCloseSheet(linePatient, sheet, wb, systolicTime, headerTimes, phasesTimes, outGLS, outMD)
+saveAndCloseSheet(linePatient, sheet, wb, headerTimes, phasesTimes, systolicTime, outGLS, outMD)
 print("\n\nRodou\n")

@@ -146,296 +146,244 @@ def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch
 
 
 #Plots the points of interest in the GLS, MD and DI calculation
-def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, txt1_par, txt2_par, txt3_par):
+def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, LAphasesTimes, txt, shwFig):
 
-	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+
+	#Counts the ammount of columns in the dataframe
+	tcolunas1=int(((txt1.size/len(txt1.index))))			
 	tcolunas2=int(((txt2.size/len(txt2.index))))
 	tcolunas3=int(((txt3.size/len(txt3.index))))
 	tcolunasMid=int(((txtMid.size/len(txtMid.index))))
 
-	END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]
 
-	fig = plt.figure(figsize=(16, 8))
+	END_Time = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]
 
-	#Top plot
-	ax0 = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
-	plt.xlim(0, END_Time1)
-	colorPlot(txt1,tcolunas1)
-	colorPlot(txt2,tcolunas2)
-	colorPlot(txt3,tcolunas3)
+	plt.figure(figsize=(16, 8))
 
-	# Below: The points used in the parameters calculations are shown
-	if prmt == "1" or prmt == "2":		#Points used for GLS or MD
+	for subplotIt in range(3):
+		if subplotIt == 0:
+			ax = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
+			
+			
+			plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
 
-		colours=list(txt1_par)
-		for colour_it in range(0,tcolunas1-2):
-			if(round(txt1_par[colours[colour_it]].max(),2) < (-0.75*(round(txt1_par[colours[colour_it]].min(),2)))) or onlyNEG:
-				plt.plot(txt1_par[colours[colour_it]].idxmin(), txt1_par[colours[colour_it]].min(), 'kx')
-			else:
-				plt.plot(txt1_par[colours[colour_it]].idxmax(), txt1_par[colours[colour_it]].max(), 'kx')
-
-		colours=list(txt2_par)
-		for colour_it in range(0,tcolunas2-2):
-			if(round(txt2_par[colours[colour_it]].max(),2) < (-0.75*(round(txt2_par[colours[colour_it]].min(),2)))) or onlyNEG:
-				plt.plot(txt2_par[colours[colour_it]].idxmin(), txt2_par[colours[colour_it]].min(), 'kx')
-			else:
-				plt.plot(txt2_par[colours[colour_it]].idxmax(), txt2_par[colours[colour_it]].max(), 'kx')
-
-		colours=list(txt3_par)
-		for colour_it in range(0,tcolunas3-2):
-			if(round(txt3_par[colours[colour_it]].max(),2) < (-0.75*(round(txt3_par[colours[colour_it]].min(),2)))) or onlyNEG:
-				plt.plot(txt3_par[colours[colour_it]].idxmin(), txt3_par[colours[colour_it]].min(), 'kx')
-			else:
-				plt.plot(txt3_par[colours[colour_it]].idxmax(), txt3_par[colours[colour_it]].max(), 'kx')
+			plt.setp(ax.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
+			colorPlot(txt1,tcolunas1)
+			colorPlot(txt2,tcolunas2)
+			colorPlot(txt3,tcolunas3)
 
 
-	#if prmt == "3": 		#Points used for DI - Diastolic Index
-		#ax0.axvline(ThirdDiastoleTime, color='k')
-
-	#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
-	ymin, ymax = plt.ylim()
-	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
-	txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
-	x_inc=0.002
-	plt.grid()
-	tick_locs = np.arange(0.0,END_Time1,0.2)
-	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-
-	plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
+			# Below: The points used in the parameters calculations are shown
 
 
-	plt.setp(ax0.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
-	
-	auxPrintValves = np.array(['MVO', 'MVC', 'AVO', 'AVC'])
-	for it1 in range(2):
-		for it2 in range(4):
-			if valveTimes[it1][it2] < END_Time1:
-				plt.text(valveTimes[it1][it2]+x_inc, txt_height_1, auxPrintValves[it2] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	
-	if op != test_op:
-		auxPrintPhases = np.array(['EMC', 'IVC', 'Ejection Time', 'IVR', 'E', 'A'])
-		for it in range(9):
-			if phasesTimes[it] < END_Time1:
-				if it < 5:
-					plt.text(phasesTimes[it]+x_inc, txt_height_2, auxPrintPhases[it] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-				else:
-					plt.text(phasesTimes[it]+x_inc, txt_height_2, auxPrintPhases[it-5] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+			if prmt == "1" or prmt == "2":		#Points used for GLS or MD
 
-	input("\n\nTeste")
-	
+				for itTxt in range(1,4):
+					colsTxt = int(((txt[itTxt].size/len(txt[itTxt].index))))
+					colours=list(txt[itTxt])
+					for colour_it in range(0,colsTxt-2):
+						if(round(txt[itTxt][colours[colour_it]].max(),2) < (-0.75*(round(txt[itTxt][colours[colour_it]].min(),2)))) or onlyNEG:
+							plt.plot(txt[itTxt][colours[colour_it]].idxmin(), txt[itTxt][colours[colour_it]].min(), 'kx')
+						else:
+							plt.plot(txt[itTxt][colours[colour_it]].idxmax(), txt[itTxt][colours[colour_it]].max(), 'kx')
 
-	#Subplot 2 (mid)
-	ax1 = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
-
-	plt.xlim(0, END_Time1)
-	if op != test_op and op != '5':
-		colorPlot(txtMid,tcolunasMid)
-	elif op == '5' or op == test_op:
-		colorPlot(strain_rate_lv4ch,tcolunas1)
-		colorPlot(strain_rate_lv2ch,tcolunas2)
-		colorPlot(strain_rate_lv3ch,tcolunas3)
-	plt.grid()
-	tick_locs = np.arange(0.0,END_Time1,0.2)
-	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-
-	if op == "1" or op == "5" or op == test_op:
-		plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
-	if op == "2":
-		plt.ylabel('Strain - LA\n(%)', fontsize=SizeFont)
-	if op == "3":
-		plt.ylabel('Strain Rate - LA\n(1/s)', fontsize=SizeFont)
-	if op == "4":
-		plt.ylabel('Strain - RV\n(%)', fontsize=SizeFont)
-
-	plt.setp(ax1.get_xticklabels(), visible=False)
-
-	ymin, ymax = plt.ylim()
-	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
-	txt_height_2 = ymax+0.05*(ymin-ymax) #Phase names text height
-
-	if op == "2" or op == "3":
-		#Below: Valve events and phases names are written in the plot
-		plt.text(IVCvalues1[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		plt.text(Evalues[0]+x_inc, txt_height_2, "Conduit" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		plt.text(Avalues[0]+x_inc, txt_height_2, "Contraction" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-
-		#These if are to determine which name will be the last written on the plot
-		if IVCvalues2[0]<END_Time1:
-			plt.text(IVCvalues2[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-			ax1.axvline(x=IVCvalues2[0], c="r",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+			#if prmt == "3": 		#Points used for DI - Diastolic Index
+				#ax0.axvline(ThirdDiastoleTime, color='k')
 
 
-	#ECG plot (bottom)
-	ax2 = plt.subplot2grid((16, 1), (13, 0), rowspan = 4, colspan = 1)
-	plt.plot(txt1.loc[:,'ECG : '])
-	plt.xlim(0, END_Time1)
-	tick_locs = np.arange(0.0,END_Time1,0.2)
-	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	plt.xlabel('Time (ms)', fontsize=SizeFont)
-	plt.ylabel('ECG\nVoltage\n(mV)', fontsize=SizeFont)
-	plt.grid()
+		elif subplotIt == 1:
+			
+			ax = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
 
-	#plt.tight_layout()
-	if prmt != '1' and prmt !='2':
+			if op != test_op and op != '5':
+				colorPlot(txtMid,tcolunasMid)
+			elif op == '5' or op == test_op:
+				colorPlot(strain_rate_lv4ch,tcolunas1)
+				colorPlot(strain_rate_lv2ch,tcolunas2)
+				colorPlot(strain_rate_lv3ch,tcolunas3)
+			
+			plt.setp(ax.get_xticklabels(), visible=False)
+
+
+			if op == "1" or op == "5" or op == test_op:
+				plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
+			if op == "2":
+				plt.ylabel('Strain - LA\n(%)', fontsize=SizeFont)
+			if op == "3":
+				plt.ylabel('Strain Rate - LA\n(1/s)', fontsize=SizeFont)
+			if op == "4":
+				plt.ylabel('Strain - RV\n(%)', fontsize=SizeFont)
+
+
+		else:
+			#ECG plot (bottom)
+			ax = plt.subplot2grid((16,1),(13,0), rowspan = 4, colspan = 1)
+
+			plt.plot(txt1.loc[:,'ECG : '])
+			plt.xlabel('Time (ms)', fontsize=SizeFont)
+			plt.ylabel('ECG\nVoltage\n(mV)', fontsize=SizeFont)
+
+		
+		plt.xlim(0, END_Time)
+
+		#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
+		ymin, ymax = plt.ylim()
+		txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
+		txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
+		x_inc=0.002
+		plt.grid()
+		tick_locs = np.arange(0.0,END_Time,0.2)
+		tick_lbls = np.arange(0, int(END_Time*1000), 200)
+		plt.xticks(tick_locs, tick_lbls)
+
+		
+		
+		auxPrintValves = np.array(['MVO', 'MVC', 'AVO', 'AVC'])
+		for it1 in range(2):
+			for it2 in range(4):
+				if valveTimes[it1][it2] < END_Time:
+					if subplotIt == 0:
+						plt.text(valveTimes[it1][it2]+x_inc, txt_height_1, auxPrintValves[it2] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+					ax.axvline(x=valveTimes[it1][it2], c="k",ymax= height_line+0.02, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+
+		auxPrintPhases = np.array(['EMC', 'IVC', 'Ejec', 'IVR', 'E', 'A'])
+		for it1 in range(8):
+			if phasesTimes[it1] < END_Time:
+				if subplotIt == 0:
+					if it1 < 6:
+						if it1%2:
+							plt.text(phasesTimes[it1]+x_inc, txt_height_2-0.8, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+						else:
+							plt.text(phasesTimes[it1]+x_inc, txt_height_2, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+						
+					else:
+						if it1%2:
+							plt.text(phasesTimes[it1]+x_inc, txt_height_2-0.8, auxPrintPhases[it1-6] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+						else:
+							plt.text(phasesTimes[it1]+x_inc, txt_height_2, auxPrintPhases[it1-6] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+											
+				ax.axvline(x=phasesTimes[it1], c="k",ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+
+		auxPrintPhases = np.array(['Reservoir', 'Conduit', 'Contraction'])
+		for it1 in range(3):
+			if LAphasesTimes[it1] < END_Time:
+				if subplotIt == 1:
+					plt.text(LAphasesTimes[it1]+x_inc, txt_height_2-0.5, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+						
+				ax.axvline(x=LAphasesTimes[it1], c="k",ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+
+	if shwFig:
 		plt.show()
 
 
-# Plots the figures containing the results of the operations
-def avgPhaseStrainVarPlot(txt1, txt2, txt3, op, averageLongStrain, valveTimes, phasesTimes):
+#plt.plot(averageLongStrain, '.k')
 
-	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+"""
+	colorPlot(txt1,tcolunas1)
+	colorPlot(txt2,tcolunas2)
+	colorPlot(txt3,tcolunas3)
+	plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
+"""
+#Juntar isso com a função de cima
+def avgPhaseStrainVarPlot(txt1, txt2, txt3, txtMid, op, averageLongStrain, valveTimes, phasesTimes, shwFig):
+
+
+	#Counts the ammount of columns in the dataframe
+	tcolunas1=int(((txt1.size/len(txt1.index))))			
 	tcolunas2=int(((txt2.size/len(txt2.index))))
 	tcolunas3=int(((txt3.size/len(txt3.index))))
 	tcolunasMid=int(((txtMid.size/len(txtMid.index))))
 
-	END_Time1 = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]
 
-	fig = plt.figure(figsize=(16, 8))
-	ax0 = plt.subplot2grid((16,1),(0,0), rowspan = 8, colspan = 1)
-	plt.xlim(0, END_Time1)
-	plt.plot(averageLongStrain, '.k')
+	END_Time = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]
 
-	#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
-	ymin, ymax = plt.ylim()
-	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
-	txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
-	x_inc=0.002
-	plt.grid()
-	tick_locs = np.arange(0.0,END_Time1,0.2)
-	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	plt.ylabel('\nAverage LV\nStrain (%)', fontsize=SizeFont)
-	plt.setp(ax0.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
+	plt.figure(figsize=(16, 8))
 
-	#Below: Valve events and phases names are written in the plot
-	for it in valveTimes[0]:
-		print(it)
-	input('')
-	
-	plt.text(MVOvalues1[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(MVCvalues1[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(AVOvalues1[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(AVCvalues1[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(EMCvalues1[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(IVCvalues1[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(EjectionTimevalues1[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(IVRvalues[0]+x_inc, txt_height_2, "IVR" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(Evalues[0]+x_inc, txt_height_2, "E" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-	plt.text(Avalues[0]+x_inc, txt_height_2, "A" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+	for subplotIt in range(3):
+		if subplotIt == 0:
+			ax = plt.subplot2grid((16,1),(1,0), rowspan = 6, colspan = 1)
+			
+			
+			plt.ylabel('\nAverage Longitudinal Strain - LV\n(%)', fontsize=SizeFont)
+
+			plt.setp(ax.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
+			plt.plot(averageLongStrain, 'k')
 
 
+		elif subplotIt == 1:
+			
+			ax = plt.subplot2grid((16,1),(7,0), rowspan = 6, colspan = 1)
 
-	#These if are to determine which name will be the last written on the plot
-	if MVOvalues2[0]<END_Time1:
-		plt.text(MVOvalues2[0]+x_inc, txt_height_1, "MVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if MVCvalues2[0]<END_Time1:
-		plt.text(MVCvalues2[0]+x_inc, txt_height_1, "MVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVOvalues2[0]<END_Time1:
-		plt.text(AVOvalues2[0]+x_inc, txt_height_1, "AVO" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVCvalues2[0]<END_Time1:
-		plt.text(AVCvalues2[0]+x_inc, txt_height_1, "AVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EMCvalues2 < END_Time1:
-		plt.text(EMCvalues2[0]+x_inc, txt_height_2, "EMC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	if IVCvalues2[0]<END_Time1:
-		plt.text(IVCvalues2[0]+x_inc, txt_height_2, "IVC" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EjectionTimevalues2[0]<END_Time1:
-		plt.text(EjectionTimevalues2[0]+x_inc, txt_height_2, "Ejec" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		ax0.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-
-	
-
-	#Subplot 2 (LV Strain Curves)
-	ax1 = plt.subplot2grid((16,1),(8,0), rowspan = 8, colspan = 1)
-	plt.xlim(0, END_Time1)
-	colorPlot(txt1,tcolunas1)
-	colorPlot(txt2,tcolunas2)
-	colorPlot(txt3,tcolunas3)
-	plt.grid()
-	tick_locs = np.arange(0.0,END_Time1,0.2)
-	tick_lbls = np.arange(0, int(END_Time1*1000), 200)
-	plt.xticks(tick_locs, tick_lbls)
-	plt.xlabel('Time (ms)', fontsize=SizeFont)
-	plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
+			colorPlot(txt1,tcolunas1)
+			colorPlot(txt2,tcolunas2)
+			colorPlot(txt3,tcolunas3)
+			plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
+			
+			plt.setp(ax.get_xticklabels(), visible=False)
 
 
-	#Lines between subplots - May be deleted later
-	ax0.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
-	ax0.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	ax0.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	#ax0.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax0.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		else:
+			#ECG plot (bottom)
+			ax = plt.subplot2grid((16,1),(13,0), rowspan = 4, colspan = 1)
 
-	ax1.axvline(x=MVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=MVCvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=AVOvalues1[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=AVCvalues1[0], c="g",ymin=-0.1,ymax= height_line+0.1, linewidth=1.5, zorder=0, clip_on=False)
-	ax1.axvline(x=EMCvalues1[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	ax1.axvline(x=IVCvalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=EjectionTimevalues1[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=IVRvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=Evalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	#ax1.axvline(x=Diastasisvalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	ax1.axvline(x=Avalues[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+			plt.plot(txt1.loc[:,'ECG : '])
+			plt.xlabel('Time (ms)', fontsize=SizeFont)
+			plt.ylabel('ECG\nVoltage\n(mV)', fontsize=SizeFont)
 
-	ymin, ymax = plt.ylim()
-	txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
-	txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
+		
+		plt.xlim(0, END_Time)
 
-	if op == "2" or op == "3":
-		#Below: Valve events and phases names are written in the plot
-		plt.text(IVCvalues1[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		plt.text(Evalues[0]+x_inc, txt_height_2, "Conduit" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-		if op != test_op:
-			#plt.text(Diastasisvalues[0]+x_inc, txt_height_2, "D" , rotation=0, verticalalignment='center')
-			plt.text(Avalues[0]+x_inc, txt_height_2, "Contraction" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
+		ymin, ymax = plt.ylim()
+		txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
+		txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
+		x_inc=0.002
+		plt.grid()
+		tick_locs = np.arange(0.0,END_Time,0.2)
+		tick_lbls = np.arange(0, int(END_Time*1000), 200)
+		plt.xticks(tick_locs, tick_lbls)
 
-		#These if are to determine which name will be the last written on the plot
-		if IVCvalues2[0]<END_Time1:
-			plt.text(IVCvalues2[0]+x_inc, txt_height_2, "Reservoir" , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-			ax1.axvline(x=IVCvalues2[0], c="r",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+		
+		
+		auxPrintValves = np.array(['MVO', 'MVC', 'AVO', 'AVC'])
+		for it1 in range(2):
+			for it2 in range(4):
+				if valveTimes[it1][it2] < END_Time:
+					if subplotIt == 0:
+						plt.text(valveTimes[it1][it2]+x_inc, txt_height_1, auxPrintValves[it2] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+					ax.axvline(x=valveTimes[it1][it2], c="k",ymax= height_line+0.02, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
 
+		auxPrintPhases = np.array(['EMC', 'IVC', 'Ejec', 'IVR', 'E', 'A'])
+		for it1 in range(8):
+			if phasesTimes[it1] < END_Time:
+				if subplotIt == 0:
+					if it1 < 6:
+						if it1%2:
+							plt.text(phasesTimes[it1]+x_inc, txt_height_2-0.8, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+						else:
+							plt.text(phasesTimes[it1]+x_inc, txt_height_2, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+						
+					else:
+						if it1%2:
+							plt.text(phasesTimes[it1]+x_inc, txt_height_2-0.8, auxPrintPhases[it1-6] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+						else:
+							plt.text(phasesTimes[it1]+x_inc, txt_height_2, auxPrintPhases[it1-6] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+											
+				ax.axvline(x=phasesTimes[it1], c="k",ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-	#ifs to find which event will be last shown in the plot
-	if MVOvalues2[0]<END_Time1:
-		ax1.axvline(x=MVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if MVCvalues2[0]<END_Time1:
-		ax1.axvline(x=MVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVOvalues2[0]<END_Time1:
-		ax1.axvline(x=AVOvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if AVCvalues2[0]<END_Time1:
-		ax1.axvline(x=AVCvalues2[0], c="k",ymin=-0.1,ymax= height_line+0.1, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EMCvalues2 < END_Time1:
-		ax1.axvline(x=EMCvalues2[0], c="y",ymin=-0.1,ymax= height_line, linewidth=1.5, zorder=0, clip_on=False)
-	if IVCvalues2[0]<END_Time1:
-		ax1.axvline(x=IVCvalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
-	if EjectionTimevalues2[0]<END_Time1:
-		ax1.axvline(x=EjectionTimevalues2[0], c="k",ymin=-0.1,ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-	#plt.tight_layout()
-	plt.show()
+	if shwFig:
+		plt.show()
 
 
 #Below: To be implemented later
 #===============================================
 
 # Plots 17 segment bullseye
-def bullseye_seventeenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
+def bullseye_seventeenSEG_plot(ax0, data, segBold=None, cmap=None, norm=None):
 	"""
 	This example demonstrates how to create the 17 segment model for the left
 	ventricle recommended by the American Heart Association (AHA).

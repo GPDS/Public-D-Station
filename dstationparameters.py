@@ -74,7 +74,7 @@ def GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 	tcolunas2=int(((txt2.size/len(txt2.index))))
 	tcolunas3=int(((txt3.size/len(txt3.index))))
 	
-	#If it's a real patient - add for simulations
+	#If it's a real patient - add for simulations later
 	txt1_s = txt1[(txt1.index >= phasesTimes[0]) & (txt1.index <= valveTimes[0][3])]		#From the LM_Time until the AVC from the raw data files
 	txt2_s = txt2[(txt2.index >= phasesTimes[0]) & (txt2.index <= valveTimes[0][3])]
 	txt3_s = txt3[(txt3.index >= phasesTimes[0]) & (txt3.index <= valveTimes[0][3])]
