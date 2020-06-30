@@ -34,9 +34,9 @@ def valveTimesRead(headerTimes, sheet, linePatient):
 			if it_row == 0 and it_col == 3:
 				valveTimes[it_row][it_col] = headerTimes[0][2]
 			elif it_row == 0:
-				valveTimes[it_row][it_col] = round((int(sheet[auxSheet[it_col]+str(linePatient)].value)/1000)+(headerTimes[0][2]-AVC_sheet),2)
+				valveTimes[it_row][it_col] = round((int(sheet[auxSheet[it_col]+str(linePatient)].value)/1000)+(headerTimes[0][2]-AVC_sheet),3)
 			else:
-				valveTimes[it_row][it_col] = round((int(sheet[auxSheet[it_col]+str(linePatient)].value)/1000)+(headerTimes[0][2]-AVC_sheet+headerTimes[0][1]),2)
+				valveTimes[it_row][it_col] = round((int(sheet[auxSheet[it_col]+str(linePatient)].value)/1000)+(headerTimes[0][2]-AVC_sheet+headerTimes[0][1]),3)
 	
 	return valveTimes
 
@@ -67,63 +67,90 @@ def phaseSeg(valveTimes, sheet, linePatient):
 
 
 
+#Colocar no valveTimes headers do circadapt
+
 #Calculates the Global Longitudinal Strain of from the LV Strain curves = mean of the peak systolic strain of all curves
 def GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 
-	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+	#Checks the ammount of columns in the dataframe
+	tcolunas1=int(((txt1.size/len(txt1.index))))			
 	tcolunas2=int(((txt2.size/len(txt2.index))))
 	tcolunas3=int(((txt3.size/len(txt3.index))))
 	
-	#If it's a real patient - add for simulations later
-	txt1_s = txt1[(txt1.index >= phasesTimes[0]) & (txt1.index <= valveTimes[0][3])]		#From the LM_Time until the AVC from the raw data files
-	txt2_s = txt2[(txt2.index >= phasesTimes[0]) & (txt2.index <= valveTimes[0][3])]
-	txt3_s = txt3[(txt3.index >= phasesTimes[0]) & (txt3.index <= valveTimes[0][3])]
 
-	if prmt == '1':																	#Shows detailed info about the GLS
+	if op != test_op:
+		#If it's a real patient - slices from the EMC until the AVC from the raw data files
+		txt1_s = txt1[(txt1.index >= phasesTimes[0]) & (txt1.index <= valveTimes[0][3])]		
+		txt2_s = txt2[(txt2.index >= phasesTimes[0]) & (txt2.index <= valveTimes[0][3])]
+		txt3_s = txt3[(txt3.index >= phasesTimes[0]) & (txt3.index <= valveTimes[0][3])]
+	else: 
+		txt1_s = txt1[(txt1.index >= 0) & (txt1.index <= valveTimes[0][3])]		
+		txt2_s = txt2[(txt2.index >= 0) & (txt2.index <= valveTimes[0][3])]
+		txt3_s = txt3[(txt3.index >= 0) & (txt3.index <= valveTimes[0][3])]
+
+	#Shows detailed info about the GLS
+	if prmt == '1':																	
 		print("\n\nPeak systolic strain:\n")
-	gls = []																		#List that stores the peak systolic points
+	
+
+	#List that stores the peak systolic points
+	gls = []																		
+	
 	colours=list(txt2_s)
-	chamber = '2CH' #auxiliates the function segmentName below
+
+	#auxiliates the function segmentName below
+	chamber = '2CH' 
 	for colour_it in range(0,tcolunas2-2):
 		if(round(txt2_s[colours[colour_it]].max(),2) < (-0.75*(round(txt2_s[colours[colour_it]].min(),2)))) or onlyNEG:
 			if prmt == '1':
-				print("\t[NEG] 2CH:", segmentName(colours[colour_it],chamber),":",round(txt2_s[colours[colour_it]].min(),2),"%","\t","Time:",round(txt2_s[colours[colour_it]].idxmin(),3),"s")
+				print("\t[NEG] 2CH:", segmentName(colours[colour_it],chamber, op),":",round(txt2_s[colours[colour_it]].min(),2),"%","\t","Time:",round(txt2_s[colours[colour_it]].idxmin(),3),"s")
 			gls.append(txt2_s[colours[colour_it]].min())								#Peak systolic points in 2CH are appended to list
 		else:
 			if prmt == '1':
-				print("\t[POS] 2CH:", segmentName(colours[colour_it],chamber),":",round(txt2_s[colours[colour_it]].max(),2),"%","\t","Time:",round(txt2_s[colours[colour_it]].idxmax(),3),"s")
+				print("\t[POS] 2CH:", segmentName(colours[colour_it],chamber, op),":",round(txt2_s[colours[colour_it]].max(),2),"%","\t","Time:",round(txt2_s[colours[colour_it]].idxmax(),3),"s")
 			gls.append(txt2_s[colours[colour_it]].max())								#Peak systolic points in 2CH are appended to list
 
 	if prmt == '1':
 		print("\n")
+
 	colours=list(txt1_s)
 	chamber = '4CH'
+
 	for colour_it in range(0,tcolunas1-2):
 		if(round(txt1_s[colours[colour_it]].max(),2) < (-0.75*(round(txt1_s[colours[colour_it]].min(),2)))) or onlyNEG:
 			if prmt == '1':
-				print("\t[NEG] 4CH:", segmentName(colours[colour_it],chamber),":",round(txt1_s[colours[colour_it]].min(),2),"%","\t","Time:",round(txt1_s[colours[colour_it]].idxmin(),3),"s")
+				print("\t[NEG] 4CH:", segmentName(colours[colour_it],chamber, op),":",round(txt1_s[colours[colour_it]].min(),2),"%","\t","Time:",round(txt1_s[colours[colour_it]].idxmin(),3),"s")
 			gls.append(txt1_s[colours[colour_it]].min())								#Peak systolic points in 4CH are appended to list
 		else:
 			if prmt == '1':
-				print("\t[POS] 4CH:", segmentName(colours[colour_it],chamber),":",round(txt1_s[colours[colour_it]].max(),2),"%","\t","Time:",round(txt1_s[colours[colour_it]].idxmax(),3),"s")
+				print("\t[POS] 4CH:", segmentName(colours[colour_it],chamber, op),":",round(txt1_s[colours[colour_it]].max(),2),"%","\t","Time:",round(txt1_s[colours[colour_it]].idxmax(),3),"s")
 			gls.append(txt1_s[colours[colour_it]].max())
 
 	if prmt == '1':
 		print("\n")
+
 	colours=list(txt3_s)
 	chamber = 'APLAX'
+	
 	for colour_it in range(0,tcolunas3-2):
 		if(round(txt3_s[colours[colour_it]].max(),2) < (-0.75*(round(txt3_s[colours[colour_it]].min(),2)))) or onlyNEG:
 			if prmt == '1':
-				print("\t[NEG] APLAX:", segmentName(colours[colour_it],chamber),":",round(txt3_s[colours[colour_it]].min(),2),"%","\t","Time:",round(txt3_s[colours[colour_it]].idxmin(),3),"s")
+				print("\t[NEG] APLAX:", segmentName(colours[colour_it],chamber, op),":",round(txt3_s[colours[colour_it]].min(),2),"%","\t","Time:",round(txt3_s[colours[colour_it]].idxmin(),3),"s")
 			gls.append(txt3_s[colours[colour_it]].min())								#Peak systolic points in APLAX are appended to list
 		else:
 			if prmt == '1':
-				print("\t[POS] APLAX:", segmentName(colours[colour_it],chamber),":",round(txt3_s[colours[colour_it]].max(),2),"%","\t","Time:",round(txt3_s[colours[colour_it]].idxmax(),3),"s")
+				print("\t[POS] APLAX:", segmentName(colours[colour_it],chamber, op),":",round(txt3_s[colours[colour_it]].max(),2),"%","\t","Time:",round(txt3_s[colours[colour_it]].idxmax(),3),"s")
 			gls.append(txt3_s[colours[colour_it]].max())
 
+
+	if op != test_op:
+		print("\n\nIMPORTANT: USING THE 18-SEGMENT MODEL")
+	else: 
+		print("\n\nIMPORTANT: USING THE 16-SEGMENT MODEL")
 	gls_values = gls
-	gls=round(np.mean(gls),1)					#GLS is calculated as the mean of all the peak systolic strain values
+
+	#GLS is calculated as the mean of all the peak systolic strain values
+	gls=round(np.mean(gls),1)					
 
 	if prmt == '1':
 		print("\n")
@@ -140,9 +167,15 @@ def MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 	tcolunas2=int(((txt2.size/len(txt2.index))))
 	tcolunas3=int(((txt3.size/len(txt3.index))))
 
-	txt1_sliced_onsets = txt1[(txt1.index >= phasesTimes[0]) & (txt1.index < phasesTimes[6])] #slices the DF to one that has points from LM to RM time
-	txt2_sliced_onsets = txt2[(txt2.index >= phasesTimes[0]) & (txt2.index < phasesTimes[6])]
-	txt3_sliced_onsets = txt3[(txt3.index >= phasesTimes[0]) & (txt3.index < phasesTimes[6])]
+	#slices the DF to one that has points from LM to RM time
+	if op != test_op:
+		txt1_sliced_onsets = txt1[(txt1.index >= phasesTimes[0]) & (txt1.index < phasesTimes[6])] 
+		txt2_sliced_onsets = txt2[(txt2.index >= phasesTimes[0]) & (txt2.index < phasesTimes[6])]
+		txt3_sliced_onsets = txt3[(txt3.index >= phasesTimes[0]) & (txt3.index < phasesTimes[6])]
+	else: 
+		txt1_sliced_onsets = txt1 
+		txt2_sliced_onsets = txt2
+		txt3_sliced_onsets = txt3
 
 	global_minima_times = [] #List that will store the peak strain points
 
@@ -156,11 +189,11 @@ def MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 	for colour_it in range(0,tcolunas2-2):
 		if(round(txt2_sliced_onsets[colours[colour_it]].max(),2) < (-0.75*(round(txt2_sliced_onsets[colours[colour_it]].min(),2)))) or onlyNEG:
 			if prmt == '2':
-				print("\t[NEG]2CH:", segmentName(colours[colour_it],chamber),":",round(txt2_sliced_onsets[colours[colour_it]].idxmin(),3),"ms") #Selects the peak strain points - 2CH
+				print("\t[NEG]2CH:", segmentName(colours[colour_it],chamber, op),":",round(txt2_sliced_onsets[colours[colour_it]].idxmin(),3),"ms") #Selects the peak strain points - 2CH
 			global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 		else:
 			if prmt == '2':
-				print("\t[POS]2CH:", segmentName(colours[colour_it],chamber),":",round(txt2_sliced_onsets[colours[colour_it]].idxmax(),3),"ms")
+				print("\t[POS]2CH:", segmentName(colours[colour_it],chamber, op),":",round(txt2_sliced_onsets[colours[colour_it]].idxmax(),3),"ms")
 			global_minima_times.append(txt2_sliced_onsets[colours[colour_it]].idxmax())
 
 	if prmt == '2':
@@ -170,11 +203,11 @@ def MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 	for colour_it in range(0,tcolunas1-2):
 		if(round(txt1_sliced_onsets[colours[colour_it]].max(),2) < (-0.75*(round(txt1_sliced_onsets[colours[colour_it]].min(),2)))) or onlyNEG:
 			if prmt == '2':
-				print("\t[NEG]4CH:", segmentName(colours[colour_it],chamber),":",round(txt1_sliced_onsets[colours[colour_it]].idxmin(),3),"ms") #Selects the peak strain points - 4CH
+				print("\t[NEG]4CH:", segmentName(colours[colour_it],chamber, op),":",round(txt1_sliced_onsets[colours[colour_it]].idxmin(),3),"ms") #Selects the peak strain points - 4CH
 			global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 		else:
 			if prmt == '2':
-				print("\t[POS]4CH:", segmentName(colours[colour_it],chamber),":",round(txt1_sliced_onsets[colours[colour_it]].idxmax(),3),"ms")
+				print("\t[POS]4CH:", segmentName(colours[colour_it],chamber, op),":",round(txt1_sliced_onsets[colours[colour_it]].idxmax(),3),"ms")
 			global_minima_times.append(txt1_sliced_onsets[colours[colour_it]].idxmax())
 
 	if prmt == '2':
@@ -184,15 +217,20 @@ def MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 	for colour_it in range(0,tcolunas3-2):
 		if(round(txt3_sliced_onsets[colours[colour_it]].max(),2) < (-0.75*(round(txt3_sliced_onsets[colours[colour_it]].min(),2)))) or onlyNEG:
 			if prmt == '2':
-				print("\t[NEG]APLAX:", segmentName(colours[colour_it],chamber),":",round(txt3_sliced_onsets[colours[colour_it]].idxmin(),3),"ms") #Selects the peak strain points - APLAX
+				print("\t[NEG]APLAX:", segmentName(colours[colour_it],chamber, op),":",round(txt3_sliced_onsets[colours[colour_it]].idxmin(),3),"ms") #Selects the peak strain points - APLAX
 			global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmin())			#Peak Strain poins are appended to global_minima_times
 		else:
 			if prmt == '2':
-				print("\t[POS]APLAX:", segmentName(colours[colour_it],chamber),":",round(txt3_sliced_onsets[colours[colour_it]].idxmax(),3),"ms")
+				print("\t[POS]APLAX:", segmentName(colours[colour_it],chamber, op),":",round(txt3_sliced_onsets[colours[colour_it]].idxmax(),3),"ms")
 			global_minima_times.append(txt3_sliced_onsets[colours[colour_it]].idxmax())
 
 	if prmt == '2':
 		print("\n")
+
+	if op != test_op:
+		print("\n\nIMPORTANT: USING THE 18-SEGMENT MODEL")
+	else: 
+		print("\n\nIMPORTANT: USING THE 16-SEGMENT MODEL")
 
 	md = round(np.std(global_minima_times,dtype=np.float64,ddof=1)*1000, 1)	#MD is calculated as the std.dev from the sample(ddof=1) of all the peak strain times
 	print("Mechanical Dispersion: ", md, "ms")
@@ -204,11 +242,12 @@ def MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 #Calculates the global strain variation in each phase
 def avgPhaseStrainVar(txt1, txt2, txt3, op, phasesTimes):
 
-	#line below: calculates the average longitudinal strain from all the LV segments
+	#calculates the average longitudinal strain from all the LV segments
 	averageLongStrain =  (pd.concat([txt1.iloc[:,0:-2], txt2.iloc[:,0:-2], txt3.iloc[:,0:-2]], axis=1, sort = False)).mean(axis=1)
 
 	#with pd.option_context('display.max_rows', None, 'display.max_columns', None):  #shows the entire dataframe
-	#	print(averageLongStrain) #for debugging
+	#print(averageLongStrain) #for debugging
+
 
 	#Adds the time points where the phase changes and interpolates in case they don't exist in the DF
 	a = float('NaN')
@@ -216,8 +255,8 @@ def avgPhaseStrainVar(txt1, txt2, txt3, op, phasesTimes):
 		averageLongStrain.loc[it] = a	
 
 	averageLongStrain = averageLongStrain.sort_index()
-	averageLongStrain = averageLongStrain.interpolate(method = 'linear') #Was using quadratic but it stopped working
-	#
+	averageLongStrain = averageLongStrain.interpolate(method = 'linear')
+	
 
 	#Prints the average strain values
 	print("\nAverage longitudinal strain variation between:")
@@ -229,9 +268,8 @@ def avgPhaseStrainVar(txt1, txt2, txt3, op, phasesTimes):
 		else:
 			print("\t",auxPrintPhases[it-5], "and ", auxPrintPhases[it-5+1],": ",round(averageLongStrain.loc[phasesTimes[it+1]]-averageLongStrain.loc[phasesTimes[it]],2), "%")
 		
-	#maybe i should return them in an array to later save in the spreadsheet
 	return averageLongStrain
-
+#
 
 #Show additional info available in the spreadsheet Patients_DB
 def moreInfo(it):

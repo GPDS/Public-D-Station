@@ -103,6 +103,9 @@ def ecgVerification(txt1, headerTimesTxt1, END_Time0, pointsECG):
 # Funcao to plot the Strain and ECG curves to select 3 points of interest on the latter
 def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch):
 	
+	# I had to to this in order to use it in the function onClick (sorry)
+	global xcoord
+
 	fig = plt.figure(figsize=(12, 8))
 	
 	for it in range(3):
@@ -141,6 +144,9 @@ def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch
 	fig.canvas.mpl_disconnect(cid)	# After the points selection the function to store them will finish
 	pointsECG = np.asarray(xcoord)
 	
+	# Reseting the list globally - in case i rerun the program
+	xcoord = []
+
 	return pointsECG
 #
 
@@ -246,46 +252,38 @@ def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, stra
 						plt.text(valveTimes[it1][it2]+x_inc, txt_height_1, auxPrintValves[it2] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 					ax.axvline(x=valveTimes[it1][it2], c="k",ymax= height_line+0.02, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-
-		auxPrintPhases = np.array(['EMC', 'IVC', 'Ejec', 'IVR', 'E', 'A'])
-		for it1 in range(8):
-			if phasesTimes[it1] < END_Time:
-				if subplotIt == 0:
-					if it1 < 6:
-						if it1%2:
-							plt.text(phasesTimes[it1]+x_inc, txt_height_2-0.8, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+		if op != test_op:
+			auxPrintPhases = np.array(['EMC', 'IVC', 'Ejec', 'IVR', 'E', 'A'])
+			for it1 in range(8):
+				if phasesTimes[it1] < END_Time:
+					if subplotIt == 0:
+						if it1 < 6:
+							if it1%2:
+								plt.text(phasesTimes[it1]+x_inc, txt_height_2-0.8, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+							else:
+								plt.text(phasesTimes[it1]+x_inc, txt_height_2, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+							
 						else:
-							plt.text(phasesTimes[it1]+x_inc, txt_height_2, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-						
-					else:
-						if it1%2:
-							plt.text(phasesTimes[it1]+x_inc, txt_height_2-0.8, auxPrintPhases[it1-6] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-						else:
-							plt.text(phasesTimes[it1]+x_inc, txt_height_2, auxPrintPhases[it1-6] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-											
-				ax.axvline(x=phasesTimes[it1], c="k",ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+							if it1%2:
+								plt.text(phasesTimes[it1]+x_inc, txt_height_2-0.8, auxPrintPhases[it1-6] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+							else:
+								plt.text(phasesTimes[it1]+x_inc, txt_height_2, auxPrintPhases[it1-6] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+												
+					ax.axvline(x=phasesTimes[it1], c="k",ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
-
-		auxPrintPhases = np.array(['Reservoir', 'Conduit', 'Contraction'])
-		for it1 in range(3):
-			if LAphasesTimes[it1] < END_Time:
-				if subplotIt == 1:
-					plt.text(LAphasesTimes[it1]+x_inc, txt_height_2-0.5, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
-						
-				ax.axvline(x=LAphasesTimes[it1], c="k",ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
+			if op == '2' or op == '3':
+				auxPrintPhases = np.array(['Reservoir', 'Conduit', 'Contraction'])
+				for it1 in range(3):
+					if LAphasesTimes[it1] < END_Time:
+						if subplotIt == 1:
+							plt.text(LAphasesTimes[it1]+x_inc, txt_height_2-0.5, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+								
+						ax.axvline(x=LAphasesTimes[it1], c="k",ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
 	if shwFig:
 		plt.show()
 
 
-#plt.plot(averageLongStrain, '.k')
-
-"""
-	colorPlot(txt1,tcolunas1)
-	colorPlot(txt2,tcolunas2)
-	colorPlot(txt3,tcolunas3)
-	plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
-"""
 #Juntar isso com a função de cima
 def avgPhaseStrainVarPlot(txt1, txt2, txt3, txtMid, op, averageLongStrain, valveTimes, phasesTimes, shwFig):
 
@@ -294,7 +292,6 @@ def avgPhaseStrainVarPlot(txt1, txt2, txt3, txtMid, op, averageLongStrain, valve
 	tcolunas1=int(((txt1.size/len(txt1.index))))			
 	tcolunas2=int(((txt2.size/len(txt2.index))))
 	tcolunas3=int(((txt3.size/len(txt3.index))))
-	tcolunasMid=int(((txtMid.size/len(txtMid.index))))
 
 
 	END_Time = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]
@@ -377,129 +374,6 @@ def avgPhaseStrainVarPlot(txt1, txt2, txt3, txtMid, op, averageLongStrain, valve
 
 	if shwFig:
 		plt.show()
-
-
-#Below: To be implemented later
-#===============================================
-
-# Plots 17 segment bullseye
-def bullseye_seventeenSEG_plot(ax0, data, segBold=None, cmap=None, norm=None):
-	"""
-	This example demonstrates how to create the 17 segment model for the left
-	ventricle recommended by the American Heart Association (AHA).
-	Bullseye representation for the left ventricle.
-
-	Parameters
-	----------
-	ax : axes
-	data : list of int and float
-		The intensity values for each of the 17 segments
-	segBold: list of int, optional
-		A list with the segments to highlight
-	cmap : ColorMap or None, optional
-		Optional argument to set the desired colormap
-	norm : Normalize or None, optional
-		Optional argument to normalize data into the [0.0, 1.0] range
-
-
-	Notes
-	-----
-	This function create the 17 segment model for the left ventricle according
-	to the American Heart Association (AHA) [1]_
-
-	References
-	----------
-	.. [1] M. D. Cerqueira, N. J. Weissman, V. Dilsizian, A. K. Jacobs,
-		S. Kaul, W. K. Laskey, D. J. Pennell, J. A. Rumberger, T. Ryan,
-		and M. S. Verani, "Standardized myocardial segmentation and
-		nomenclature for tomographic imaging of the heart",
-		Circulation, vol. 105, no. 4, pp. 539-542, 2002.
-	"""
-	if segBold is None:
-		segBold = []
-
-	linewidth = 2
-	data = np.array(data).ravel()
-	print(data)
-
-	if cmap is None:
-		cmap = plt.cm.viridis
-
-	if norm is None:
-		norm = mpl.colors.Normalize(vmin=data.min(), vmax=data.max())
-
-	theta = np.linspace(0, 2*np.pi, 768)
-	r = np.linspace(0.2, 1, 4)
-
-	# Create the bound for the segment 17
-	for i in range(r.shape[0]):
-		ax.plot(theta, np.repeat(r[i], theta.shape), '-k', lw=linewidth)
-
-	# Create the bounds for the segments  1-12
-	for i in range(6):
-		theta_i = i*60*np.pi/180
-		ax.plot([theta_i, theta_i], [r[1], 1], '-k', lw=linewidth)
-
-	# Create the bounds for the segments 13-16
-	for i in range(4):
-		theta_i = i*90*np.pi/180 - 45*np.pi/180
-		ax.plot([theta_i, theta_i], [r[0], r[1]], '-k', lw=linewidth)
-
-	# Fill the segments 1-6
-	r0 = r[2:4]
-	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
-	for i in range(6):
-		# First segment start at 60 degrees
-		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((128, 2))*data[i]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+1 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[2], r[3]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[2], r[3]], '-k', lw=linewidth+1)
-
-	# Fill the segments 7-12
-	r0 = r[1:3]
-	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
-	for i in range(6):
-		# First segment start at 60 degrees
-		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((128, 2))*data[i+6]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+7 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[1], r[2]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[1], r[2]], '-k', lw=linewidth+1)
-
-	# Fill the segments 13-16
-	r0 = r[0:2]
-	r0 = np.repeat(r0[:, np.newaxis], 192, axis=1).T
-	for i in range(4):
-		# First segment start at 45 degrees
-		theta0 = theta[i*192:i*192+192] + 45*np.pi/180
-		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
-		z = np.ones((192, 2))*data[i+12]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if i+13 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-			ax.plot(theta0[0], [r[0], r[1]], '-k', lw=linewidth+1)
-			ax.plot(theta0[-1], [r[0], r[1]], '-k', lw=linewidth+1)
-
-	# Fill the segments 17
-	if data.size == 17:
-		r0 = np.array([0, r[0]])
-		r0 = np.repeat(r0[:, np.newaxis], theta.size, axis=1).T
-		theta0 = np.repeat(theta[:, np.newaxis], 2, axis=1)
-		z = np.ones((theta.size, 2))*data[16]
-		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
-		if 17 in segBold:
-			ax.plot(theta0, r0, '-k', lw=linewidth+2)
-
-	ax.set_ylim([0, 1])
-	ax.set_yticklabels([])
-	ax.set_xticklabels([])
 
 
 # Plots 18 segment bullseye
@@ -630,29 +504,39 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 
 
 # Inserts the data in the bullseye - Add GLS and MD here
-def DR_bullseye(data, prmt):
+def DR_bullseye(data, op,prmt):
 	# Make a figure and axes with dimensions as desired.
 	fig2, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
 						   subplot_kw=dict(projection='polar'))
 	fig2.canvas.set_window_title('Parameter Bulls Eye') #it wi	ll depend of a parameter
-	BullseyeAux = [data[0], data[17], data[11], data[5], data[12], data[6], data[1], data[16], data[10], data[4], 
+	if op != test_op:
+		BullseyeAux = [data[0], data[17], data[11], data[5], data[12], data[6], data[1], data[16], data[10], data[4], 
 	data[13], data[7], data[2], data[15], data[9], data[3], data[14], data[8]] #Check if the values are correct
+	else:
+		BullseyeAux = [data[10], data[15], data[14], data[9], data[8], data[7], data[6], data[13], data[12], 
+	data[5], data[4], data[3], data[2], data[11], data[1], data[0]] #Check if the values are correct
+			
 	# Create the axis for the colorbars
-	axl = fig2.add_axes([0.75, 0.1, 0.2, 0.05])	#Orientação
+	#Orientação
+	axl = fig2.add_axes([0.75, 0.1, 0.2, 0.05])	
 
 	# Set the colormap and norm to correspond to the data for which
 	# the colorbar will be used.
 
 	if prmt == '1':
 		cmap = mpl.cm.RdYlBu
-		norm = mpl.colors.Normalize(vmin=-25, vmax=10) #Valores para normalização
+		
+		#Valores para normalização
+		norm = mpl.colors.Normalize(vmin=-25, vmax=10) 
 		
 		#Preparing the data for bull's eye plot
 		BullseyeAux = np.round(BullseyeAux)
 
 	elif prmt == '2':
 		cmap = mpl.cm.RdBu
-		norm = mpl.colors.Normalize(vmin=0.5, vmax=0.7) #Valores para normalização
+		
+		#Valores para normalização
+		norm = mpl.colors.Normalize(vmin=0.5, vmax=0.7) 
 
 		#Preparing the data for bull's eye plot
 		BullseyeAux = np.round(BullseyeAux,3)
@@ -664,13 +548,275 @@ def DR_bullseye(data, prmt):
 	# and labels.
 	cb1 = mpl.colorbar.ColorbarBase(axl, cmap=cmap, norm=norm,
 									orientation='horizontal')
+	if op != test_op:
+		# Create the 18 segment model
+		bullseye_eighteenSEG_plot(ax, BullseyeAux, cmap=cmap, norm=norm)
+	else:
+		bullseye_sixteenSEG_plot(ax, BullseyeAux, cmap=cmap, norm=norm)
 	
-	# Create the 18 segment model
-	bullseye_eighteenSEG_plot(ax, BullseyeAux, cmap=cmap, norm=norm)
 	if prmt == '1':
-		ax.set_title('GLS Bull\'s Eye (%)') 
-		cb1.set_label('GLS') #see a few lines above for cb1
+		ax.set_title('GLS Bull\'s Eye (%)')
+		#see a few lines above for cb1 
+		cb1.set_label('GLS') 
 	elif prmt == '2':
-		ax.set_title('MD Bull\'s Eye (ms)') 
-		cb1.set_label('MD') #see a few lines above for cb1
+		ax.set_title('MD Bull\'s Eye (ms)')
+		#see a few lines above for cb1) 
+		cb1.set_label('MD') 
 	plt.show()
+
+
+#Below: To be implemented later
+#===============================================
+
+# Plots 16 segment bullseye
+def bullseye_sixteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
+	"""
+	Bullseye representation for the left ventricle.
+
+	Parameters
+	----------
+	ax : axes
+	data : list of int and float
+		The intensity values for each of the 17 segments
+	segBold: list of int, optional
+		A list with the segments to highlight
+	cmap : ColorMap or None, optional
+		Optional argument to set the desired colormap
+	norm : Normalize or None, optional
+		Optional argument to normalize data into the [0.0, 1.0] range
+
+
+	Notes
+	-----
+	This function creats the 18 segment model for the left ventricle according
+	to the American Heart Association (AHA) [1]
+	Based on the function developed by
+		.. [1] M. D. Cerqueira, N. J. Weissman, V. Dilsizian, A. K. Jacobs,
+			S. Kaul, W. K. Laskey, D. J. Pennell, J. A. Rumberger, T. Ryan,
+			and M. S. Verani, "Standardized myocardial segmentation and
+			nomenclature for tomographic imaging of the heart",
+			Circulation, vol. 105, no. 4, pp. 539-542, 2002.
+	"""
+	if segBold is None:
+		segBold = []
+
+	linewidth = 2
+	data = np.array(data).ravel()
+
+	if cmap is None:
+		cmap = plt.cm.viridis
+
+	if norm is None:
+		norm = mpl.colors.Normalize(vmin=data.min(), vmax=data.max())
+
+	theta = np.linspace(0, 2*np.pi, 768)
+	r = np.linspace(0, 1, 4)
+
+	# Create the bounds for the segments  1-12
+	for i in range(6):
+		theta_i = i*60*np.pi/180
+		ax.plot([theta_i, theta_i], [r[1], 1], '-k', lw=linewidth)
+	
+	# Create the bounds for the segments  13-16
+	for i in range(4):
+		theta_i = i*90*np.pi/180+np.pi/4
+		ax.plot([theta_i, theta_i], [r[0], r[1]], '-k', lw=linewidth)
+
+	#Correcting factor for the values annotations
+	cAngleFactor = [0.1, 0.1, 0, -0.1, -0.1, 0] #In Basal and Med segs
+	cAngleFactorApical = [0.3, 0.25, -0.15, -0.4] #For the apical segs
+	cRadiusFactor = [1.2, 1.5, 1.5, 0.8]	#Only in the apical segs
+
+	angStep = np.arange(1/2,15/6,2/6)
+	angStepApical = np.arange(1/2,15/6,3/6)
+
+	# Fill the segments 1-6
+	r0 = r[2:4]
+	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
+	for i in range(6):
+		# First segment start at 60 degrees
+		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
+		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+		z = np.ones((128, 2))*data[i]
+		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+
+		#Correto
+		ax.annotate(data[i], #Colocar o %
+            xy=(angStep[i]*np.pi+cAngleFactor[i], 5/6) #theta, radius
+            ) #Agora ir iterando pelos dados, raios e ângulos
+		#Raios: 1/6, 3/6, 5/6
+		#Ângulos: 3pi/6, 5pi/6,7pi/6,9pi/6, 11pi/6, 13pi/6
+
+		if i+1 in segBold:
+			ax.plot(theta0, r0, '-k', lw=linewidth+2)
+			ax.plot(theta0[0], [r[2], r[3]], '-k', lw=linewidth+1)
+			ax.plot(theta0[-1], [r[2], r[3]], '-k', lw=linewidth+1)
+		else:
+			ax.plot(theta0, r0, '-k', lw=linewidth)
+
+	# Fill the segments 7-12
+	r0 = r[1:3]
+	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
+	for i in range(6):
+		# First segment start at 60 degrees
+		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
+		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+		z = np.ones((128, 2))*data[i+6]
+		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+
+		ax.annotate(data[6+i], #Colocar o %
+            xy=(angStep[i]*np.pi+cAngleFactor[i], 3/6) #theta, radius
+            )
+
+		if i+7 in segBold:
+			ax.plot(theta0, r0, '-k', lw=linewidth+2)
+			ax.plot(theta0[0], [r[1], r[2]], '-k', lw=linewidth+1)
+			ax.plot(theta0[-1], [r[1], r[2]], '-k', lw=linewidth+1)
+		else:
+			ax.plot(theta0, r0, '-k', lw=linewidth)
+
+	# Fill the segments 13-16
+	r0 = r[0:2]
+
+	r0 = np.repeat(r0[:, np.newaxis], 192, axis=1).T
+	for i in range(4):
+		# First segment start at 45 degrees
+		theta0 = theta[i*192:i*192+192] + 45*np.pi/180
+		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+		z = np.ones((192, 2))*data[i+12]
+		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+
+		ax.annotate(data[12+i], #Colocar o %
+            xy=(angStepApical[i]*np.pi+cAngleFactorApical[i], 1/6*cRadiusFactor[i]) #theta, radius
+            )
+
+		if i+13 in segBold:
+			ax.plot(theta0, r0, '-k', lw=linewidth+2)
+			ax.plot(theta0[0], [r[0], r[1]], '-k', lw=linewidth+1)
+			ax.plot(theta0[-1], [r[0], r[1]], '-k', lw=linewidth+1)
+		else:
+			ax.plot(theta0, r0, '-k', lw=linewidth)
+
+	ax.set_ylim([0, 1])
+	ax.set_yticklabels([])
+	ax.set_xticklabels([])
+
+# Plots 17 segment bullseye
+def bullseye_seventeenSEG_plot(ax0, data, segBold=None, cmap=None, norm=None):
+	"""
+	This example demonstrates how to create the 17 segment model for the left
+	ventricle recommended by the American Heart Association (AHA).
+	Bullseye representation for the left ventricle.
+
+	Parameters
+	----------
+	ax : axes
+	data : list of int and float
+		The intensity values for each of the 17 segments
+	segBold: list of int, optional
+		A list with the segments to highlight
+	cmap : ColorMap or None, optional
+		Optional argument to set the desired colormap
+	norm : Normalize or None, optional
+		Optional argument to normalize data into the [0.0, 1.0] range
+
+
+	Notes
+	-----
+	This function create the 17 segment model for the left ventricle according
+	to the American Heart Association (AHA) [1]_
+
+	References
+	----------
+	.. [1] M. D. Cerqueira, N. J. Weissman, V. Dilsizian, A. K. Jacobs,
+		S. Kaul, W. K. Laskey, D. J. Pennell, J. A. Rumberger, T. Ryan,
+		and M. S. Verani, "Standardized myocardial segmentation and
+		nomenclature for tomographic imaging of the heart",
+		Circulation, vol. 105, no. 4, pp. 539-542, 2002.
+	"""
+	if segBold is None:
+		segBold = []
+
+	linewidth = 2
+	data = np.array(data).ravel()
+	print(data)
+
+	if cmap is None:
+		cmap = plt.cm.viridis
+
+	if norm is None:
+		norm = mpl.colors.Normalize(vmin=data.min(), vmax=data.max())
+
+	theta = np.linspace(0, 2*np.pi, 768)
+	r = np.linspace(0.2, 1, 4)
+
+	# Create the bound for the segment 17
+	for i in range(r.shape[0]):
+		ax.plot(theta, np.repeat(r[i], theta.shape), '-k', lw=linewidth)
+
+	# Create the bounds for the segments  1-12
+	for i in range(6):
+		theta_i = i*60*np.pi/180
+		ax.plot([theta_i, theta_i], [r[1], 1], '-k', lw=linewidth)
+
+	# Create the bounds for the segments 13-16
+	for i in range(4):
+		theta_i = i*90*np.pi/180 - 45*np.pi/180
+		ax.plot([theta_i, theta_i], [r[0], r[1]], '-k', lw=linewidth)
+
+	# Fill the segments 1-6
+	r0 = r[2:4]
+	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
+	for i in range(6):
+		# First segment start at 60 degrees
+		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
+		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+		z = np.ones((128, 2))*data[i]
+		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+		if i+1 in segBold:
+			ax.plot(theta0, r0, '-k', lw=linewidth+2)
+			ax.plot(theta0[0], [r[2], r[3]], '-k', lw=linewidth+1)
+			ax.plot(theta0[-1], [r[2], r[3]], '-k', lw=linewidth+1)
+
+	# Fill the segments 7-12
+	r0 = r[1:3]
+	r0 = np.repeat(r0[:, np.newaxis], 128, axis=1).T
+	for i in range(6):
+		# First segment start at 60 degrees
+		theta0 = theta[i*128:i*128+128] + 60*np.pi/180
+		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+		z = np.ones((128, 2))*data[i+6]
+		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+		if i+7 in segBold:
+			ax.plot(theta0, r0, '-k', lw=linewidth+2)
+			ax.plot(theta0[0], [r[1], r[2]], '-k', lw=linewidth+1)
+			ax.plot(theta0[-1], [r[1], r[2]], '-k', lw=linewidth+1)
+
+	# Fill the segments 13-16
+	r0 = r[0:2]
+	r0 = np.repeat(r0[:, np.newaxis], 192, axis=1).T
+	for i in range(4):
+		# First segment start at 45 degrees
+		theta0 = theta[i*192:i*192+192] + 45*np.pi/180
+		theta0 = np.repeat(theta0[:, np.newaxis], 2, axis=1)
+		z = np.ones((192, 2))*data[i+12]
+		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+		if i+13 in segBold:
+			ax.plot(theta0, r0, '-k', lw=linewidth+2)
+			ax.plot(theta0[0], [r[0], r[1]], '-k', lw=linewidth+1)
+			ax.plot(theta0[-1], [r[0], r[1]], '-k', lw=linewidth+1)
+
+	# Fill the segments 17
+	if data.size == 17:
+		r0 = np.array([0, r[0]])
+		r0 = np.repeat(r0[:, np.newaxis], theta.size, axis=1).T
+		theta0 = np.repeat(theta[:, np.newaxis], 2, axis=1)
+		z = np.ones((theta.size, 2))*data[16]
+		ax.pcolormesh(theta0, r0, z, cmap=cmap, norm=norm)
+		if 17 in segBold:
+			ax.plot(theta0, r0, '-k', lw=linewidth+2)
+
+	ax.set_ylim([0, 1])
+	ax.set_yticklabels([])
+	ax.set_xticklabels([])
+

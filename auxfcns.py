@@ -30,79 +30,148 @@ pd.DataFrame.front = front
 #
 
 
-def segmentName(segmentColor, chamber):
+def segmentName(segmentColor, chamber, op):
+	
+	if op != test_op:
+		if chamber == '2CH':
 
-	if chamber == '2CH':
+			if 'RED' in segmentColor:
+				return "Red - Basal Anterior"
 
-		if 'RED' in segmentColor:
-			return "Red - Basal Anterior"
+			elif 'BLUE' in segmentColor:
+				return "Blue - Mid Anterior"
 
-		elif 'BLUE' in segmentColor:
-			return "Blue - Medium Anterior"
+			elif 'MAGENTA' in segmentColor:
+				return "Magenta - Apical Anterior"
 
-		elif 'MAGENTA' in segmentColor:
-			return "Magenta - Apical Anterior"
+			elif 'GREEN' in segmentColor:
+				return "Green - Apical Inferior"
 
-		elif 'GREEN' in segmentColor:
-			return "Green - Apical Inferior"
+			elif 'CYAN' in segmentColor:
+				return "Cyan - Mid Inferior"
 
-		elif 'CYAN' in segmentColor:
-			return "Cyan - Medium Inferior"
+			elif 'YELLOW' in segmentColor:
+				return "Yellow - Basal Inferior"
 
-		elif 'YELLOW' in segmentColor:
-			return "Yellow - Basal Inferior"
+			else:
+				return "\nERROR - Color could not be identified\n"
+
+		elif chamber == '4CH':
+
+			if 'RED' in segmentColor:
+				return "Red - Basal Anterolateral"
+
+			elif 'BLUE' in segmentColor:
+				return "Blue - Mid Anterolateral"
+
+			elif 'MAGENTA' in segmentColor:
+				return "Magenta - Apical Anterolateral"
+
+			elif 'GREEN' in segmentColor:
+				return "Green -Apical Inferoseptal"
+
+			elif 'CYAN' in segmentColor:
+				return "Cyan - Mid Inferoseptal"
+
+			elif 'YELLOW' in segmentColor:
+				return "Yellow - Basal Inferoseptal"
+
+			else:
+				return "\nERROR - Color could not be identified\n"
+
+		elif chamber == 'APLAX':
+
+			if 'RED' in segmentColor:
+				return "Red - Basal Anteroseptal"
+
+			elif 'BLUE' in segmentColor:
+				return "Blue - Mid Anteroseptal"
+
+			elif 'MAGENTA' in segmentColor:
+				return "Magenta - Apical Anteroseptal"
+
+			elif 'GREEN' in segmentColor:
+				return "Green - Apical Inferolateral"
+
+			elif 'CYAN' in segmentColor:
+				return "Cyan - Mid Inferolateral"
+
+			elif 'YELLOW' in segmentColor:
+				return "Yellow - Basal Inferolateral"
+
+			else:
+				return "\nERROR - Color could not be identified\n"
 
 		else:
-			return "\nERROR - Color could not be identified\n"
-
-	elif chamber == '4CH':
-
-		if 'RED' in segmentColor:
-			return "Red - Basal Anterolateral"
-
-		elif 'BLUE' in segmentColor:
-			return "Blue - Medium Anterolateral"
-
-		elif 'MAGENTA' in segmentColor:
-			return "Magenta - Apical Anterolateral"
-
-		elif 'GREEN' in segmentColor:
-			return "Green -Apical Inferoseptal"
-
-		elif 'CYAN' in segmentColor:
-			return "Cyan - Medium Inferoseptal"
-
-		elif 'YELLOW' in segmentColor:
-			return "Yellow - Basal Inferoseptal"
-
-		else:
-			return "\nERROR - Color could not be identified\n"
-
-	elif chamber == 'APLAX':
-
-		if 'RED' in segmentColor:
-			return "Red - Basal Anteroseptal"
-
-		elif 'BLUE' in segmentColor:
-			return "Blue - Medium Anteroseptal"
-
-		elif 'MAGENTA' in segmentColor:
-			return "Magenta - Apical Anteroseptal"
-
-		elif 'GREEN' in segmentColor:
-			return "Green - Apical Inferolateral"
-
-		elif 'CYAN' in segmentColor:
-			return "Cyan - Medium Inferolateral"
-
-		elif 'YELLOW' in segmentColor:
-			return "Yellow - Basal Inferolateral"
-
-		else:
-			return "\nERROR - Color could not be identified\n"
-
+			return "\nERROR - Vision could not be identified\n"
+	
+	#For simulations from CircAdapt (following our strain curves export method)
 	else:
-		return "\nERROR - Vision could not be identified\n"
+		if chamber == '2CH':
+
+			if 'RED' in segmentColor:
+				return "Red - Apical Lateral"
+
+			elif 'BLUE' in segmentColor:
+				return "Blue - Apical Inferior"
+
+			elif 'MAGENTA' in segmentColor:
+				return "Magenta - Apical Anterior"
+
+			elif 'GREEN' in segmentColor:
+				return "Green - Mid Anterolateral"
+
+			elif 'CYAN' in segmentColor:
+				return "Cyan - Mid Inferolateral"
+
+			elif 'YELLOW' in segmentColor:
+				return "Yellow - Mid Inferior"
+
+			else:
+				return "\nERROR - Color could not be identified\n"
+
+		elif chamber == '4CH':
+
+			if 'RED' in segmentColor:
+				return "Red - Mid Anterior"
+
+			elif 'BLUE' in segmentColor:
+				return "Blue - Basal Anterolateral"
+
+			elif 'MAGENTA' in segmentColor:
+				return "Magenta - Basal Inferolateral"
+
+			elif 'GREEN' in segmentColor:
+				return "Green -Basal Inferior"
+
+			elif 'CYAN' in segmentColor:
+				return "Cyan - Basal Anterior"
+
+			elif 'YELLOW' in segmentColor:
+				return "Yellow - Apical Septal"
+
+			else:
+				return "\nERROR - Color could not be identified\n"
+
+		elif chamber == 'APLAX':
+
+			if 'RED' in segmentColor:
+				return "Red - Mid Inferoseptal"
+
+			elif 'BLUE' in segmentColor:
+				return "Blue - Mid Anteroseptal"
+
+			elif 'MAGENTA' in segmentColor:
+				return "Magenta - Basal Inferoseptal"
+
+			elif 'GREEN' in segmentColor:
+				return "Green - Basal Anteroseptal"
+
+			else:
+				return "\nERROR - Color could not be identified\n"
+
+		else:
+			return "\nERROR - Vision could not be identified\n"
 
 
 
