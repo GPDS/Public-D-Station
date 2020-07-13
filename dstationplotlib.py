@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"Separar as funcoes de plot para cada parâmetro mesmo, ficam menos confusas"
 
 # A package created for the D-Station (https://gpdsifpb.github.io/D-Station/)
 # to plot strain or strain rate curves and calculate its parameters
@@ -25,25 +24,22 @@ height_line = float(config['default']['height_line'])
 
 
 # Declaring variables and arrays
-xcoord = []	# List where the time values of the selected points are stored
 
+# List where the time values of the selected points are stored
+# Used in plot click
+xcoord = []	
 
-onlyNEG = 1  #control - to use only the negative peaks in peak detection/in the plots
-
+#control - to use only the negative peaks in peak detection/in the plots
+onlyNEG = 1  
 
 # Function to select the points of interest in the ECG curve
 def onclick(event):
-	print ("\nValue: Time = %f milliseconds"%(event.xdata*1000)) # Shows the time value of the clicked point
-	xcoord.append(event.xdata*1000) # Appends the points to an array
 
+	# Shows the time value of the clicked point
+	print ("\nValue: Time = %f milliseconds"%(event.xdata*1000)) 
 
-# This function below may be used in the future
-def onclick_iva(event):
-	#print ("\nValue: Time = %f milliseconds"%(event.xdata*1000))
-	if prmt != "8":
-		xcoord.append(event.xdata*1000)
-	else:
-		times_IVA.append(event.xdata)
+	# Appends the points to an array
+	xcoord.append(event.xdata*1000) 
 
 
 # Function to plot the curves with the colors that they have in the raw data file
@@ -64,7 +60,8 @@ def colorPlot(txt,tcolunas):
 			plt.plot(txt.iloc[:,it], 'y')
 		else:
 			plt.plot(txt.iloc[:,it], 'k')
-	#plt.plot(txt.iloc[:,tcolunas-2], 'k.')                  # Global segment, uncomment this to show it
+	# Global segment, uncomment this to show it
+	# plt.plot(txt.iloc[:,tcolunas-2], 'k.')                  
 
 
 #Plots the ECG curve so the user may see in the red lines the OnsetQRS1, OnsetP and OnsetQRS2 and verify if the values stored in the spreadsheet are correct
@@ -100,7 +97,8 @@ def ecgVerification(txt1, headerTimesTxt1, END_Time0, pointsECG):
 	plt.grid()
 	plt.show()
 
-# Funcao to plot the Strain and ECG curves to select 3 points of interest on the latter
+
+# Plots the Strain and ECG curves to select 3 points of interest on the latter
 def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch,tcolunas_strain_rate_lv4ch):
 	
 	# I had to to this in order to use it in the function onClick (sorry)
@@ -119,29 +117,38 @@ def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch
 		plt.xticks(tick_locs, tick_lbls)
 
 		if it == 0: # Subplot 1 (Top Plot - LV Strain)
-			colorPlot(txt1,tcolunas1)			# Right now only the 4CH is plotted in this stage
+
+			# Right now only the 4CH is plotted in this stage
+			colorPlot(txt1,tcolunas1)			
 			plt.ylabel('Strain - LV\n(%)', fontsize=SizeFont)
 			plt.grid()
-			plt.setp(ax.get_xticklabels(), visible=False)		# The time label isn't shown in this subplot
+
+			# The time label isn't shown in this subplot
+			plt.setp(ax.get_xticklabels(), visible=False)		
 
 		elif it == 1: # Subplot 2 (Mid Plot - LV Strain Rate)
-			colorPlot(strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)		#S train Rate 4ch is shown if it is not a simulation
+
+			#Strain Rate 4ch is shown if it is not a simulation
+			colorPlot(strain_rate_lv4ch,tcolunas_strain_rate_lv4ch)		
 			plt.ylabel('Strain Rate - LV\n(1/s)', fontsize=SizeFont)
 			plt.grid()
 			plt.setp(ax.get_xticklabels(), visible=False)
+
 		else: # Subplot 3 (Bottom plot - ECG)
 			plt.plot(txt1.loc[:,'ECG : '])
 			plt.xlabel('Time (ms)', fontsize=SizeFont)
 			plt.ylabel('ECG\nVoltage (mV)', fontsize=SizeFont)
 			plt.grid()
 
-	cid = fig.canvas.mpl_connect('button_press_event', onclick) # Allowing to store the time values of the clicked points
+	# Allowing to store the time values of the clicked points
+	cid = fig.canvas.mpl_connect('button_press_event', onclick) 
 
 	# Plotting everything to be clicked
 	#plt.tight_layout()
 	plt.show()
 
-	fig.canvas.mpl_disconnect(cid)	# After the points selection the function to store them will finish
+	# After the points selection the function to store them will finish
+	fig.canvas.mpl_disconnect(cid)	
 	pointsECG = np.asarray(xcoord)
 	
 	# Reseting the list globally - in case i rerun the program
@@ -151,7 +158,7 @@ def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch
 #
 
 
-#Plots the points of interest in the GLS, MD and DI calculation
+#Plots the curves with the points of interest in the GLS, MD or other parameters
 def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, LAphasesTimes, txt, shwFig):
 
 
@@ -173,7 +180,8 @@ def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, stra
 			
 			plt.ylabel('\nStrain - LV\n(%)', fontsize=SizeFont)
 
-			plt.setp(ax.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
+			#Time labels in the top subplot won't be shown
+			plt.setp(ax.get_xticklabels(), visible=False)		
 			colorPlot(txt1,tcolunas1)
 			colorPlot(txt2,tcolunas2)
 			colorPlot(txt3,tcolunas3)
@@ -181,8 +189,8 @@ def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, stra
 
 			# Below: The points used in the parameters calculations are shown
 
-
-			if prmt == "1" or prmt == "2":		#Points used for GLS or MD
+			#Points used for GLS or MD
+			if prmt == "1" or prmt == "2":		
 
 				for itTxt in range(1,4):
 					colsTxt = int(((txt[itTxt].size/len(txt[itTxt].index))))
@@ -232,10 +240,16 @@ def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, stra
 		
 		plt.xlim(0, END_Time)
 
-		#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
+		# Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
 		ymin, ymax = plt.ylim()
-		txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
-		txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
+
+		# Valve events text height
+		txt_height_1 = ymax+0.15*(ymax-ymin) 
+
+		# Phase names text height
+		txt_height_2 = ymax+0.05*(ymax-ymin) 
+
+
 		x_inc=0.002
 		plt.grid()
 		tick_locs = np.arange(0.0,END_Time,0.2)
@@ -276,7 +290,7 @@ def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, stra
 				for it1 in range(3):
 					if LAphasesTimes[it1] < END_Time:
 						if subplotIt == 1:
-							plt.text(LAphasesTimes[it1]+x_inc, txt_height_2-0.5, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
+							plt.text(LAphasesTimes[it1]+x_inc, txt_height_2-5, auxPrintPhases[it1] , rotation=0, verticalalignment='center', fontsize=SizePhaseFont)
 								
 						ax.axvline(x=LAphasesTimes[it1], c="k",ymax= height_line, linewidth=1, linestyle = ':', zorder=0, clip_on=False)
 
@@ -305,7 +319,8 @@ def avgPhaseStrainVarPlot(txt1, txt2, txt3, txtMid, op, averageLongStrain, valve
 			
 			plt.ylabel('\nAverage Longitudinal Strain - LV\n(%)', fontsize=SizeFont)
 
-			plt.setp(ax.get_xticklabels(), visible=False)		#Time labels in the top subplot won't be shown
+			#Time labels in the top subplot won't be shown
+			plt.setp(ax.get_xticklabels(), visible=False)		
 			plt.plot(averageLongStrain, 'k')
 
 
@@ -334,8 +349,12 @@ def avgPhaseStrainVarPlot(txt1, txt2, txt3, txtMid, op, averageLongStrain, valve
 
 		#Diferenciação Entre eventos das valvas e das fases (altura da linha)/ Disposição do texto
 		ymin, ymax = plt.ylim()
-		txt_height_1 = ymax+0.15*(ymax-ymin) #Valve events text height
-		txt_height_2 = ymax+0.05*(ymax-ymin) #Phase names text height
+
+		#Valve events text height
+		txt_height_1 = ymax+0.15*(ymax-ymin) 
+
+		#Phase names text height
+		txt_height_2 = ymax+0.05*(ymax-ymin) 
 		x_inc=0.002
 		plt.grid()
 		tick_locs = np.arange(0.0,END_Time,0.2)
@@ -503,71 +522,6 @@ def bullseye_eighteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 	ax.set_xticklabels([])
 
 
-# Inserts the data in the bullseye - Add GLS and MD here
-def DR_bullseye(data, op,prmt):
-	# Make a figure and axes with dimensions as desired.
-	fig2, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
-						   subplot_kw=dict(projection='polar'))
-	fig2.canvas.set_window_title('Parameter Bulls Eye') #it wi	ll depend of a parameter
-	if op != test_op:
-		BullseyeAux = [data[0], data[17], data[11], data[5], data[12], data[6], data[1], data[16], data[10], data[4], 
-	data[13], data[7], data[2], data[15], data[9], data[3], data[14], data[8]] #Check if the values are correct
-	else:
-		BullseyeAux = [data[10], data[15], data[14], data[9], data[8], data[7], data[6], data[13], data[12], 
-	data[5], data[4], data[3], data[2], data[11], data[1], data[0]] #Check if the values are correct
-			
-	# Create the axis for the colorbars
-	#Orientação
-	axl = fig2.add_axes([0.75, 0.1, 0.2, 0.05])	
-
-	# Set the colormap and norm to correspond to the data for which
-	# the colorbar will be used.
-
-	if prmt == '1':
-		cmap = mpl.cm.RdYlBu
-		
-		#Valores para normalização
-		norm = mpl.colors.Normalize(vmin=-25, vmax=10) 
-		
-		#Preparing the data for bull's eye plot
-		BullseyeAux = np.round(BullseyeAux)
-
-	elif prmt == '2':
-		cmap = mpl.cm.RdBu
-		
-		#Valores para normalização
-		norm = mpl.colors.Normalize(vmin=0.5, vmax=0.7) 
-
-		#Preparing the data for bull's eye plot
-		BullseyeAux = np.round(BullseyeAux,3)
-
-	# ColorbarBase derives from ScalarMappable and puts a colorbar
-	# in a specified axes, so it has everything needed for a
-	# standalone colorbar.  There are many more kwargs, but the
-	# following gives a basic continuous colorbar with ticks
-	# and labels.
-	cb1 = mpl.colorbar.ColorbarBase(axl, cmap=cmap, norm=norm,
-									orientation='horizontal')
-	if op != test_op:
-		# Create the 18 segment model
-		bullseye_eighteenSEG_plot(ax, BullseyeAux, cmap=cmap, norm=norm)
-	else:
-		bullseye_sixteenSEG_plot(ax, BullseyeAux, cmap=cmap, norm=norm)
-	
-	if prmt == '1':
-		ax.set_title('GLS Bull\'s Eye (%)')
-		#see a few lines above for cb1 
-		cb1.set_label('GLS') 
-	elif prmt == '2':
-		ax.set_title('MD Bull\'s Eye (ms)')
-		#see a few lines above for cb1) 
-		cb1.set_label('MD') 
-	plt.show()
-
-
-#Below: To be implemented later
-#===============================================
-
 # Plots 16 segment bullseye
 def bullseye_sixteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 	"""
@@ -701,6 +655,79 @@ def bullseye_sixteenSEG_plot(ax, data, segBold=None, cmap=None, norm=None):
 	ax.set_yticklabels([])
 	ax.set_xticklabels([])
 
+
+# Inserts the data (GLS, MD or other parameters) into the (16 or 18 segment) bullseye
+def DR_bullseye(data, op, prmt):
+	# Make a figure and axes with dimensions as desired.
+	fig2, ax = plt.subplots(figsize=(8, 6), nrows=1, ncols=1,
+						   subplot_kw=dict(projection='polar'))
+
+	#it depends of the parameter
+	fig2.canvas.set_window_title('Parameter Bulls Eye') 
+	
+	#Ordering the segments of the raw data files in the polar plot
+	if op != test_op:
+		BullseyeAux = [data[0], data[17], data[11], data[5], data[12], data[6], data[1], data[16], data[10], data[4], 
+	data[13], data[7], data[2], data[15], data[9], data[3], data[14], data[8]]
+	else:
+		BullseyeAux = [data[10], data[15], data[14], data[9], data[8], data[7], data[6], data[13], data[12], 
+	data[5], data[4], data[3], data[2], data[11], data[1], data[0]]
+			
+
+	# Create the axis for the colorbars
+	axl = fig2.add_axes([0.75, 0.1, 0.2, 0.05])	
+
+	# Set the colormap and norm to correspond to the data for which
+	# the colorbar will be used.
+	if prmt == '1':
+		cmap = mpl.cm.RdYlBu
+
+		#Values to normalize the colorbar
+		norm = mpl.colors.Normalize(vmin=-25, vmax=10) 
+		
+		#Preparing the data for bull's eye plot
+		BullseyeAux = np.round(BullseyeAux)
+
+	elif prmt == '2':
+		cmap = mpl.cm.RdBu
+		
+		#Values to normalize the colorbar
+		norm = mpl.colors.Normalize(vmin=0.5, vmax=0.7) 
+
+		#Preparing the data for bull's eye plot
+		BullseyeAux = np.round(BullseyeAux,3)
+
+
+	# ColorbarBase derives from ScalarMappable and puts a colorbar
+	# in a specified axes, so it has everything needed for a
+	# standalone colorbar.  There are many more kwargs, but the
+	# following gives a basic continuous colorbar with ticks
+	# and labels.
+	cb1 = mpl.colorbar.ColorbarBase(axl, cmap=cmap, norm=norm,
+									orientation='horizontal')
+	if op != test_op:
+		# Create the 18 segment model
+		bullseye_eighteenSEG_plot(ax, BullseyeAux, cmap=cmap, norm=norm)
+	
+	else:
+		# Create the 16 segment model
+		bullseye_sixteenSEG_plot(ax, BullseyeAux, cmap=cmap, norm=norm)
+	
+	if prmt == '1':
+		ax.set_title('GLS Bull\'s Eye (%)')
+		#see a few lines above for cb1 
+		cb1.set_label('GLS') 
+	elif prmt == '2':
+		ax.set_title('MD Bull\'s Eye (ms)')
+		#see a few lines above for cb1) 
+		cb1.set_label('MD') 
+	plt.show()
+
+
+
+# To be implemented later
+#===============================================
+
 # Plots 17 segment bullseye
 def bullseye_seventeenSEG_plot(ax0, data, segBold=None, cmap=None, norm=None):
 	"""
@@ -819,4 +846,3 @@ def bullseye_seventeenSEG_plot(ax0, data, segBold=None, cmap=None, norm=None):
 	ax.set_ylim([0, 1])
 	ax.set_yticklabels([])
 	ax.set_xticklabels([])
-

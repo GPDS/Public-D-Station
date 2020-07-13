@@ -8,7 +8,7 @@ import re
 import numpy as np
 import openpyxl                  # Package to work with .xlsx - See documentation when working with a big amount of data
 
-#Package that i (rafaelds9) created
+#Package by me (rafaelds9)
 from dstationplotlib import *
 
 
@@ -29,7 +29,8 @@ def front(self, n):
 pd.DataFrame.front = front
 #
 
-
+# Function to relate the raw data file segments (col names)
+# with the actual segments in the AHA (American Heart Association) model 
 def segmentName(segmentColor, chamber, op):
 	
 	if op != test_op:
@@ -174,7 +175,9 @@ def segmentName(segmentColor, chamber, op):
 			return "\nERROR - Vision could not be identified\n"
 
 
-
+# Function that checks if there is a raw data associated with the patient
+# and visualization chosen, opens it and returns the dataframe and
+# the corresponding header times  
 def openRawData(exams_path, heartChamber, strainType, visualization):
 
 
@@ -209,7 +212,9 @@ def openRawData(exams_path, heartChamber, strainType, visualization):
 		sys.exit(1)
 
 
-
+# Function that takes the reference ES_Time (end systolic time) and the ES_Time
+# of the file to times of the dataframe so they are with the same ES_Time as
+# the reference. This is done by shifting the index based on the difference
 def syncStrain(txt, refESTime, oldESTime):
 
 	txt=txt.copy(deep=True) #Aparentemente não é necessario
@@ -218,7 +223,7 @@ def syncStrain(txt, refESTime, oldESTime):
 	return txt
 
 
-
+# Opens the spreadsheet and reads the line corresponding to the idPatient inputed
 def openSheet(sheetName, idPatient):
 
 	#ADD TRY-EXCEPT routines later
@@ -230,31 +235,42 @@ def openSheet(sheetName, idPatient):
 
 	#Determines the current patient row
 	for cell in sheet['A']:
-		if(cell.value is not None): #check if that the cell is not empty.
-			if idPatient == cell.value: #Check if the value of the cell contains the idPatient
+		#checks if that the cell is not empty.
+		if(cell.value is not None): 
+			#Checks if the value of the cell contains the idPatient
+			if idPatient == cell.value: 
 				patientLine = format(cell.row)
 
 	return sheet, patientLine, wb
 
 
-
+# Function to check if the ECG times (QRS Onset1, P Onset and QRS Onset2) 
+# were already selected. If they were, the user may check if they are 
+# correct or change them. If there were not selected, the it will plot
+# the ECG curve so the user can select these points 
 def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op, decision):
-	#Checks if the ECG points were selected
 
-	EcgOk = 0	#Defines if the ECG has its points correctly or should be marked/rechecked
-	MarkPoints = 1 # For future use
+	# Defines if the ECG has its points correctly or should be marked/rechecked
+	EcgOk = 0	
+
+	# For future use
+	MarkPoints = 1 
 
 	auxSheetColumns = ['U', 'V', 'W']
-	pointsECG = np.zeros(3) #OnsetQRS1, OnsetP, OnsetQRS2
 
-	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
+	# [OnsetQRS1, OnsetP, OnsetQRS2]
+	pointsECG = np.zeros(3) #
+
+	#Checks the ammount of columns in the dataframe
+	tcolunas1=int(((txt1.size/len(txt1.index))))			
 	tcolunas_strain_rate_lv4ch = int(((strain_rate_lv4ch.size/len(strain_rate_lv4ch.index))))
 
-	#Sort para detectar o menor index dentre os arquivospara que um gráfico não fique sobrando
-	END_Time0 = sorted([txt1.index[len(txt1.index)-1], strain_rate_lv4ch.index[len(strain_rate_lv4ch.index)-1]])[1]
+	# Detects the smallest index in the dataframes
+	END_Time0 = min([txt1.index[len(txt1.index)-1], strain_rate_lv4ch.index[len(strain_rate_lv4ch.index)-1]])
 
-
+	# If not a simulation and MarkPoints == 1
 	if op != test_op and MarkPoints:
+		# If all the values are present
 		if sheet['U'+linePatient].value is not None and sheet['V'+linePatient].value is not None and sheet['W'+linePatient].value is not None:
 			
 			while EcgOk == 0:
@@ -299,7 +315,7 @@ def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op,
 				sheet[auxSheetColumns[it]+str(linePatient)] = round(pointsECG[it],0) # Writes the ECG points on the sheet
 
 
-
+# Saves the values calculated in the line corresponding to the idPatient
 def saveAndCloseSheet(linePatient, sheet, wb, headerTimes, phasesTimes, systolicTime, outGLS, outMD):
 	
 	auxSheetCols = np.array(['X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK'])

@@ -20,8 +20,9 @@ def openRawDataFiles(idPatient, op):
 	#Creating a np array to later export all time arrays
 	headerTimes = np.zeros((5,3))
 
-	txtMid2 = 0	#Default state  
-	txtMid3 = 0	#Default state  
+	#Default state for the txtMids 
+	txtMid2 = 0	 
+	txtMid3 = 0
 
 	#Checks if the file is on the patient's or simulation' directory
 	if op != test_op:					 
@@ -63,8 +64,10 @@ def openRawDataFiles(idPatient, op):
 		txtMid1, headerTimes[3] = openRawData(exams_path, 'RV', 'SL', '4CH')
 		txtMid1 = syncStrain(txtMid1, headerTimes[0][2], headerTimes[3][2])
 
-	else: # Left Ventricle - Longitudinal Strain Rate (obtained by the strain curves) 
-		  #(forCircAdapt simulations or default case)
+	
+	else: 
+		# Left Ventricle - Longitudinal Strain Rate (obtained by the strain curves) 
+		#(forCircAdapt simulations or default case)
 		if op != "5" and op != test_op:
 			print("Invalid Option. Using default option (5)\n\n") 
 

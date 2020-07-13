@@ -1,5 +1,7 @@
 import numpy as np
 
+
+# Prints the LV valve event times
 def printValveTimes(valveTimes):
     
     auxPrintValves = np.array(['MVO', 'MVC', 'AVO', 'AVC'])
@@ -9,7 +11,7 @@ def printValveTimes(valveTimes):
             print("\t", auxPrintValves[it2]+str(it1+1),": ", valveTimes[it1][it2]*1000, " ms", sep='')
 #
 
-
+# Prints the LV phase onset times
 def printPhaseTimes(phasesTimes):
     
     print("\n\nLeft Ventricle Phase Times:\n")
@@ -21,7 +23,7 @@ def printPhaseTimes(phasesTimes):
             print("\t", auxPrintPhases[it-6]+'2',": ", phasesTimes[it]*1000, " ms", sep='')
 #
 
-
+# Prints the LA phase onset times
 def printLAPhaseTimes(LAphasesTimes):    
 	auxPrintLAPhases = np.array(['Reservoir', 'Conduit', 'Atrial Contraction'])
 	print("\n\nLeft Atrium Phase Times:\n")
