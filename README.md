@@ -1,77 +1,107 @@
-# Software - Análise Curvas de Deformação Cardíaca
-
-### Descrição
-
-A análise da deformação cardíaca pela técnica de Speckle Tracking[1] tem se mostrado de grande aplicabilidade em diversos cenários, tanto da prática cardiológica[1]  quanto no âmbito da pesquisa clínica[2], uma vez que torna possível avaliar em detalhe a mecânica das câmaras do coração a níveis regional e global. Porém, o emprego de ferramentas para processamento offline dos sinais fornecidos pelo Speckle Tracking tornaram-se imprescindíveis para aplicações mais amplas desta tecnologia no âmbito da pesquisa clínica. Enquanto o acesso às estações de pós processamento, no entanto, é limitado à certas regiões em função das dimensões do país e pelo seu alto custo. Ademais, fabricantes desses equipamentos impõem padrões específicos de análise para suas workstations, gerando limitações de análise, bem como discrepâncias na mensuração dos diferentes parâmetros.
-
-É comum que, centros internacionais de referência no estudo da deformação cardíaca, tenham softwares livres customizados para a realização do processamento offline sem as limitações impostas pelos fabricantes, permitindo que sejam adaptados com base nas necessidades de suas pesquisas. No Brasil, entretanto, não há registro na literatura de centros que possuem tais softwares livres.
-
-O presente trabalho visa apresentar e pré-validar um novo software, para uso livre, que denominamos D-station, para análise das curvas de deformação cardíaca fornecidas por qualquer software proprietário de análise offline. Para isso, a solução proposta torna possível apresentar e validar o D-station para avaliação de curvas de deformação cardíaca que, a partir destes sinais, possibilite o cálculo de parâmetros de diferentes softwares de processamento offline de curvas de deformação, com a vantagem de ser gratuito e ter código livre. Sua validação será feita por comparação entre parâmetros obtidos com o D-station e o software EchoPAC(GE).
+# Software for Post-Processing Analysis of Strain Curves: The D-Station
 
 
-### Dependências
+The D-Station is a custom and free application, developed using the Python 3 programming language and directed to the offline post processing of the heart strain curves.
 
-Para o funcionamento correto do software são necessárias a instalações das seguintes ferramentas:
+The application’s inputs are: 
+
+1) the opening and closing times of the aortic and mitral valves; 
+
+2) the raw data files containing the Strain or Strain Rate curves; 
+
+3) the Patient ID;
+
+4) the option of visualization selected by the user.
+
+#
+
+In the current version of the software, six output options are available to the users:
+
+* Strain - LV (Left Ventricle), Strain Rate - LV and ECG;
+
+* Strain - LV, Strain - LA (Left Atrium) and ECG; 
+
+* Strain - LV, Strain Rate - LA and ECG; 
+
+* Strain - LV, Strain - RV (Right Ventricle) and ECG; 
+
+* Strain - LV, Strain Rate - LV and ECG, in which the Strain Rate is obtained from the Strain curves;
+
+* Test Option (to use with CircAdapt): Strain - LV and Strain Rate - LV.
 
 
- - [Python 3](https://www.python.org/downloads/)
- - [Panda](https://pandas.pydata.org/) 
+
+### Packages
+
+In order to run the application you will need the following packages for Python 3 (tested in Python 3.8.3 64-bit):
+
+ - [Pandas](https://pandas.pydata.org/) 
  - [numpy](http://www.numpy.org/)
  - [matplotlib](https://matplotlib.org/)
  - [openpyxl](https://pypi.org/project/openpyxl/)
  - [numpy](http://www.numpy.org/)
 
 
-### Instruções de uso
-
-  
-Para o funcionamento do programa são necessárias as seguintes condições:
-
-Os arquivos .txt devem estar numa pasta contida na pasta Patients, caso sejam de pacientes reais, ou numa pasta contida em Simulations, caso sejam simulações provenientes do CircAdapt, de forma semelhante aos arquivos de exemplo.
-
-Os tempos de abertura e fechamento das valvas devem estar no arquivo Event_Timing.
-
-Executando o arquivo D-Station, o programa inicia-se pedindo para que seja inserido o Patient ID, isto é, o nome da pasta que contém os exames (e.g. Aristoteles). O usuário deve então escolher uma das opções de visualização oferecidas (simulações funcionam apenas com a Test Option) e marcar os seguintes pontos: QRS 1 Onset, P Onset, QRS 2 Onset e serão exibidos então os tempos de início de cada fase, caso seja um paciente real. Por fim o usuário pode escolher o parâmetro que deseja visualizar.
+### Usage 
 
 
-### Publicações 
+To run the application the following criteria need to be met:
+
+* The text files containing the strain/strain rate curves of at least the LV (2CH, 4CH and APLAX/3CH) should be in the directory Patients, if they are from real patients or, or Simulations, if they are CircAdapt simulations.
+
+* The valve event times (Mitral Valve Opening, Mitral Valve Closing, Aortic Valve Opening and Aortic Valve Closing) should be in the spreadsheet (Patients_DB.xlsx), where the IdPatient must have the same name as the directory in which the text files are stored.
+
+To help new users, a few examples are already available in this repository. Use the instructions above to register new patients.
+
+
+### Running the application
+
+When you run the D-Station, the application starts asking the user to type the Patient ID, that is, the name of the directory containing the text files with the curves. After that, the user must input one of the output options presented in the description section and in the console of the application. It is important to emphasise that **simulations only work with the test option**. After selecting the option, if it is not a simulation, the user must select in the ECG plot the **Onset of the QRS complex 1, Onset of the P-Wave and the Onset of the QRS complex 2**. The parameters will all be calculated and printed in the console. The user can then select an option to view more details about those parameters. 
+
+
+### Parameters
+
+* Global Longitudinal Strain **(validated considering peak systolic strain as the most negative points during systole)**:  Mean value of the peak systolic strain. 
+
+* Mechanical Dispersion **(to be validated)**: Standard deviation of the time values of the peak strain points, considering the peak as the most negative points in the whole cycle.
 
 
 
-
-### Autores
+### Authors
 
  - Rafael D. de Sousa
-	 - IFPB - João Pessoa 
-	 - Aluno: pesquisador e desenvolvedor
+	 - Student/Reseacher/Developer
+	 - IFPB - Campus João Pessoa 
 
  - Ittalo S. Silva 
-	  - IFPB - João Pessoa 
-	 - Aluno: pesquisador e desenvolvedor
-	 
- - Carlos Danilo M. Regis
-	 - Professor Orientador
-	 - IFPB - João Pessoa 
-	 
- - Paulo Szewierenko 
-	 - Professor Orientador
-	 - Instituto Tecnológico de Aeronáutica - São José dos Campos - SP
-	 
- - Renato A. Hortegal
-	 - Professor Orientador
-	 - Instituto Dante Pazzanese de Cardiologia - SP
+	 - Student/Reseacher/Developer
+	 - IFPB - Campus João Pessoa 
 
  - José Raimundo Barbosa
-	 -	IFPB - João Pessoa 
-	 - Aluno: desenvolvedor suporte.
+	 - Student/Reseacher/Developer
+	 - IFPB - Campus João Pessoa 
+	 
+ - Carlos Danilo M. Regis
+	 - Professor Advisor
+	 - IFPB - Campus João Pessoa 
+	 
+ - Paulo Szewierenko 
+	 - Statistical Consultant
+	 
+ - Renato A. Hortegal
+	 - Cardiologist/Advisor
+	 - Beneficência Portuguesa Hospital of São Paulo/Dante Pazzanese Institute of Cardiology
 
 
-### Referências
 
-1.  Almeida ALC, Gjesdal O, Newton N, Choi EY, Tura-Teixido G, Yoneyama K, et al. Speckle-Tracking pela ecocardiografia bidimensional: aplicações clínicas. Rev bras ecocardiogr imagem cardiovasc. 2013 Jan-Mar;26(1):38-49.
-    
-2.  Haugaa KH, Grenne BL, Eek CH, Ersbøll M, Valeur Nana, Svendsen JH, et al. Strain Echocardiography Improves Risk Prediction of Ventricular Arrhythmias After Myocardial Infarction. JACC Cardiovasc Imaging. 2013 Aug, 6(8):841-50.
-    
-3.  Mentz RJ, Khouri MG. Longitudinal Strain in Heart Failure With Preserved  
-    Ejection Fraction: Is There a Role for Prognostication? Circulation. 2015 Aug  
-    4;132(5):368-70.
+
+### Main References
+
+For more references check the related paper: https://doi.org/10.36660/abc.20180403  
+
+1.  D’hooge J, Bijnens B, Thoen J, Van de Werf F, Sutherland GR and Suetens P.
+Echocardiographic Strain and Strain-Rate Imaging: A New Tool to Study Regional Myocardial Function. IEEE Trans Med Imaging. 2002 Sep;21(9):1022–30.
+
+2.  Voigt JU, Pedrizzetti G, Lysyansky P, Marwick TH, Houle H, Baumann R, et al. Definitions for a common standard for 2D speckle tracking echocardiography: consensus document of the EACVI/ASE/Industry Task Force to standardize deformation imaging. Eur Heart J Cardiovasc Imaging. 2015 Jan; 16(1):1–11.
+
+3.  Walmsley J, Arts T, Derval N, Bordachar P, Cochet H, Ploux S, et al. Fast Simulation of Mechanical Heterogeneity in the Electrically Asynchronous Heart Using the MultiPatch Module.PLoS Comput Biol. 2015 Jul; 11(7): e1004284.
