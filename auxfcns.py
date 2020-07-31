@@ -262,8 +262,8 @@ def verifyECG(txt1, strain_rate_lv4ch, headerTimesTxt1 , sheet, linePatient, op,
 	pointsECG = np.zeros(3) #
 
 	#Checks the ammount of columns in the dataframe
-	tcolunas1=int(((txt1.size/len(txt1.index))))			
-	tcolunas_strain_rate_lv4ch = int(((strain_rate_lv4ch.size/len(strain_rate_lv4ch.index))))
+	tcolunas1 = txt1.shape[1]			
+	tcolunas_strain_rate_lv4ch = strain_rate_lv4ch.shape[1]
 
 	# Detects the smallest index in the dataframes
 	END_Time0 = min([txt1.index[len(txt1.index)-1], strain_rate_lv4ch.index[len(strain_rate_lv4ch.index)-1]])

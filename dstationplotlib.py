@@ -162,11 +162,11 @@ def PlotClick(txt1, tcolunas1, headerTimesTxt1, END_Time0, op, strain_rate_lv4ch
 def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, strain_rate_lv3ch, prmt, op, valveTimes, phasesTimes, LAphasesTimes, txt, shwFig):
 
 
-	#Counts the ammount of columns in the dataframe
-	tcolunas1=int(((txt1.size/len(txt1.index))))			
-	tcolunas2=int(((txt2.size/len(txt2.index))))
-	tcolunas3=int(((txt3.size/len(txt3.index))))
-	tcolunasMid=int(((txtMid.size/len(txtMid.index))))
+	#Counts the ammount of columns in the dataframes
+	tcolunas1 = txt1.shape[1]			
+	tcolunas2 = txt2.shape[1]		
+	tcolunas3 = txt3.shape[1]
+	tcolunasMid = txtMid.shape[1]
 
 
 	END_Time = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]
@@ -302,10 +302,10 @@ def POIPlot(txt1, txt2, txt3, txtMid, strain_rate_lv4ch, strain_rate_lv2ch, stra
 def avgPhaseStrainVarPlot(txt1, txt2, txt3, txtMid, op, averageLongStrain, valveTimes, phasesTimes, shwFig):
 
 
-	#Counts the ammount of columns in the dataframe
-	tcolunas1=int(((txt1.size/len(txt1.index))))			
-	tcolunas2=int(((txt2.size/len(txt2.index))))
-	tcolunas3=int(((txt3.size/len(txt3.index))))
+	#Counts the ammount of columns in the dataframes
+	tcolunas1 = txt1.shape[1]			
+	tcolunas2 = txt2.shape[1]		
+	tcolunas3 = txt3.shape[1]
 
 
 	END_Time = sorted([txt1.index[len(txt1.index)-1], txt2.index[len(txt2.index)-1], txt3.index[len(txt3.index)-1],txtMid.index[len(txtMid.index)-1]])[3]

@@ -80,8 +80,8 @@ def openRawDataFiles(idPatient, op):
 
 	#Estimates SR to use in the first plot (POI selection)
 	txtSRLV4CH = txt1.truediv(txt1.index.to_series().diff(), axis = 0)/100 
-	txtSRLV2CH = txt2.truediv(txt1.index.to_series().diff(), axis = 0)/100 
-	txtSRLVAPLAX = txt3.truediv(txt1.index.to_series().diff(), axis = 0)/100
+	txtSRLV2CH = txt2.truediv(txt2.index.to_series().diff(), axis = 0)/100 
+	txtSRLVAPLAX = txt3.truediv(txt3.index.to_series().diff(), axis = 0)/100
 
 
 	return txt1, txt2, txt3, txtMid1, txtMid2, txtMid3, txtSRLV4CH, txtSRLV2CH, txtSRLVAPLAX, headerTimes 

@@ -73,9 +73,9 @@ def phaseSeg(valveTimes, sheet, linePatient):
 def GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 
 	#Checks the ammount of columns in the dataframe
-	tcolunas1=int(((txt1.size/len(txt1.index))))			
-	tcolunas2=int(((txt2.size/len(txt2.index))))
-	tcolunas3=int(((txt3.size/len(txt3.index))))
+	tcolunas1 = txt1.shape[1]			
+	tcolunas2 = txt2.shape[1]		
+	tcolunas3 = txt3.shape[1]		
 	
 
 	if op != test_op:
@@ -163,9 +163,9 @@ def GLS_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 #Calculates the Mechanical Dispersion (std.deviance from all the peak strain time values in a cycle)
 def MD_calc(txt1, txt2, txt3, op, prmt, phasesTimes, valveTimes):
 
-	tcolunas1=int(((txt1.size/len(txt1.index))))			#Checks the ammount of columns in the dataframe
-	tcolunas2=int(((txt2.size/len(txt2.index))))
-	tcolunas3=int(((txt3.size/len(txt3.index))))
+	tcolunas1 = txt1.shape[1]			
+	tcolunas2 = txt2.shape[1]		
+	tcolunas3 = txt3.shape[1]
 
 	#slices the DF to one that has points from LM to RM time
 	if op != test_op:
